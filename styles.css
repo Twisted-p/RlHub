@@ -1317,6 +1317,25 @@ body.app-ready .page-shell {
 }
 
 .performance-layout { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 1.25rem; align-items: start; }
+.performance-controls [hidden], #performance-matches-panel[hidden], #performance-trends-panel[hidden] { display: none !important; }
+.performance-tabs { display: flex; gap: .5rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,.08); padding-bottom: .75rem; }
+.performance-tab { color: var(--muted); background: transparent; border: 1px solid transparent; border-radius: 12px; font: inherit; font-weight: 700; padding: .65rem 1.1rem; cursor: pointer; }
+.performance-tab.active { color: var(--teal); border-color: rgba(89,240,212,.3); background: rgba(89,240,212,.08); }
+.performance-filters { display: flex; align-items: end; flex-wrap: wrap; gap: 1rem; }
+.performance-filters .field { flex: 1 1 160px; }
+.performance-filters select { width: 100%; color: var(--text); background: #142234; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: .8rem; font: inherit; }
+.performance-filters .field > span { font-size: .75rem; color: var(--muted); }
+.performance-charts { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.25rem; margin: 1.25rem 0; }
+.performance-chart svg { display: block; width: 100%; overflow: visible; }
+.performance-chart svg text { fill: var(--muted); font: 12px 'Space Grotesk', sans-serif; }
+.performance-chart svg line { stroke: rgba(255,255,255,.18); }
+.performance-chart svg .chart-grid { stroke-dasharray: 4 4; }
+.performance-chart-point:hover rect, .performance-chart-point:focus rect { opacity: 1; stroke: white; stroke-width: 2; }
+.performance-open-match { border: 0; background: transparent; color: var(--teal); cursor: pointer; font: inherit; text-align: left; padding: .3rem 0; }
+.performance-open-match:hover { text-decoration: underline; }
+.performance-tab:focus-visible, .performance-open-match:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+#performance-trend-metrics small { display: block; color: var(--muted); margin-top: .5rem; font-size: .75rem; }
+@media (max-width: 1000px) { .performance-charts { grid-template-columns: 1fr; } }
 .performance-setup { display: grid; gap: 1rem; padding: 1rem; border-radius: 16px; background: rgba(89, 240, 212, 0.05); }
 .performance-setup .primary-button { justify-self: start; }
 .performance-score { font-family: Sora, sans-serif; font-size: 2.2rem; white-space: nowrap; color: var(--teal); }

@@ -13,6 +13,7 @@ assets = [
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",
     "assets/rlhub-intro.mp4",
     "overlay.html", "overlay-settings.js",
+    "performance-analytics.js",
 ]
 a = Analysis(
     [str(root / "desktop_app.py")],

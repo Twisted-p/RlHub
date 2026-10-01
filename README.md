@@ -8,6 +8,8 @@ Last ned **RL Hub.exe** fra [Releases](https://github.com/Twisted-p/RlHub/releas
 
 Velg plattform og gamertag under Profile for å hente rank. Start Rocket League med kontoen én gang slik at appen kan finne den offentlige spiller-ID-en i den lokale spilloggen. Under Performance aktiverer du kampoppsummeringer én gang og starter spillet på nytt. La RL Hub kjøre mens du spiller.
 
+Performance har fanene **Kamper** og **Grafer**. Filtrer på gamemode og seier/tap, sorter kamper etter dato eller egne tall, og se skudd, mål, saves og assists for de siste 5, 10 eller 20 kampene. Grafene viser også totaler, snitt og samlet skuddprosent. Du kan åpne kampoppsummeringen direkte fra tabellen under grafene.
+
 ## Fortsette utvikling på en annen maskin
 
 Du trenger Windows, Git, Python 3.13 og [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
@@ -39,6 +41,8 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 ```
 
 UI-testene krever Windows og WebView2. Testen av exe-filen bruker egen port, eget vindusnavn og separat lagring slik at den vanlige appen kan fortsette å kjøre.
+
+Med Node.js kan du også kjøre `node tests/performance_analytics.test.cjs` for beregningene bak grafene. Node.js er bare nødvendig for denne utviklertesten.
 
 ## Prosjektfiler
 

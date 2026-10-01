@@ -54,6 +54,8 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
                 assert b"desktop-runtime.js" in response.read()
         with urlopen(origin + "/api/performance", timeout=2) as response:
             assert isinstance(json.load(response)["matches"], list)
+        with urlopen(origin + "/performance-analytics.js", timeout=2) as response:
+            assert b"performanceAnalytics" in response.read()
         with urlopen(origin + "/api/overlay", timeout=2) as response:
             overlay = json.load(response)
             assert overlay["nativeReady"], overlay["nativeError"]

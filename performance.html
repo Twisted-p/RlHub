@@ -44,7 +44,21 @@
               <button class="primary-button compact-button" id="performance-enable" type="button">Aktiver kampoppsummeringer</button>
             </div>
           </article>
-          <div class="performance-layout">
+          <article class="glass module is-active performance-controls">
+            <div class="performance-tabs" role="tablist" aria-label="Performance-visning">
+              <button class="performance-tab active" id="performance-tab-matches" type="button" role="tab" aria-selected="true" aria-controls="performance-matches-panel">Kamper</button>
+              <button class="performance-tab" id="performance-tab-trends" type="button" role="tab" aria-selected="false" aria-controls="performance-trends-panel" tabindex="-1">Grafer</button>
+            </div>
+            <div class="performance-filters">
+              <label class="field"><span>Gamemode</span><select id="performance-mode"><option value="all">Alle gamemodes</option></select></label>
+              <label class="field"><span>Resultat</span><select id="performance-result"><option value="all">Alle resultater</option><option value="win">Seiere</option><option value="loss">Tap</option></select></label>
+              <label class="field" id="performance-sort-field"><span>Sorter kamper</span><select id="performance-sort"><option value="newest">Nyeste først</option><option value="oldest">Eldste først</option><option value="score">Flest poeng</option><option value="goals">Flest mål</option><option value="shots">Flest skudd</option><option value="saves">Flest saves</option><option value="assists">Flest assists</option></select></label>
+              <label class="field" id="performance-range-field" hidden><span>Periode</span><select id="performance-range"><option value="5">Siste 5 kamper</option><option value="10" selected>Siste 10 kamper</option><option value="20">Siste 20 kamper</option></select></label>
+              <button class="secondary-button compact-button" id="performance-reset-filters" type="button">Nullstill filtre</button>
+            </div>
+            <p class="module-note" id="performance-filter-summary" aria-live="polite"></p>
+          </article>
+          <div class="performance-layout" id="performance-matches-panel" role="tabpanel" aria-labelledby="performance-tab-matches">
             <article class="glass module is-active performance-detail" id="performance-detail">
               <p class="eyebrow">Din neste kamp</p><h3>Ingen kamper lagret ennå</h3>
               <p>Spill en kamp med RL Hub åpen. Oppsummeringen dukker opp her når kampen er ferdig.</p>
@@ -54,10 +68,16 @@
               <div id="performance-history"><p class="module-note">Avsluttede kamper vises her.</p></div>
             </aside>
           </div>
+          <section id="performance-trends-panel" role="tabpanel" aria-labelledby="performance-tab-trends" hidden>
+            <div class="glass module is-active"><div class="module-header"><div><p class="eyebrow">Din utvikling</p><h3>Fra kamp til kamp</h3></div></div><p class="module-note" id="performance-trends-summary"></p><div class="performance-metrics" id="performance-trend-metrics"></div></div>
+            <div class="performance-charts" id="performance-charts"></div>
+            <article class="glass module is-active"><h3>Kampene bak grafene</h3><p class="module-note">Eldste kamp står først. Pek på en søyle for dato og tall, eller åpne kampen i oversikten.</p><div class="performance-table-wrap" id="performance-trend-table"></div></article>
+          </section>
         </section>
       </main>
     </div>
     <script src="./script.js"></script>
+    <script src="./performance-analytics.js"></script>
     <script src="./performance.js"></script>
   </body>
 </html>

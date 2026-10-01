@@ -1,16 +1,16 @@
 """Verify Performance in WebView2 with simulated official Stats API events."""
-import ctypes
-from ctypes import wintypes
+import base64
+import json
 from pathlib import Path
 import sys
 import tempfile
 import time
+from copy import deepcopy
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from desktop_app import start_server
 from performance_service import PerformanceService
 from test_performance import STATE, END, PLAYER
-from PIL import ImageGrab
 import webview
 
 root = Path(__file__).resolve().parents[1]
@@ -52,15 +52,53 @@ def exercise():
         assert window.evaluate_js("performanceDetail.innerText.includes('40%')")
         assert window.evaluate_js("document.querySelectorAll('.performance-table tbody tr').length") == 2
         assert window.evaluate_js("document.querySelectorAll('[data-match-id]').length") == 1
+        base = deepcopy(service.snapshot()["matches"][0])
+        history = []
+        for index in range(25):
+            match = deepcopy(base)
+            match.update(id=f"analytics-{index}", endedAt=f"2026-10-01T10:{index:02}:00+00:00", playlist=11 if index < 15 else 13, mode="Ranked 2v2" if index < 15 else "Ranked 3v3", winnerTeam=index % 2)
+            match["players"][0].update(shots=index, goals=index % 3, saves=index % 5, score=100 + index)
+            history.append(match)
+        with service.lock:
+            service.history = list(reversed(history))
+        wait_for("performanceData.matches.length === 25")
+        window.evaluate_js("modeFilter.value='11'; modeFilter.dispatchEvent(new Event('change'))")
+        assert window.evaluate_js("document.querySelectorAll('[data-match-id]').length") == 15
+        window.evaluate_js("sortFilter.value='shots'; sortFilter.dispatchEvent(new Event('change'))")
+        assert window.evaluate_js("document.querySelector('[data-match-id]').dataset.matchId") == "analytics-14"
+        window.evaluate_js("document.getElementById('performance-tab-trends').click(); rangeFilter.value='5'; rangeFilter.dispatchEvent(new Event('change'))")
+        assert window.evaluate_js("document.querySelectorAll('.performance-chart svg').length") == 4
+        assert window.evaluate_js("document.querySelectorAll('[data-open-match]').length") == 5
+        assert window.evaluate_js("document.querySelector('[data-open-match]').dataset.openMatch") == "analytics-10"
+        assert window.evaluate_js("document.getElementById('performance-trend-metrics').innerText.includes('12 per kamp')")
+        window.evaluate_js("rangeFilter.value='20'; rangeFilter.dispatchEvent(new Event('change'))")
+        assert window.evaluate_js("document.querySelectorAll('[data-open-match]').length") == 15
+        window.evaluate_js("resultFilter.value='win'; resultFilter.dispatchEvent(new Event('change'))")
+        assert window.evaluate_js("document.querySelectorAll('[data-open-match]').length") == 8
+        window.evaluate_js("document.querySelector('[data-open-match]').click()")
+        assert window.evaluate_js("performanceView") == "matches"
+        assert window.evaluate_js("selectedMatchId") == "analytics-0"
+        window.evaluate_js("modeFilter.value='13'; resultFilter.value='loss'; renderPerformance()")
+        assert window.evaluate_js("document.querySelectorAll('[data-match-id]').length") == 5
+        window.evaluate_js("modeFilter.innerHTML += '<option value=\"999\">Empty mode</option>'; modeFilter.value='999'; renderPerformance(); document.getElementById('performance-tab-trends').click()")
+        assert window.evaluate_js("document.querySelectorAll('.performance-chart svg').length") == 0
+        assert window.evaluate_js("document.getElementById('performance-trends-summary').innerText.includes('Ingen kamper')")
+        window.evaluate_js("document.getElementById('performance-reset-filters').click(); rangeFilter.value='20'; renderPerformance()")
+        assert window.evaluate_js("document.querySelectorAll('[data-open-match]').length") == 20
         time.sleep(1)
-        user32 = ctypes.windll.user32
-        user32.FindWindowW.argtypes = [wintypes.LPCWSTR, wintypes.LPCWSTR]
-        user32.FindWindowW.restype = wintypes.HWND
-        handle = user32.FindWindowW(None, "RL Hub Performance test")
-        rect = wintypes.RECT()
-        user32.GetWindowRect(handle, ctypes.byref(rect))
-        ImageGrab.grab(bbox=(rect.left, rect.top, rect.right, rect.bottom)).save(root / "build/performance-preview.png")
-        print("Performance UI: setup, completed match, personal stats, history and scoreboard OK", flush=True)
+        # Capture WebView's own surface even when a fullscreen game covers the desktop.
+        from System import Action
+        tasks = {}
+        window.evaluate_js("window.scrollTo(0,0)")
+        def capture():
+            tasks["capture"] = window.native.webview.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", '{"format":"png","captureBeyondViewport":true}')
+        window.native.webview.Invoke(Action(capture))
+        deadline = time.monotonic() + 10
+        while not tasks["capture"].IsCompleted and time.monotonic() < deadline:
+            time.sleep(.1)
+        image = json.loads(str(tasks["capture"].Result))["data"]
+        (root / "build/performance-preview.png").write_bytes(base64.b64decode(image))
+        print("Performance UI: collection, mode/result filters, sorting, 5/10/20 windows, charts, drilldown and empty state OK", flush=True)
     except Exception as error:
         failures.append(str(error))
         print(str(error), file=sys.stderr, flush=True)
