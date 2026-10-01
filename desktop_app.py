@@ -16,7 +16,8 @@ from tracker_proxy import TrackerProxyHandler
 from mmr_provider import fetch_rank_profile
 from performance_service import PerformanceService
 
-APP_PORT = 18765  # Stable origin keeps localStorage across restarts and builds.
+# The default origin stays stable; smoke tests can isolate their local service.
+APP_PORT = int(os.environ.get("RL_HUB_PORT", "18765"))
 ASSET_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).parent))
 UI_FILES = {
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
@@ -125,7 +126,7 @@ def main() -> None:
         server = start_server(performance=performance)
         performance.start()
         webview.create_window(
-            "RL Hub", f"http://127.0.0.1:{APP_PORT}/index.html",
+            os.environ.get("RL_HUB_WINDOW_TITLE", "RL Hub"), f"http://127.0.0.1:{APP_PORT}/index.html",
             width=1180, height=820, min_size=(980, 680),
             background_color="#10131d",
         )

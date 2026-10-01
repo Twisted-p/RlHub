@@ -37,7 +37,7 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 .\.venv\Scripts\python.exe tests/packaged_smoke.py
 ```
 
-UI-testene krever Windows og WebView2. Lukk den vanlige appen før `packaged_smoke.py`, som bruker appens faste port. Testene bruker separat lagring.
+UI-testene krever Windows og WebView2. Testen av exe-filen bruker egen port, eget vindusnavn og separat lagring slik at den vanlige appen kan fortsette å kjøre.
 
 ## Prosjektfiler
 
