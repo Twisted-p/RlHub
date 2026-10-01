@@ -17,7 +17,7 @@
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <PlatformTarget>$(Platform)</PlatformTarget>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <AppxBundle>Never</AppxBundle>
     <AppxSymbolPackageEnabled>false</AppxSymbolPackageEnabled>
@@ -30,6 +30,7 @@
     <ApplicationDefinition Include="App.xaml" />
     <AppxManifest Include="Package.appxmanifest" />
     <Content Include="Assets\*.png" />
+    <Content Include="Properties\Default.rd.xml" />
     <PackageReference Include="Microsoft.Gaming.XboxGameBar" Version="7.2.240903001" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
   </ItemGroup>
