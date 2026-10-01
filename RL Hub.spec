@@ -15,6 +15,7 @@ assets = [
     "overlay.html", "overlay-settings.js",
     "performance-analytics.js",
     "readiness.js",
+    "goals.html", "goals.js",
 ]
 a = Analysis(
     [str(root / "desktop_app.py")],

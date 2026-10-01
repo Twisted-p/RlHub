@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Goals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="app-ready" data-page="goals">
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+      <aside class="sidebar">
+        <a class="brand" href="./index.html"><img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" /></a>
+        <nav class="nav">
+          <a class="nav-link" href="./dashboard.html">Dashboard</a>
+          <a class="nav-link" href="./garage.html">Garage</a>
+          <a class="nav-link" href="./training.html">Training</a>
+          <a class="nav-link" href="./performance.html">Performance</a>
+          <a class="nav-link active" href="./goals.html">Goals</a>
+          <a class="nav-link" href="./profile.html">Profile</a>
+        </nav>
+        <div class="status-card glass">
+          <p class="eyebrow">Dine ambisjoner</p><h3>Ett mål per modus</h3>
+          <p>Målene dine lagres automatisk. Oppdatert MMR fra Profile og økten brukes her også.</p>
+          <a class="text-button" href="./profile.html">Hent eller oppdater rank →</a>
+        </div>
+      </aside>
+      <main class="main-content">
+        <header class="page-header glass reveal">
+          <div><p class="eyebrow">Goals</p><h1>Neste rank starter med et mål.</h1>
+            <p class="hero-text">Velg ranken du vil nå i 1v1, 2v2 og 3v3. Se avstanden i MMR og hvor mange seiere på rad som kan ta deg dit.</p></div>
+        </header>
+        <section class="page-stack reveal">
+          <article class="glass module">
+            <div class="module-header"><div><p class="eyebrow">Rankmål</p><h3 id="goals-player">Dine mål</h3></div><span class="live-pill">≈ +9 MMR per seier</span></div>
+            <p class="module-note" id="goals-updated">Henter sist kjente MMR …</p>
+            <div class="goals-grid" id="goals-cards"></div>
+            <p class="module-note" id="goals-status" role="status"></p>
+          </article>
+          <article class="glass module">
+            <h3>Et anslag for veien videre</h3>
+            <p class="module-note">Antall seiere = MMR som gjenstår ÷ 9, rundet opp. Anslaget forutsetter seiere på rad uten tap og omtrent +9 MMR per seier. Den faktiske endringen varierer fra kamp til kamp.</p>
+            <p class="module-note">Rankmål bruker omtrentlige MMR-grenser for hver modus. Sesongendringer, placement-kamper og opprykk/nedrykk kan gi avvik. «MMR-målet nådd» bekrefter MMR-avstanden, ikke en offisiell rank eller sesongbelønning.</p>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="./script.js"></script>
+    <script src="./goals.js"></script>
+  </body>
+</html>

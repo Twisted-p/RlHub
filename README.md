@@ -12,6 +12,8 @@ Performance har fanene **Kamper** og **Grafer**. Filtrer på gamemode og seier/t
 
 Dashboard viser **Dagens spillform** med faktisk treningstid, siste fem egne ranked/casual-kamper, statistiske snitt og MMR-endring per modus i økten. Økten starter automatisk ved første trenings- eller kampdata. Etter hver femkampers blokk anbefales 15 minutter pause ved minst tre tap, eller 5 minutter pause og 5 minutter ny trening ved minst tre seiere. Start pausen i appen; tid i trening/kamp avbryter hvilen. En 90-minutters fokustimer senker readiness gradvis. Dette er lokal coaching, ikke en offisiell stat eller en dokumentert universell fokusgrense. Detaljene i beregningen kan åpnes i Dashboard.
 
+**Goals** lar deg lagre ett rankmål for hver av 1v1, 2v2 og 3v3. Siden bruker siste hentede MMR, omtrentlige rankgrenser per modus og `ceil(MMR igjen / 9)` for anslåtte seiere på rad. Mål lagres separat per tilkoblet spiller i `goals.json`; +9 er et planleggingsanslag, ikke en garanti for MMR-endringen i en kamp.
+
 ## Fortsette utvikling på en annen maskin
 
 Du trenger Windows, Git, Python 3.13 og [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
@@ -39,6 +41,7 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 .\.venv\Scripts\python.exe tests/splash_ui_smoke.py
 .\.venv\Scripts\python.exe tests/performance_ui_smoke.py
 .\.venv\Scripts\python.exe tests/readiness_ui_smoke.py
+.\.venv\Scripts\python.exe tests/goals_ui_smoke.py
 .\.venv\Scripts\python.exe tests/overlay_ui_smoke.py
 .\.venv\Scripts\python.exe tests/packaged_smoke.py
 ```

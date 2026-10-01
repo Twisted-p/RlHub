@@ -24,6 +24,12 @@ Profiloppslag, sist hentede statistikk, presets og trening lagres under `%LOCALA
 
 Appen bruker Microsoft Edge WebView2 Runtime. Hvis den mangler på maskinen, installer den fra [Microsoft](https://developer.microsoft.com/en-us/microsoft-edge/webview2/). Internett trengs for MMR-oppslag og nettfonter, mens lokale presets og trening kan brukes uten nett.
 
+## Goals
+
+Under **Goals** velger du ønsket rank separat for 1v1, 2v2 og 3v3. Målene lagres i `%LOCALAPPDATA%/RL Hub/goals.json` per spiller. Hent rank i Profile først; Goals bruker samme siste hentede rank som overlayet, inkludert oppdateringer etter kamp. Manglende MMR vises som ukjent, ikke null. Du kan velge mål før en spiller er koblet; disse tildeles den første tilkoblede spilleren.
+
+MMR-målene er omtrentlige opprykksmål, med ulike verdier for 1v1 og lagmodusene. Referanseverdiene er avrundet fra [MMR-guiden](https://earlygame.com/rocket-league/mmr-guide-match-making-rank), kontrollert mot [observerte 1v1-ranker](https://rocketleague.tracker.network/rocket-league/distribution?playlist=10) 1. oktober 2026; dette er ingen offisiell tabell eller live-kilde. Appen henter ikke TRN-data for å vise Goals. Se `goals_service.py` for tabellen som kan oppdateres ved sesongendringer. Seiersanslaget rundes opp med +9 MMR per seier uten tap. «MMR-målet nådd» betyr at den valgte MMR-verdien er nådd, ikke at sesongbelønningen er opptjent.
+
 ## Kjøre fra kildekode
 
 ```powershell

@@ -12,6 +12,13 @@ document.querySelectorAll("a[href]").forEach((link) => {
 
 const desktopNav = document.querySelector(".nav");
 if (desktopNav) {
+  if (!desktopNav.querySelector('a[href="./goals.html"]')) {
+    const goalsLink = document.createElement("a");
+    goalsLink.className = "nav-link";
+    goalsLink.href = "./goals.html";
+    goalsLink.textContent = "Goals";
+    desktopNav.insertBefore(goalsLink, desktopNav.querySelector('a[href="./profile.html"]'));
+  }
   const overlayLink = document.createElement("a");
   overlayLink.className = "nav-link" + (document.body.dataset.page === "overlay" ? " active" : "");
   overlayLink.href = "./overlay.html";

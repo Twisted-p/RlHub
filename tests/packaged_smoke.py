@@ -49,7 +49,7 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
         ImageGrab.grab(bbox=(rect.left, rect.top, rect.right, rect.bottom)).save(root / "build" / "desktop-intro-preview.png")
         time.sleep(5)  # Wait for the intro to finish and the first page paint.
         assert process.poll() is None
-        for page in ["index", "dashboard", "garage", "training", "profile", "performance", "overlay"]:
+        for page in ["index", "dashboard", "garage", "training", "profile", "performance", "overlay", "goals"]:
             with urlopen(f"{origin}/{page}.html", timeout=2) as response:
                 assert b"desktop-runtime.js" in response.read()
         with urlopen(origin + "/api/performance", timeout=2) as response:
@@ -60,6 +60,10 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
             assert b"focusRemaining" in response.read()
         with urlopen(origin + "/api/readiness", timeout=2) as response:
             assert json.load(response)["focusLimit"] == 5400
+        with urlopen(origin + "/goals.js", timeout=2) as response:
+            assert b"goals-cards" in response.read()
+        with urlopen(origin + "/api/goals", timeout=2) as response:
+            assert len(json.load(response)["goals"]) == 3
         with urlopen(origin + "/api/overlay", timeout=2) as response:
             overlay = json.load(response)
             assert overlay["nativeReady"], overlay["nativeError"]

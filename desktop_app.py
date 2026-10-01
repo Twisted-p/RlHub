@@ -20,6 +20,7 @@ from mmr_provider import fetch_rank_profile
 from performance_service import PerformanceService
 from overlay_service import OverlayService
 from readiness_service import ReadinessService
+from goals_service import GoalsService
 from native_overlay import NativeOverlay, render_card
 
 # The default origin stays stable; smoke tests can isolate their local service.
@@ -32,6 +33,7 @@ UI_FILES = {
     "overlay.html", "overlay-settings.js",
     "performance-analytics.js",
     "readiness.js",
+    "goals.html", "goals.js",
 }
 
 
@@ -53,6 +55,10 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/api/goals":
+            service = getattr(self.server, "goals", None)
+            self.respond_json(200 if service else 503, service.view() if service else {"error": "Goals er ikke startet."})
+            return
         if parsed.path == "/api/readiness":
             service = getattr(self.server, "readiness", None)
             self.respond_json(200 if service else 503, service.tick() if service else {"error": "Økten er ikke startet."})
@@ -131,12 +137,27 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_POST(self) -> None:
         path = urlparse(self.path).path
-        if path not in ("/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break"):
+        if path not in ("/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break", "/api/goals"):
             self.respond_json(404, {"error": "Fant ikke endepunktet."})
             return
         expected_origin = f"http://127.0.0.1:{self.server.server_port}"
         if self.headers.get("Origin") != expected_origin:
             self.respond_json(403, {"error": "Endringer må gjøres fra RL Hub."})
+            return
+        if path == "/api/goals":
+            service = getattr(self.server, "goals", None)
+            if service is None:
+                self.respond_json(503, {"error": "Goals er ikke startet."})
+                return
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= 1024:
+                    raise ValueError("Ugyldig mål.")
+                self.respond_json(200, service.set_goal(json.loads(self.rfile.read(length))))
+            except (ValueError, TypeError):
+                self.respond_json(400, {"error": "Velg en gyldig modus og rank."})
+            except OSError:
+                self.respond_json(500, {"error": "Kunne ikke lagre målet på maskinen."})
             return
         if path.startswith("/api/readiness/"):
             service = getattr(self.server, "readiness", None)
@@ -190,13 +211,14 @@ class DesktopHandler(TrackerProxyHandler):
             self.respond_json(400, {"error": "Kunne ikke aktivere kampoppsummeringer. Start Rocket League én gang, lukk spillet, og prøv igjen. Kontroller at appen kan skrive til spillets innstillinger."})
 
 
-def start_server(port: int = APP_PORT, performance: PerformanceService | None = None, overlay: OverlayService | None = None, readiness: ReadinessService | None = None) -> ThreadingHTTPServer:
+def start_server(port: int = APP_PORT, performance: PerformanceService | None = None, overlay: OverlayService | None = None, readiness: ReadinessService | None = None, goals: GoalsService | None = None) -> ThreadingHTTPServer:
     server = ThreadingHTTPServer(("127.0.0.1", port), DesktopHandler)
     server.daemon_threads = True
     server.session_id = uuid4().hex
     server.performance = performance
     server.overlay = overlay
     server.readiness = readiness
+    server.goals = goals
     Thread(target=server.serve_forever, name="rl-hub-service", daemon=True).start()
     return server
 
@@ -215,7 +237,8 @@ def main() -> None:
         performance = PerformanceService(data_dir)
         overlay = OverlayService(data_dir, performance)
         readiness = ReadinessService(data_dir, performance, overlay)
-        server = start_server(performance=performance, overlay=overlay, readiness=readiness)
+        goals = GoalsService(data_dir, overlay)
+        server = start_server(performance=performance, overlay=overlay, readiness=readiness, goals=goals)
         performance.start()
         readiness.start()
         native_overlay = NativeOverlay(overlay, ASSET_ROOT / "App Logo.png")
