@@ -10,7 +10,7 @@
   <Identity
     Name="RLHub.GameBar"
     Publisher="CN=RL Hub, OID.2.25.311729368913984317654407730594956997722=1"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="4b9dee15-da50-4b0a-8337-9b84da542023" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
