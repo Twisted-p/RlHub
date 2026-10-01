@@ -40,8 +40,10 @@ namespace RLHubGameBar
                 Window.Current.Content = frame;
                 stage = "Game Bar connection";
                 widget = new XboxGameBarWidget(activation, Window.Current.CoreWindow, frame);
-                stage = "Overlay navigation";
-                if (!frame.Navigate(typeof(OverlayPage))) throw new Exception("Widget page navigation failed.");
+                stage = "Overlay creation";
+                // The page is authored in C#, so instantiate it directly instead
+                // of asking the generated XAML metadata provider to activate it.
+                frame.Content = new OverlayPage();
                 Window.Current.Closed += (sender, e) => { widget = null; };
                 stage = "Window activation";
                 Window.Current.Activate();
