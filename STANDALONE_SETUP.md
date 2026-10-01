@@ -4,7 +4,7 @@ Last ned `RL Hub.exe` fra GitHub Releases, eller bygg den selv til `dist/RL Hub.
 
 ## Overlay uten Overwolf
 
-Åpne **Overlay** i RL Hub. For kantløst vindu velger du **Kantløst vindu / vindu** og bruker Borderless i spillet. **Fullskjerm – Xbox Game Bar** bruker en egen RL Hub-widget som må installeres først. Åpne Win + G, velg RL Hub under Widgets, fest med tegnestiften og slå på Game Bars klikkgjennomgang. Hold RL Hub åpen. Se [gamebar/README.md](gamebar/README.md) for bygging og installasjon. Fullskjermvisningen må verifiseres over spillet etter installasjon; at widgeten er tilkoblet bekrefter bare dataforbindelsen.
+Åpne **Overlay** i RL Hub. For kantløst vindu velger du **Kantløst vindu / vindu** og bruker Borderless i spillet. **Fullskjerm – Xbox Game Bar** bruker en egen RL Hub-widget som må installeres først. Åpne Win + G, velg RL Hub under Widgets, fest med tegnestiften og slå på Game Bars klikkgjennomgang. Hold RL Hub åpen. Se [gamebar/README.md](gamebar/README.md) for bygging og installasjon. Fullskjermvisningen ble bekreftet i ekte Rocket League-trening 1. oktober 2026 med widgeten festet og Win+G-menyen lukket. På en annen maskin bør selve visningen også kontrolleres; tilkoblingsstatus bekrefter bare dataforbindelsen.
 
 «Vis statistikk under kamp» er en egen bryter; den er avslått som standard. Lobby, trening og etter kamp følger samme datakilde i begge visningsmoduser. Du velger hjørne og størrelse i RL Hub for kantløst vindu; Game Bar styrer plassering og størrelse for fullskjermwidgeten. Lagre endringene, eller bruk forhåndsvisningen for å se kortet.
 

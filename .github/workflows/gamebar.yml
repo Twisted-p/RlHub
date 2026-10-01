@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [codex/standalone-overlay]
-    paths: ['gamebar/**', '.github/workflows/gamebar.yml']
+    paths: ['gamebar/**/*.cs', 'gamebar/**/*.xaml', 'gamebar/**/*.csproj', 'gamebar/**/*.appxmanifest', 'gamebar/**/*.rd.xml', 'gamebar/Assets/**', '.github/workflows/gamebar.yml']
 permissions:
   contents: read
 jobs:

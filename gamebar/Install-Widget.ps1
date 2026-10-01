@@ -13,8 +13,9 @@ function Get-PackageIdentity([string]$Path) {
 $package = Get-ChildItem -LiteralPath $PackageDirectory -Recurse -File |
     Where-Object { $_.Name -like 'RLHubGameBar*' -and $_.Extension -in @('.msix', '.appx') } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if (-not $package) { throw 'Fant ikke RL Hub-widgetpakken. Bygg eller last ned den først.' }
-$dependencies = @(Get-ChildItem -LiteralPath $PackageDirectory -Recurse -Filter '*.appx' |
-    Where-Object { $_.FullName -match '\\Dependencies\\x64\\' } | ForEach-Object {
+$dependencyDirectory = Join-Path $package.Directory.FullName 'Dependencies\x64'
+$dependencies = @(Get-ChildItem -LiteralPath $dependencyDirectory -Filter '*.appx' -ErrorAction SilentlyContinue |
+    ForEach-Object {
         $identity = Get-PackageIdentity $_.FullName
         $existing = Get-AppxPackage -Name $identity.Name | Where-Object {
             $_.Architecture -eq 'X64' -and [version]$_.Version -ge [version]$identity.Version
