@@ -784,6 +784,26 @@ body.app-ready .page-shell {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.session-ring { background: conic-gradient(var(--teal) 0 var(--readiness), rgba(255,255,255,.08) var(--readiness) 100%); }
+.session-results { display:flex; gap:.5rem; margin-top:.5rem; }
+.session-results span { border-radius:10px; padding:.4rem .7rem; font-weight:700; }
+.session-results span.session-win { background:rgba(72,235,210,.14); color:var(--teal); }
+.session-results span.session-loss { background:rgba(255,155,80,.14); color:#ffad78; }
+.session-method { margin-top:1.5rem; color:var(--muted); font-size:.85rem; line-height:1.65; }
+.session-method summary { cursor:pointer; color:var(--teal); }
+.session-clock { font-size:2rem; font-variant-numeric:tabular-nums; }
+.session-focus-track { height:10px; border-radius:20px; background:rgba(255,255,255,.08); overflow:hidden; }
+.session-focus-track span { display:block; height:100%; background:linear-gradient(90deg,var(--teal),#ffad78); transition:width 1s linear; }
+.session-focus-track + .module-note, .session-stat-grid + .module-note { margin-top:.8rem; }
+.session-coach { padding:1.2rem; margin:1.2rem 0; border-radius:18px; background:rgba(255,255,255,.04); }
+.session-coach p { color:var(--muted); line-height:1.6; }
+.session-coach.needs-break { border:1px solid rgba(255,173,120,.4); }
+#session-break-clock { display:block; color:var(--teal); font-size:1.4rem; font-variant-numeric:tabular-nums; }
+#session-break-clock[hidden] { display:none; }
+.session-actions { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+.session-stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:.8rem; }
+.session-actions button:disabled { opacity:.5; cursor:default; }
+
 .progress-core {
   position: relative;
   z-index: 1;

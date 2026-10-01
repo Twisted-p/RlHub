@@ -10,6 +10,8 @@ Velg plattform og gamertag under Profile for å hente rank. Start Rocket League 
 
 Performance har fanene **Kamper** og **Grafer**. Filtrer på gamemode og seier/tap, sorter kamper etter dato eller egne tall, og se skudd, mål, saves og assists for de siste 5, 10 eller 20 kampene. Grafene viser også totaler, snitt og samlet skuddprosent. Du kan åpne kampoppsummeringen direkte fra tabellen under grafene.
 
+Dashboard viser **Dagens spillform** med faktisk treningstid, siste fem egne ranked/casual-kamper, statistiske snitt og MMR-endring per modus i økten. Økten starter automatisk ved første trenings- eller kampdata. Etter hver femkampers blokk anbefales 15 minutter pause ved minst tre tap, eller 5 minutter pause og 5 minutter ny trening ved minst tre seiere. Start pausen i appen; tid i trening/kamp avbryter hvilen. En 90-minutters fokustimer senker readiness gradvis. Dette er lokal coaching, ikke en offisiell stat eller en dokumentert universell fokusgrense. Detaljene i beregningen kan åpnes i Dashboard.
+
 ## Fortsette utvikling på en annen maskin
 
 Du trenger Windows, Git, Python 3.13 og [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
@@ -36,6 +38,7 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 .\.venv\Scripts\python.exe tests/splash_ui_smoke.py
 .\.venv\Scripts\python.exe tests/performance_ui_smoke.py
+.\.venv\Scripts\python.exe tests/readiness_ui_smoke.py
 .\.venv\Scripts\python.exe tests/overlay_ui_smoke.py
 .\.venv\Scripts\python.exe tests/packaged_smoke.py
 ```
@@ -52,6 +55,7 @@ Med Node.js kan du også kjøre `node tests/performance_analytics.test.cjs` for 
 - `mmr_provider.py`: rank og MMR via tredjepartstjenesten `mmr.kmdw.dev`.
 - `performance_service.py`, `performance.js`, `performance.html`: Rocket Leagues lokale Stats API og kampoppsummeringer.
 - `native_overlay.py`, `overlay_service.py`, `overlay.html`, `overlay-settings.js`: Windows-overlay, rank-økter og innstillinger.
+- `readiness_service.py`, `readiness.js`: automatisk økt, spillform, femkampers blokker og pause-/treningstimer.
 - `assets/rlhub-intro.mp4`, `App Logo.png`: intro og logo, inkludert i exe-filen.
 - `RL Hub.spec`, `requirements*.txt`: bygging og avhengigheter.
 - `Ball modell`, `Fennec modell`: modellfiler med teksturer, kilder og lisensinformasjon for videre utvikling.

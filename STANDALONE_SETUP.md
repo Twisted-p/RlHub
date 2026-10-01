@@ -56,6 +56,12 @@ Eksisterende Overwolf-filer ligger fortsatt i prosjektet. Desktop-versjonen last
 
 ## Performance
 
+Dashboard bruker de samme innsamlede dataene til **Dagens spillform**. Den lokale økten lagres i `readiness.json` og samles også når andre faner er åpne. Den starter ved første spilldata, teller faktisk trening og egne fullførte ranked/casual-kamper, og sammenligner MMR fra samme spiller med første tilgjengelige rank i økten. Rank kan være forsinket. Private kamper og replays teller ikke i femkampers blokkene; manglende statistikk inngår ikke i snitt.
+
+Etter hver femte kamp gir minst tre tap rådet om 15 minutter hvile; minst tre seiere gir 5 minutter hvile etterfulgt av 5 minutter faktisk trening. Trykk **Start pause** i lobbyen, og hold appen åpen. Tid i kamp/trening nullstiller den sammenhengende hvilen. Trening før pausen oppfyller ikke kravet til trening etterpå. Rådet hindrer ikke brukeren i å starte en kamp.
+
+Fokustimeren teller tilkoblet økttid, inkludert lobby, fra første spilldata. Startet pause stopper den. Lukkede/suspenderte apper og manglende treningsdata legger ikke til treningstid; gjenstart beholder innsamlede tall uten å telle tiden appen var lukket. Korte pauser nullstiller ikke fokusrammen. **Start ny økt** nullstiller både Dashboard og overlayets MMR-baseline. Ny dato eller ny spiller starter også ny coachingøkt. 90 minutter er en coachingregel, ikke et vitenskapelig dokumentert maksimum for alle.
+
 **Performance** viser oppsummeringer etter kamp fra [Rocket Leagues offisielle Stats API](https://www.rocketleague.com/developer/stats-api). Trykk **Aktiver kampoppsummeringer** én gang og start Rocket League på nytt. Ha RL Hub åpen mens du spiller; mottakeren kjører også når en annen fane er valgt.
 
 Under **Kamper** kan du filtrere på gamemode og resultat, og sortere etter dato, poeng, mål, skudd, saves eller assists. **Grafer** viser de siste 5, 10 eller 20 kampene etter filtrering, i rekkefølge fra eldste til nyeste. Grafene bruker bare kamper der din spiller er gjenkjent. Hvis du har færre kamper enn valgt antall, vises tilgjengelige kamper. Delvis innsamlede kamper merkes, og manglende tall teller ikke som null i snittet. Samlet skuddprosent beregnes fra summen av mål og skudd i kampene med begge tall tilgjengelig. Tabellen under grafene åpner hele kampoppsummeringen. Filtrene endrer bare visningen og sletter ingen historie.

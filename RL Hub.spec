@@ -14,6 +14,7 @@ assets = [
     "assets/rlhub-intro.mp4",
     "overlay.html", "overlay-settings.js",
     "performance-analytics.js",
+    "readiness.js",
 ]
 a = Analysis(
     [str(root / "desktop_app.py")],

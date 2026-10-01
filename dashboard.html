@@ -32,29 +32,29 @@
 
         <div class="status-card glass">
           <p class="eyebrow">Dagens status</p>
-          <h3 id="status-title">Lokal readiness</h3>
-          <p id="status-copy">Basert på Training-progress, warmup-tid og aktiv Garage-preset. Dette er ikke en offisiell Rocket League-stat.</p>
+          <h3 id="session-sidebar-title">Dagens spillform</h3>
+          <p id="session-sidebar-copy">Start trening eller en kamp med RL Hub åpen for å starte økten.</p>
           <div class="status-bars">
             <div class="status-row">
               <div class="status-meta">
                 <span>Readiness</span>
-                <strong id="status-flow">72%</strong>
+                <strong id="session-sidebar-score">—</strong>
               </div>
-              <span class="status-bar-fill" id="status-flow-bar" style="--fill: 72%"></span>
+              <span class="status-bar-fill" id="session-sidebar-bar" style="--fill: 0%"></span>
             </div>
             <div class="status-row">
               <div class="status-meta">
-                <span>Routine</span>
-                <strong id="status-routine">2 / 4</strong>
+                <span>Femkampers blokk</span>
+                <strong id="session-sidebar-bracket">0 / 5</strong>
               </div>
-              <span class="status-bar-fill" id="status-routine-bar" style="--fill: 50%"></span>
+              <span class="status-bar-fill" id="session-bracket-bar" style="--fill: 0%"></span>
             </div>
             <div class="status-row">
               <div class="status-meta">
-                <span>Preset</span>
-                <strong id="status-preset">Neo Tokyo Fennec</strong>
+                <span>Fokustid igjen</span>
+                <strong id="session-sidebar-focus">90:00</strong>
               </div>
-              <span class="status-bar-fill" id="status-preset-bar" style="--fill: 88%"></span>
+              <span class="status-bar-fill" id="session-focus-bar" style="--fill: 100%"></span>
             </div>
           </div>
         </div>
@@ -64,10 +64,10 @@
         <header class="page-header glass reveal">
           <div>
             <p class="eyebrow">For dagens økt</p>
-            <h1>Se hva du skal fokusere på før du hopper inn i kamp.</h1>
+            <h1>Finn rytmen. Hold på fokuset.</h1>
             <p class="hero-text">
-              Her får du en rask sjekk på formen din, warmupen og hva som bør
-              være hovedfokuset ditt akkurat nå.
+              Følg dagens spillform med faktisk treningstid, de siste fem kampene
+              og MMR-endringen gjennom økten.
             </p>
           </div>
         </header>
@@ -76,41 +76,76 @@
           <article class="glass module spotlight is-active">
             <div class="module-header">
               <div>
-                <p class="eyebrow">Today</p>
-                <h3>Aktiv økt</h3>
+                <p class="eyebrow">For dagens økt</p>
+                <h3>Dagens spillform</h3>
               </div>
-              <span class="live-pill">Live focus</span>
+              <span class="live-pill" id="session-status">Venter på spillet</span>
             </div>
-            <p class="module-note" id="overwolf-status-note">
-              Lokal readiness: basert på Training-progress, warmup-tid og aktiv Garage-preset. Ikke en offisiell Rocket League-stat.
+            <p class="module-note" id="session-note">
+              Økten starter automatisk i trening eller kamp. Aktiver kampoppsummeringer i Performance først.
             </p>
             <div class="progress-ring-wrap">
-              <div class="progress-ring">
+              <div class="progress-ring session-ring" id="session-ring" style="--readiness: 0%">
                 <div class="progress-core">
-                  <strong id="flow-score">72%</strong>
+                  <strong id="session-score">—</strong>
                   <span>Readiness</span>
                 </div>
               </div>
               <div class="spotlight-list">
                 <div>
-                  <span>Kilde</span>
-                  <strong id="live-source">Garage + Training</strong>
+                  <span>Faktisk tid i trening</span>
+                  <strong id="session-training">0:00</strong>
                 </div>
                 <div>
-                  <span>Warmup</span>
-                  <strong id="live-mode">Ikke i kamp</strong>
+                  <span>Siste fem kamper i økten</span>
+                  <strong id="session-results">Ingen kamper ennå</strong>
+                  <div class="session-results" id="session-result-dots" aria-label="Kampresultater fra eldste til nyeste"></div>
                 </div>
                 <div>
-                  <span>Aktiv preset</span>
-                  <strong id="live-rank">Ingen preset valgt</strong>
+                  <span>MMR-endring i økten</span>
+                  <strong id="session-mmr">Hent rank i Profile</strong>
+                  <small>Fra siste rank-oppslag. Oppdateringen kan være forsinket.</small>
                 </div>
               </div>
             </div>
+            <details class="session-method"><summary>Hvordan beregnes readiness?</summary>
+              <p>Lokal coaching, ikke en offisiell spillstat: start på 50 poeng, opptil +20 for 10 minutter trening,
+                −20 til +20 fra seier/tap, opptil +10 fra mål, saves og assists per kamp og −10 til +10 fra MMR i aktiv ranked-modus.
+                Fokustid trekker gradvis opptil 35 poeng ved 90 minutter, og opptil 45 etterpå. Skudd og øvrige snitt vises under.</p>
+              <p>Timeren starter ved første trenings- eller kampdata og teller tilkoblet økttid, inkludert lobby.
+                En startet pause stopper fokustimeren. Spilling avbryter pausen; ny sammenhengende hvile kreves.
+                Appen teller ikke tid mens den er lukket. 90 minutter er en coachingregel, ikke en dokumentert hard fokusgrense.</p>
+              <p>Ranked og casual teller i blokkene. Private kamper, replays og ufullførte kamper teller ikke.
+                MMR kan være forsinket og måles fra første rank-oppslag i økten. En ny økt nullstiller også overlayets økt.</p>
+            </details>
+          </article>
+          <article class="glass module session-focus">
+            <div class="module-header"><div><p class="eyebrow">90 minutter</p><h3>Ta vare på fokuset</h3></div>
+              <strong class="session-clock" id="session-focus-clock">90:00</strong></div>
+            <div class="session-focus-track"><span id="session-focus-fill" style="width:0%"></span></div>
+            <p class="module-note" id="session-focus-copy">Timeren starter når du begynner å spille.</p>
+            <div class="session-coach" id="session-coach">
+              <h3 id="session-coach-title" aria-live="polite">Én blokk om gangen</h3>
+              <p id="session-coach-copy">Spill fem kamper, så får du et pauseråd basert på resultatene.</p>
+              <strong id="session-break-clock" hidden></strong>
+            </div>
+            <div class="session-actions">
+              <button class="primary-button" id="session-break" disabled>Start 15 min pause</button>
+              <button class="ghost-button" id="session-reset">Start ny økt</button>
+              <a class="text-button" href="./performance.html">Se Performance →</a>
+            </div>
+            <p class="module-note" id="session-action-status" role="status"></p>
+          </article>
+          <article class="glass module">
+            <div class="module-header"><div><p class="eyebrow">Siste fem i økten</p><h3>Ditt bidrag per kamp</h3></div><span id="session-sample">0 kamper</span></div>
+            <div class="session-stat-grid" id="session-stats"></div>
+            <p class="module-note">Snitt fra dine lagrede kamper. Manglende tall regnes ikke som null. Garage-preset og avkrysset trening påvirker ikke spillformen.</p>
           </article>
         </section>
       </main>
     </div>
 
     <script src="./script.js"></script>
+    <script src="./readiness.js"></script>
   </body>
 </html>

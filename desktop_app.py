@@ -19,6 +19,7 @@ from tracker_proxy import TrackerProxyHandler
 from mmr_provider import fetch_rank_profile
 from performance_service import PerformanceService
 from overlay_service import OverlayService
+from readiness_service import ReadinessService
 from native_overlay import NativeOverlay, render_card
 
 # The default origin stays stable; smoke tests can isolate their local service.
@@ -30,6 +31,7 @@ UI_FILES = {
     "assets/rlhub-intro.mp4",
     "overlay.html", "overlay-settings.js",
     "performance-analytics.js",
+    "readiness.js",
 }
 
 
@@ -51,6 +53,10 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/api/readiness":
+            service = getattr(self.server, "readiness", None)
+            self.respond_json(200 if service else 503, service.tick() if service else {"error": "Økten er ikke startet."})
+            return
         if parsed.path == "/health":
             self.respond_json(200, {"status": "ok", "app": "rl-hub-desktop"})
             return
@@ -125,12 +131,26 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_POST(self) -> None:
         path = urlparse(self.path).path
-        if path not in ("/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset"):
+        if path not in ("/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break"):
             self.respond_json(404, {"error": "Fant ikke endepunktet."})
             return
         expected_origin = f"http://127.0.0.1:{self.server.server_port}"
         if self.headers.get("Origin") != expected_origin:
             self.respond_json(403, {"error": "Endringer må gjøres fra RL Hub."})
+            return
+        if path.startswith("/api/readiness/"):
+            service = getattr(self.server, "readiness", None)
+            if service is None:
+                self.respond_json(503, {"error": "Økten er ikke startet."})
+                return
+            try:
+                if path.endswith("/reset"):
+                    service.reset()
+                else:
+                    service.start_break()
+                self.respond_json(200, service.tick())
+            except ValueError as error:
+                self.respond_json(400, {"error": str(error)})
             return
         if path.startswith("/api/overlay/"):
             overlay = getattr(self.server, "overlay", None)
@@ -151,7 +171,11 @@ class DesktopHandler(TrackerProxyHandler):
                 elif path.endswith("/preview"):
                     overlay.preview()
                 else:
-                    overlay.reset_session()
+                    readiness = getattr(self.server, "readiness", None)
+                    if readiness:
+                        readiness.reset()
+                    else:
+                        overlay.reset_session()
                 self.respond_json(200, overlay.view())
             except (ValueError, TypeError):
                 self.respond_json(400, {"error": "Kunne ikke lagre overlay-innstillingene."})
@@ -166,12 +190,13 @@ class DesktopHandler(TrackerProxyHandler):
             self.respond_json(400, {"error": "Kunne ikke aktivere kampoppsummeringer. Start Rocket League én gang, lukk spillet, og prøv igjen. Kontroller at appen kan skrive til spillets innstillinger."})
 
 
-def start_server(port: int = APP_PORT, performance: PerformanceService | None = None, overlay: OverlayService | None = None) -> ThreadingHTTPServer:
+def start_server(port: int = APP_PORT, performance: PerformanceService | None = None, overlay: OverlayService | None = None, readiness: ReadinessService | None = None) -> ThreadingHTTPServer:
     server = ThreadingHTTPServer(("127.0.0.1", port), DesktopHandler)
     server.daemon_threads = True
     server.session_id = uuid4().hex
     server.performance = performance
     server.overlay = overlay
+    server.readiness = readiness
     Thread(target=server.serve_forever, name="rl-hub-service", daemon=True).start()
     return server
 
@@ -183,13 +208,16 @@ def main() -> None:
     server = None
     performance = None
     native_overlay = None
+    readiness = None
     try:
         import webview
 
         performance = PerformanceService(data_dir)
         overlay = OverlayService(data_dir, performance)
-        server = start_server(performance=performance, overlay=overlay)
+        readiness = ReadinessService(data_dir, performance, overlay)
+        server = start_server(performance=performance, overlay=overlay, readiness=readiness)
         performance.start()
+        readiness.start()
         native_overlay = NativeOverlay(overlay, ASSET_ROOT / "App Logo.png")
         native_overlay.start()
         webview.create_window(
@@ -209,6 +237,8 @@ def main() -> None:
         else:
             print(message, file=sys.stderr)
     finally:
+        if readiness is not None:
+            readiness.stop()
         if native_overlay is not None:
             native_overlay.stop()
         if performance is not None:

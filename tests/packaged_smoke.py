@@ -56,6 +56,10 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
             assert isinstance(json.load(response)["matches"], list)
         with urlopen(origin + "/performance-analytics.js", timeout=2) as response:
             assert b"performanceAnalytics" in response.read()
+        with urlopen(origin + "/readiness.js", timeout=2) as response:
+            assert b"focusRemaining" in response.read()
+        with urlopen(origin + "/api/readiness", timeout=2) as response:
+            assert json.load(response)["focusLimit"] == 5400
         with urlopen(origin + "/api/overlay", timeout=2) as response:
             overlay = json.load(response)
             assert overlay["nativeReady"], overlay["nativeError"]
