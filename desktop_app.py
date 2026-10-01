@@ -4,8 +4,10 @@ from __future__ import annotations
 import ctypes
 import logging
 import json
+from io import BytesIO
 import mimetypes
 import os
+import time
 from pathlib import Path
 import sys
 from threading import Thread
@@ -17,7 +19,7 @@ from tracker_proxy import TrackerProxyHandler
 from mmr_provider import fetch_rank_profile
 from performance_service import PerformanceService
 from overlay_service import OverlayService
-from native_overlay import NativeOverlay
+from native_overlay import NativeOverlay, render_card
 
 # The default origin stays stable; smoke tests can isolate their local service.
 APP_PORT = int(os.environ.get("RL_HUB_PORT", "18765"))
@@ -57,6 +59,28 @@ class DesktopHandler(TrackerProxyHandler):
         if parsed.path == "/api/overlay":
             overlay = getattr(self.server, "overlay", None)
             self.respond_json(200 if overlay else 503, overlay.view() if overlay else {"error": "Overlayet er ikke startet."})
+            return
+        if parsed.path == "/api/overlay/frame":
+            overlay = getattr(self.server, "overlay", None)
+            if not overlay:
+                self.respond_json(503, {"error": "Overlayet er ikke startet."})
+                return
+            from PIL import Image
+            overlay.gamebar_seen_at = time.monotonic()
+            view = overlay.view()
+            shown = view["settings"].get("renderer") == "gamebar" and (view["preview"] or (view["settings"]["enabled"] and view["phase"] != "hidden"))
+            frame = render_card(view, ASSET_ROOT / "App Logo.png") if shown else Image.new("RGBA", (440, 250))
+            buffer = BytesIO()
+            frame.save(buffer, format="PNG")
+            content = buffer.getvalue()
+            self.send_response(200)
+            self.send_header("Content-Type", "image/png")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            try:
+                self.wfile.write(content)
+            except (BrokenPipeError, ConnectionResetError):
+                pass
             return
         if parsed.path == "/api/performance":
             service = getattr(self.server, "performance", None)

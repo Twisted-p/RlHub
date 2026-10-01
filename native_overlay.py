@@ -194,7 +194,7 @@ class NativeOverlay:
     def _tick(self):
         view = self.service.view()
         target = self._target(view["preview"])
-        visible = bool(target and (view["preview"] or view["settings"]["enabled"]) and (view["preview"] or view["phase"] != "hidden"))
+        visible = bool(view["settings"].get("renderer", "desktop") == "desktop" and target and (view["preview"] or view["settings"]["enabled"]) and (view["preview"] or view["phase"] != "hidden"))
         if not visible:
             if self.service.visible:
                 self.user.ShowWindow(self.hwnd, 0)

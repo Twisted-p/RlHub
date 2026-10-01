@@ -25,11 +25,12 @@
         <section class="page-stack reveal">
           <article class="glass module is-active">
             <div class="module-header"><h3>Overlay i Rocket League</h3><span class="live-pill" id="overlay-status">Starter…</span></div>
-            <p class="module-note">Bruk <strong>Borderless / kantløst vindu</strong> i Rocket Leagues videoinnstillinger. Overlayet vises når spillet er i forgrunnen, og skjules når du bytter til andre programmer.</p>
+            <p class="module-note">Velg visningsmodus som passer spillet. For fullskjerm: installer RL Hub-widgeten, åpne <strong>Win + G</strong>, velg <strong>RL Hub</strong> og fest den med tegnestiften. Slå på klikkgjennomgang i Game Bar. RL Hub må være åpen mens du spiller.</p>
             <form id="overlay-form" class="overlay-options">
               <label class="overlay-switch"><input type="checkbox" id="overlay-enabled" /><span><strong>Aktiver overlay</strong><small>Lobby, trening og etter kamp.</small></span></label>
               <label class="overlay-switch"><input type="checkbox" id="overlay-in-match" /><span><strong>Vis statistikk under kamp</strong><small>Score, mål, assists, saves og skudd.</small></span></label>
               <div class="overlay-option-row">
+                <label class="field"><span>Visningsmodus</span><select id="overlay-renderer"><option value="desktop">Kantløst vindu / vindu</option><option value="gamebar">Fullskjerm – Xbox Game Bar</option></select></label>
                 <label class="field"><span>Plassering</span><select id="overlay-position"><option value="top-left">Øverst til venstre</option><option value="top-right">Øverst til høyre</option><option value="bottom-left">Nederst til venstre</option><option value="bottom-right">Nederst til høyre</option></select></label>
                 <label class="field"><span>Størrelse <output id="overlay-scale-label">100%</output></span><input id="overlay-scale" type="range" min="75" max="125" step="5" value="100" /></label>
                 <label class="field"><span>Rank i lobbyen</span><select id="overlay-playlist"><option value="1v1">1v1</option><option value="2v2">2v2</option><option value="3v3">3v3</option></select></label>

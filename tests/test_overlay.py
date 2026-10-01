@@ -6,6 +6,8 @@ import tempfile
 import unittest
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
+from io import BytesIO
+from PIL import Image
 
 from desktop_app import start_server
 from overlay_service import OverlayService
@@ -102,13 +104,37 @@ class OverlayTests(unittest.TestCase):
         self.assertFalse(self.overlay.view()["preview"])
 
     def test_settings_are_atomic_and_persisted(self):
-        self.overlay.configure({"position": "bottom-right", "scale": 125, "showInMatch": True})
+        self.overlay.configure({"position": "bottom-right", "scale": 125, "showInMatch": True, "renderer": "gamebar"})
         with self.assertRaises(ValueError):
             self.overlay.configure({"enabled": False, "scale": 1000})
         self.assertTrue(self.overlay.settings["enabled"])
         restored = OverlayService(self.path, self.performance)
         self.assertEqual(restored.settings["position"], "bottom-right")
         self.assertTrue(restored.settings["showInMatch"])
+        self.assertEqual(restored.settings["renderer"], "gamebar")
+
+    def test_gamebar_frame_hides_disabled_backend_and_in_match_toggle(self):
+        server = start_server(0, self.performance, self.overlay)
+        endpoint = f"http://127.0.0.1:{server.server_port}/api/overlay/frame"
+        def frame():
+            with urlopen(endpoint) as response:
+                self.assertEqual(response.headers["Content-Type"], "image/png")
+                return Image.open(BytesIO(response.read())).convert("RGBA")
+        try:
+            self.assertIsNone(frame().getbbox())
+            self.overlay.configure({"renderer": "gamebar"})
+            self.assertIsNotNone(frame().getbbox())
+            self.performance.ingest(STATE)
+            self.assertIsNone(frame().getbbox())
+            self.overlay.configure({"showInMatch": True})
+            self.assertIsNotNone(frame().getbbox())
+            self.overlay.configure({"enabled": False})
+            self.assertIsNone(frame().getbbox())
+            with self.assertRaises(ValueError):
+                self.overlay.configure({"renderer": "invalid"})
+        finally:
+            server.shutdown()
+            server.server_close()
 
     def test_api_requires_same_origin_and_rejects_invalid_settings(self):
         server = start_server(0, self.performance, self.overlay)

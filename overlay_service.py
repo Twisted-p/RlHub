@@ -10,7 +10,7 @@ import time
 from mmr_provider import fetch_rank_profile
 
 RANKED = {10: "1v1", 11: "2v2", 13: "3v3"}
-DEFAULTS = {"enabled": True, "showInMatch": False, "position": "top-left", "scale": 100, "playlist": "2v2"}
+DEFAULTS = {"enabled": True, "showInMatch": False, "position": "top-left", "scale": 100, "playlist": "2v2", "renderer": "desktop"}
 
 
 def own_player(players, identity):
@@ -43,6 +43,7 @@ class OverlayService:
         self.native_error = ""
         self.hotkey = False
         self.visible = False
+        self.gamebar_seen_at = 0
         try:
             saved = json.loads(self.file.read_text(encoding="utf-8"))
             self.configure(saved.get("settings", {}), persist=False)
@@ -87,6 +88,10 @@ class OverlayService:
                 if changes["playlist"] not in ("1v1", "2v2", "3v3"):
                     raise ValueError("Ugyldig spilleliste.")
                 settings["playlist"] = changes["playlist"]
+            if "renderer" in changes:
+                if changes["renderer"] not in ("desktop", "gamebar"):
+                    raise ValueError("Ugyldig visningsmodus.")
+                settings["renderer"] = changes["renderer"]
             self.settings = settings
             if not settings["enabled"]:
                 self.preview_until = 0
@@ -214,6 +219,7 @@ class OverlayService:
             me = own_player((match or {}).get("players", []), identity)
             return {"settings": dict(self.settings), "phase": phase, "preview": now < self.preview_until,
                     "nativeReady": self.native_ready, "nativeError": self.native_error,
+                    "gamebarConnected": bool(self.gamebar_seen_at and now - self.gamebar_seen_at < 3),
                     "hotkey": self.hotkey, "visible": self.visible, "connected": snapshot.get("connected", False),
                     "name": (identity or {}).get("name", "Koble spiller i Profile"), "playlist": playlist,
                     "rank": row["rank"] if row else "Ingen rank hentet", "mmr": row["mmr"] if row else None,

@@ -3,6 +3,9 @@ __pycache__/
 *.pyc
 build/
 dist/
+gamebar/bin/
+gamebar/obj/
+gamebar/packages/
 .env
 .env.*
 !.env.example

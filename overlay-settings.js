@@ -5,6 +5,7 @@ const overlayFields = {
   position: document.getElementById("overlay-position"),
   scale: document.getElementById("overlay-scale"),
   playlist: document.getElementById("overlay-playlist"),
+  renderer: document.getElementById("overlay-renderer"),
 };
 const overlayFeedback = document.getElementById("overlay-feedback");
 let overlayFieldsLoaded = false;
@@ -20,7 +21,7 @@ function renderOverlaySettings(data, force = false) {
     document.getElementById("overlay-scale-label").textContent = `${data.settings.scale}%`;
     overlayFieldsLoaded = true;
   }
-  document.getElementById("overlay-status").textContent = data.nativeError || (data.nativeReady ? data.settings.enabled ? data.visible ? "Overlay vises" : "Klart for spillet" : "Avslått" : "Starter…");
+  document.getElementById("overlay-status").textContent = data.settings.renderer === "gamebar" ? (data.settings.enabled ? data.gamebarConnected ? "Game Bar tilkoblet" : "Åpne RL Hub i Win + G" : "Avslått") : data.nativeError || (data.nativeReady ? data.settings.enabled ? data.visible ? "Overlay vises" : "Klart for spillet" : "Avslått" : "Starter…");
   document.getElementById("overlay-source-status").textContent = data.connected ? "Kampdata tilkoblet" : "Venter på kampdata";
   document.getElementById("overlay-hotkey").textContent = data.hotkey ? "Ctrl + Shift + O skjuler eller viser overlayet." : "Hurtigtasten er opptatt. Bruk bryteren i denne fanen.";
   document.getElementById("overlay-session").textContent = `${data.name} · ${data.playlist} · ${data.mmr ?? "—"} MMR · ${data.wins}W / ${data.losses}L denne økten`;
@@ -35,7 +36,7 @@ async function overlayAction(action, payload = {}) {
     if (!response.ok) throw new Error(data.error || "Kunne ikke oppdatere overlayet.");
     overlayDirty = false;
     renderOverlaySettings(data, true);
-    overlayFeedback.textContent = action === "preview" ? "Forhåndsvisningen vises i 20 sekunder, også utenfor spillet." : action === "reset" ? "En ny økt er startet." : "Overlay-innstillingene er lagret.";
+    overlayFeedback.textContent = action === "preview" ? data.settings.renderer === "gamebar" ? "Forhåndsvisningen vises i RL Hub-widgeten i 20 sekunder. Åpne den med Win + G." : "Forhåndsvisningen vises i 20 sekunder, også utenfor spillet." : action === "reset" ? "En ny økt er startet." : "Overlay-innstillingene er lagret.";
   } catch (error) {
     overlayFeedback.textContent = error.message;
   } finally {
@@ -44,7 +45,7 @@ async function overlayAction(action, payload = {}) {
 }
 
 function readOverlaySettings() {
-  return {enabled: overlayFields.enabled.checked, showInMatch: overlayFields.showInMatch.checked, position: overlayFields.position.value, scale: Number(overlayFields.scale.value), playlist: overlayFields.playlist.value};
+  return {enabled: overlayFields.enabled.checked, showInMatch: overlayFields.showInMatch.checked, position: overlayFields.position.value, scale: Number(overlayFields.scale.value), playlist: overlayFields.playlist.value, renderer: overlayFields.renderer.value};
 }
 overlayForm.addEventListener("input", () => {
   overlayDirty = true;
