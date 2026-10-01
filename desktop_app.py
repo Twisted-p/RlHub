@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ctypes
 import logging
+import json
 import mimetypes
 import os
 from pathlib import Path
@@ -15,6 +16,8 @@ from uuid import uuid4
 from tracker_proxy import TrackerProxyHandler
 from mmr_provider import fetch_rank_profile
 from performance_service import PerformanceService
+from overlay_service import OverlayService
+from native_overlay import NativeOverlay
 
 # The default origin stays stable; smoke tests can isolate their local service.
 APP_PORT = int(os.environ.get("RL_HUB_PORT", "18765"))
@@ -23,6 +26,7 @@ UI_FILES = {
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",
     "assets/rlhub-intro.mp4",
+    "overlay.html", "overlay-settings.js",
 }
 
 
@@ -30,7 +34,11 @@ class DesktopHandler(TrackerProxyHandler):
     source_name = "MMR-tjenesten"
 
     def fetch_profile(self, platform: str, gamertag: str, player_id: str = "") -> dict:
-        return fetch_rank_profile(platform, gamertag, player_id)
+        profile = fetch_rank_profile(platform, gamertag, player_id)
+        overlay = getattr(self.server, "overlay", None)
+        if overlay:
+            overlay.set_profile(profile, {"platform": platform, "gamertag": gamertag})
+        return profile
 
     def end_headers(self) -> None:
         # The standalone UI and API share an origin; do not enable wildcard CORS.
@@ -45,6 +53,10 @@ class DesktopHandler(TrackerProxyHandler):
             return
         if parsed.path == "/api/profile":
             super().do_GET()
+            return
+        if parsed.path == "/api/overlay":
+            overlay = getattr(self.server, "overlay", None)
+            self.respond_json(200 if overlay else 503, overlay.view() if overlay else {"error": "Overlayet er ikke startet."})
             return
         if parsed.path == "/api/performance":
             service = getattr(self.server, "performance", None)
@@ -87,12 +99,37 @@ class DesktopHandler(TrackerProxyHandler):
             pass
 
     def do_POST(self) -> None:
-        if urlparse(self.path).path != "/api/performance/setup":
+        path = urlparse(self.path).path
+        if path not in ("/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset"):
             self.respond_json(404, {"error": "Fant ikke endepunktet."})
             return
         expected_origin = f"http://127.0.0.1:{self.server.server_port}"
         if self.headers.get("Origin") != expected_origin:
-            self.respond_json(403, {"error": "Aktivering må gjøres fra RL Hub."})
+            self.respond_json(403, {"error": "Endringer må gjøres fra RL Hub."})
+            return
+        if path.startswith("/api/overlay/"):
+            overlay = getattr(self.server, "overlay", None)
+            if overlay is None:
+                self.respond_json(503, {"error": "Overlayet er ikke startet."})
+                return
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 <= length <= 32768:
+                    raise ValueError("Ugyldig forespørsel.")
+                payload = json.loads(self.rfile.read(length)) if length else {}
+                if not isinstance(payload, dict):
+                    raise ValueError("Ugyldig forespørsel.")
+                if path.endswith("/settings"):
+                    overlay.configure(payload)
+                elif path.endswith("/profile"):
+                    overlay.set_profile(payload.get("profile"), payload.get("lookup"))
+                elif path.endswith("/preview"):
+                    overlay.preview()
+                else:
+                    overlay.reset_session()
+                self.respond_json(200, overlay.view())
+            except (ValueError, TypeError):
+                self.respond_json(400, {"error": "Kunne ikke lagre overlay-innstillingene."})
             return
         service = getattr(self.server, "performance", None)
         if service is None:
@@ -104,11 +141,12 @@ class DesktopHandler(TrackerProxyHandler):
             self.respond_json(400, {"error": "Kunne ikke aktivere kampoppsummeringer. Start Rocket League én gang, lukk spillet, og prøv igjen. Kontroller at appen kan skrive til spillets innstillinger."})
 
 
-def start_server(port: int = APP_PORT, performance: PerformanceService | None = None) -> ThreadingHTTPServer:
+def start_server(port: int = APP_PORT, performance: PerformanceService | None = None, overlay: OverlayService | None = None) -> ThreadingHTTPServer:
     server = ThreadingHTTPServer(("127.0.0.1", port), DesktopHandler)
     server.daemon_threads = True
     server.session_id = uuid4().hex
     server.performance = performance
+    server.overlay = overlay
     Thread(target=server.serve_forever, name="rl-hub-service", daemon=True).start()
     return server
 
@@ -119,12 +157,16 @@ def main() -> None:
     logging.basicConfig(filename=str(data_dir / "desktop.log"), level=logging.WARNING)
     server = None
     performance = None
+    native_overlay = None
     try:
         import webview
 
         performance = PerformanceService(data_dir)
-        server = start_server(performance=performance)
+        overlay = OverlayService(data_dir, performance)
+        server = start_server(performance=performance, overlay=overlay)
         performance.start()
+        native_overlay = NativeOverlay(overlay, ASSET_ROOT / "App Logo.png")
+        native_overlay.start()
         webview.create_window(
             os.environ.get("RL_HUB_WINDOW_TITLE", "RL Hub"), f"http://127.0.0.1:{APP_PORT}/index.html",
             width=1180, height=820, min_size=(980, 680),
@@ -142,6 +184,8 @@ def main() -> None:
         else:
             print(message, file=sys.stderr)
     finally:
+        if native_overlay is not None:
+            native_overlay.stop()
         if performance is not None:
             performance.stop()
         if server is not None:

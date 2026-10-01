@@ -49,11 +49,15 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
         ImageGrab.grab(bbox=(rect.left, rect.top, rect.right, rect.bottom)).save(root / "build" / "desktop-intro-preview.png")
         time.sleep(5)  # Wait for the intro to finish and the first page paint.
         assert process.poll() is None
-        for page in ["index", "dashboard", "garage", "training", "profile", "performance"]:
+        for page in ["index", "dashboard", "garage", "training", "profile", "performance", "overlay"]:
             with urlopen(f"{origin}/{page}.html", timeout=2) as response:
                 assert b"desktop-runtime.js" in response.read()
         with urlopen(origin + "/api/performance", timeout=2) as response:
             assert isinstance(json.load(response)["matches"], list)
+        with urlopen(origin + "/api/overlay", timeout=2) as response:
+            overlay = json.load(response)
+            assert overlay["nativeReady"], overlay["nativeError"]
+            assert overlay["settings"]["enabled"]
         with urlopen(origin + "/assets/rlhub-intro.mp4", timeout=2) as response:
             assert response.headers.get("Content-Type") == "video/mp4"
             assert b"ftyp" in response.read(32)

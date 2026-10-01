@@ -2,7 +2,19 @@
 
 Last ned `RL Hub.exe` fra GitHub Releases, eller bygg den selv til `dist/RL Hub.exe`. Appen kjører i sitt eget vindu og starter lokale rank- og Performance-tjenester automatisk. Overwolf og Python trengs ikke for den ferdigbygde appen.
 
-Desktop-versjonen har dashboard, garage, trening, spilleroppslag, Performance med kampoppsummeringer og en Octane-intro. Den har foreløpig ingen ingame-overlay. Desktop-appen henter rank, divisjon og MMR for 1v1, 2v2 og 3v3 fra [mmr-api-v2](https://github.com/Kalilamodow/mmr-api-v2), på `mmr.kmdw.dev`, uten Tracker eller nettleservindu. Det er en tredjepartstjeneste og ingen garanti for oppetid eller helt ferske data. Lifetime-statistikk og kampantall leveres ikke av denne kilden. Sist lagrede statistikk beholdes ved feil og merkes som ikke oppdatert.
+## Overlay uten Overwolf
+
+Velg **Borderless / kantløst vindu** i Rocket Leagues videoinnstillinger. Åpne **Overlay** i RL Hub. Lobby, trening og etter kamp vises automatisk når Rocket League er i forgrunnen. «Vis statistikk under kamp» er en egen bryter; den er avslått som standard. Du kan velge hjørne, størrelse og hvilken ranked-spilleliste som vises i lobbyen. Lagre endringene, eller bruk forhåndsvisningen for å se plasseringen.
+
+**Ctrl + Shift + O** skjuler eller viser overlayet uten å bytte vindu. Hvis hurtigtasten er opptatt av et annet program, vises dette i appen og bryteren fungerer fortsatt. Overlayet tar ikke fokus og lar museklikk gå videre til spillet. Det skjules ved bytte til andre programmer, bortsett fra en aktiv forhåndsvisning på 20 sekunder. Denne versjonen støtter kantløst vindu og vindusmodus; eksklusiv fullskjerm er ikke en støttet visningsmodus.
+
+Rank, start-MMR, endring gjennom økten, seiere/tap, streak og anslag for neste rank vises i lobbyen. Fullførte ranked-kamper fra Performance teller i økten; andre kamper og kamper du forlater før slutt teller ikke som ranked-resultater. «Start ny økt» nullstiller tellingen og setter en ny MMR-baseline. Økten og innstillingene lagres i `%LOCALAPPDATA%/RL Hub/overlay.json`.
+
+Treningstimeren og kampstatistikken bruker Stats API-tilkoblingen som aktiveres i Performance. Rank oppdateres fra MMR-tjenesten etter fullførte ranked-kamper. Oppdateringen kan være forsinket; endringer vises bare når kilden faktisk har levert dem. Overlayet beregner ikke en MMR-endring fra kampens score.
+
+Visningen er et separat Win32-vindu med alfagjennomsiktighet, klikkgjennomgang og ingen aktivering. Det er ingen spillinjeksjon eller Overwolf-avhengighet. `tests/overlay_ui_smoke.py` kontrollerer innstillinger, synlig kort, vindusstiler, kampbryter og avslutning med isolert lagring. Ekte treningsdata og tegning over Rocket League ble også bekreftet under utviklingen.
+
+Desktop-versjonen har dashboard, garage, trening, spilleroppslag, Performance med kampoppsummeringer, et Windows-overlay og en Octane-intro. Desktop-appen henter rank, divisjon og MMR for 1v1, 2v2 og 3v3 fra [mmr-api-v2](https://github.com/Kalilamodow/mmr-api-v2), på `mmr.kmdw.dev`, uten Tracker eller nettleservindu. Det er en tredjepartstjeneste og ingen garanti for oppetid eller helt ferske data. Lifetime-statistikk og kampantall leveres ikke av denne kilden. Sist lagrede statistikk beholdes ved feil og merkes som ikke oppdatert.
 
 Brukeren velger plattform, skriver gamertag og trykker **Hent rank**. Spiller-ID håndteres i bakgrunnen og kan ikke endres i skjemaet. Appen finner ID fra Rocket Leagues lokale login-logg, med eksakt navnematching, og husker den etter vellykket oppslag. Lagret ID brukes bare når både plattform og gamertag stemmer. Loggen brukes bare til å lese offentlig spiller-ID; innloggingstokens og passord brukes ikke. Hvis kontoen ikke finnes i loggene, må brukeren starte spillet med kontoen én gang. Vilkårlige kontoer som aldri har vært brukt på maskinen kan foreløpig ikke slås opp bare med gamertag. Bare offentlig spiller-ID sendes til MMR-tjenesten.
 

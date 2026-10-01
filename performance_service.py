@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 import shutil
 import uuid
+import time
 from threading import Event, RLock, Thread
 
 import websocket
@@ -113,6 +114,8 @@ class PerformanceService:
         self.parsed_events = 0
         self.ignored_messages = 0
         self.current = None
+        self.live = None
+        self.live_at = 0
         self.replay = False
         self.history = []
         try:
@@ -160,6 +163,8 @@ class PerformanceService:
                     "activeMatch": bool(self.current and self.current["players"] and not self.current.get("finished")),
                     "lastEventName": self.last_event_name, "receivedMessages": self.received_messages,
                     "parsedEvents": self.parsed_events, "ignoredMessages": self.ignored_messages,
+                    "live": deepcopy(self.live), "liveAge": time.monotonic() - self.live_at if self.live_at else None,
+                    "currentMatch": deepcopy(self.current), "replay": self.replay,
                     "matches": deepcopy(self.history)}
 
     def _listen(self):
@@ -193,6 +198,7 @@ class PerformanceService:
                 with self.lock:
                     self.connected = False
                     self.current = None  # Never mix snapshots across connections.
+                    self.live = None
                 self.connection = None
                 if connection:
                     connection.close(timeout=0)
@@ -220,12 +226,23 @@ class PerformanceService:
             game = data.get("Game", {})
             if event == "ReplayCreated":
                 self.current = None
+                self.live = None
                 self.replay = True
                 return
             if event == "MatchCreated":
                 self.replay = False
             if self.replay or game.get("bReplay"):
                 return
+            if event in ("MatchCreated", "MatchDestroyed"):
+                self.live = None
+            if event == "UpdateState":
+                self.live = {"players": [self._player(row) for row in data.get("Players", []) if isinstance(row, dict)],
+                             "teams": [{"name": row.get("Name", ""), "team": row.get("TeamNum"), "score": row.get("Score", 0)}
+                                       for row in game.get("Teams", []) if isinstance(row, dict)],
+                             "playlist": game.get("PlaylistId"), "seconds": game.get("TimeSeconds"),
+                             "overtime": bool(game.get("bOvertime")), "arena": game.get("Arena", "")}
+                self.live["training"] = bool(self.live["players"]) and (len(self.live["teams"]) < 2 or len(self.live["players"]) < 2)
+                self.live_at = time.monotonic()
             match_id = data.get("MatchGuid")
             if event == "UpdateState" and (len(game.get("Teams", [])) < 2 or len(data.get("Players", [])) < 2):
                 return  # A training snapshot is not a completed match.

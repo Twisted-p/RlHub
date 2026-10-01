@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Overlay</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="app-ready" data-page="overlay">
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+      <aside class="sidebar">
+        <a class="brand" href="./index.html"><img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" /></a>
+        <nav class="nav">
+          <a class="nav-link" href="./dashboard.html">Dashboard</a>
+          <a class="nav-link" href="./garage.html">Garage</a>
+          <a class="nav-link" href="./training.html">Training</a>
+          <a class="nav-link" href="./performance.html">Performance</a>
+          <a class="nav-link" href="./profile.html">Profile</a>
+        </nav>
+        <div class="status-card glass"><p class="eyebrow">Mens du spiller</p><h3>Alt på ett blikk.</h3><p>Rank i lobbyen, tid i trening og resultat etter kamp.</p></div>
+      </aside>
+      <main class="main-content">
+        <header class="page-header glass reveal"><div><p class="eyebrow">Overlay</p><h1>Ta RL Hub med inn i spillet.</h1><p class="hero-text">Velg hva du vil se. Overlayet lar museklikk gå videre til spillet.</p></div></header>
+        <section class="page-stack reveal">
+          <article class="glass module is-active">
+            <div class="module-header"><h3>Overlay i Rocket League</h3><span class="live-pill" id="overlay-status">Starter…</span></div>
+            <p class="module-note">Bruk <strong>Borderless / kantløst vindu</strong> i Rocket Leagues videoinnstillinger. Overlayet vises når spillet er i forgrunnen, og skjules når du bytter til andre programmer.</p>
+            <form id="overlay-form" class="overlay-options">
+              <label class="overlay-switch"><input type="checkbox" id="overlay-enabled" /><span><strong>Aktiver overlay</strong><small>Lobby, trening og etter kamp.</small></span></label>
+              <label class="overlay-switch"><input type="checkbox" id="overlay-in-match" /><span><strong>Vis statistikk under kamp</strong><small>Score, mål, assists, saves og skudd.</small></span></label>
+              <div class="overlay-option-row">
+                <label class="field"><span>Plassering</span><select id="overlay-position"><option value="top-left">Øverst til venstre</option><option value="top-right">Øverst til høyre</option><option value="bottom-left">Nederst til venstre</option><option value="bottom-right">Nederst til høyre</option></select></label>
+                <label class="field"><span>Størrelse <output id="overlay-scale-label">100%</output></span><input id="overlay-scale" type="range" min="75" max="125" step="5" value="100" /></label>
+                <label class="field"><span>Rank i lobbyen</span><select id="overlay-playlist"><option value="1v1">1v1</option><option value="2v2">2v2</option><option value="3v3">3v3</option></select></label>
+              </div>
+              <div class="overlay-actions"><button type="submit" class="primary-button compact-button">Lagre</button><button type="button" id="overlay-preview" class="secondary-button compact-button">Vis forhåndsvisning</button><button type="button" id="overlay-reset" class="secondary-button compact-button">Start ny økt</button></div>
+            </form>
+            <p class="module-note" id="overlay-feedback" role="status" aria-live="polite"></p>
+            <p class="module-note" id="overlay-hotkey">Ctrl + Shift + O skjuler eller viser overlayet.</p>
+          </article>
+          <article class="glass module is-active"><div class="module-header"><h3>Rank og kampdata</h3><span class="live-pill" id="overlay-source-status">Venter</span></div><p class="module-note">Hent rank i <a href="./profile.html">Profile</a>. Aktiver kampoppsummeringer i <a href="./performance.html">Performance</a> for trening og kampstatistikk. MMR oppdateres automatisk etter ranked-kamper; kilden kan være forsinket.</p><p id="overlay-session" class="module-note"></p></article>
+        </section>
+      </main>
+    </div>
+    <script src="./script.js"></script>
+    <script src="./overlay-settings.js"></script>
+  </body>
+</html>

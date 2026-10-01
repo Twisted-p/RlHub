@@ -9,3 +9,28 @@ document.querySelectorAll("a[href]").forEach((link) => {
     link.removeAttribute("target");
   }
 });
+
+const desktopNav = document.querySelector(".nav");
+if (desktopNav) {
+  const overlayLink = document.createElement("a");
+  overlayLink.className = "nav-link" + (document.body.dataset.page === "overlay" ? " active" : "");
+  overlayLink.href = "./overlay.html";
+  overlayLink.textContent = "Overlay";
+  desktopNav.append(overlayLink);
+}
+
+let sentOverlayProfile = "";
+async function syncOverlayProfile() {
+  try {
+    const profile = JSON.parse(localStorage.getItem("rlhub:trackerProfile"));
+    const lookup = JSON.parse(localStorage.getItem("rlhub:lastProfileQuery"));
+    if (!profile || !profile.playerId || !Array.isArray(profile.ranks)) return;
+    const payload = JSON.stringify({profile, lookup});
+    if (payload === sentOverlayProfile) return;
+    const response = await fetch("./api/overlay/profile", {method: "POST", headers: {"Content-Type": "application/json"}, body: payload});
+    if (response.ok) sentOverlayProfile = payload;
+  } catch (_) { /* The main app continues to work if the overlay is unavailable. */ }
+}
+window.addEventListener("storage", syncOverlayProfile);
+window.addEventListener("DOMContentLoaded", syncOverlayProfile);
+window.setInterval(syncOverlayProfile, 4000);

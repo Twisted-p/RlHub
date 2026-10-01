@@ -1,6 +1,6 @@
 # RL Hub
 
-En standalone Rocket League-app for Windows, uten Overwolf. Den samler rank/MMR, kampoppsummeringer, garage og trening. Ved oppstart kjører en 6,6 sekunders intro der Octane powerslider og blir til RL Hub-logoen.
+En standalone Rocket League-app for Windows, uten Overwolf. Den samler rank/MMR, kampoppsummeringer, garage og trening, med et eget Windows-overlay. Ved oppstart kjører en 6,6 sekunders intro der Octane powerslider og blir til RL Hub-logoen.
 
 ## Bruke den ferdige appen
 
@@ -34,6 +34,7 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 .\.venv\Scripts\python.exe tests/splash_ui_smoke.py
 .\.venv\Scripts\python.exe tests/performance_ui_smoke.py
+.\.venv\Scripts\python.exe tests/overlay_ui_smoke.py
 .\.venv\Scripts\python.exe tests/packaged_smoke.py
 ```
 
@@ -46,6 +47,7 @@ UI-testene krever Windows og WebView2. Testen av exe-filen bruker egen port, ege
 - `desktop-runtime.js`: tilpasning for standalone-versjonen.
 - `mmr_provider.py`: rank og MMR via tredjepartstjenesten `mmr.kmdw.dev`.
 - `performance_service.py`, `performance.js`, `performance.html`: Rocket Leagues lokale Stats API og kampoppsummeringer.
+- `native_overlay.py`, `overlay_service.py`, `overlay.html`, `overlay-settings.js`: Windows-overlay, rank-økter og innstillinger.
 - `assets/rlhub-intro.mp4`, `App Logo.png`: intro og logo, inkludert i exe-filen.
 - `RL Hub.spec`, `requirements*.txt`: bygging og avhengigheter.
 - `Ball modell`, `Fennec modell`: modellfiler med teksturer, kilder og lisensinformasjon for videre utvikling.
