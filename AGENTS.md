@@ -2,6 +2,8 @@
 
 The main product is the standalone Windows app. Read README.md and STANDALONE_SETUP.md before changing its startup, rank lookup or Performance collection.
 
+On a new machine or when continuing development, read CODEX_HANDOFF.md for build commands, tested behavior, the code map and fullscreen-widget setup.
+
 - Run `desktop_app.py` with Python 3.13 and the dependencies in `requirements-desktop.txt`. Build using `requirements-build.txt` and `RL Hub.spec`.
 - Keep the local UI/API on one origin. Port 18765 preserves existing WebView storage; use an ephemeral port for isolated service tests.
 - When adding a runtime asset, update both `desktop_app.py`'s `UI_FILES` allowlist and `RL Hub.spec`'s asset list. Keep subdirectories intact in the bundle.

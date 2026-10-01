@@ -2,7 +2,7 @@ name: Build Game Bar overlay
 on:
   workflow_dispatch:
   push:
-    branches: [codex/standalone-overlay]
+    branches: [main, codex/standalone-overlay]
     paths: ['gamebar/**/*.cs', 'gamebar/**/*.xaml', 'gamebar/**/*.csproj', 'gamebar/**/*.appxmanifest', 'gamebar/**/*.rd.xml', 'gamebar/Assets/**', '.github/workflows/gamebar.yml']
 permissions:
   contents: read

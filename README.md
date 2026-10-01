@@ -16,6 +16,8 @@ Dashboard viser **Dagens spillform** med faktisk treningstid, siste fem egne ran
 
 ## Fortsette utvikling på en annen maskin
 
+Åpne repoet i Codex og be den lese [CODEX_HANDOFF.md](CODEX_HANDOFF.md) og [AGENTS.md](AGENTS.md). Guiden dekker installasjon, bygging, tester, fullskjerm-widget, kodekart og videre utvikling. `main` inneholder den samlede nyeste versjonen.
+
 Du trenger Windows, Git, Python 3.13 og [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
 
 ```powershell
@@ -59,6 +61,8 @@ Med Node.js kan du også kjøre `node tests/performance_analytics.test.cjs` for 
 - `performance_service.py`, `performance.js`, `performance.html`: Rocket Leagues lokale Stats API og kampoppsummeringer.
 - `native_overlay.py`, `overlay_service.py`, `overlay.html`, `overlay-settings.js`: Windows-overlay, rank-økter og innstillinger.
 - `readiness_service.py`, `readiness.js`: automatisk økt, spillform, femkampers blokker og pause-/treningstimer.
+- `goals_service.py`, `goals.js`, `goals.html`: rankmål for 1v1/2v2/3v3 og anslått MMR-avstand/seiersbehov.
+- `CODEX_HANDOFF.md`, `AGENTS.md`: instrukser til Codex ved bygging og videre utvikling på en ny maskin.
 - `assets/rlhub-intro.mp4`, `App Logo.png`: intro og logo, inkludert i exe-filen.
 - `RL Hub.spec`, `requirements*.txt`: bygging og avhengigheter.
 - `Ball modell`, `Fennec modell`: modellfiler med teksturer, kilder og lisensinformasjon for videre utvikling.
