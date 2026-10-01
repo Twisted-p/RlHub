@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="app-ready" data-page="profile">
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">
+          <img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" />
+        </a>
+
+        <nav class="nav">
+          <a class="nav-link" href="./dashboard.html">Dashboard</a>
+          <a class="nav-link" href="./garage.html">Garage</a>
+          <a class="nav-link" href="./training.html">Training</a>
+          <a class="nav-link" href="./performance.html">Performance</a>
+          <a class="nav-link active" href="./profile.html">Profile</a>
+        </nav>
+
+        <div class="status-card glass">
+          <p class="eyebrow">Dagens status</p>
+          <h3 id="status-title">Spillerbilde</h3>
+          <p id="status-copy">Denne boksen gir deg en rask oppsummering mens du ser på rank, vaner og progresjon.</p>
+          <div class="status-bars">
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Readiness</span>
+                <strong id="status-flow">72%</strong>
+              </div>
+              <span class="status-bar-fill" id="status-flow-bar" style="--fill: 72%"></span>
+            </div>
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Routine</span>
+                <strong id="status-routine">2 / 4</strong>
+              </div>
+              <span class="status-bar-fill" id="status-routine-bar" style="--fill: 50%"></span>
+            </div>
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Preset</span>
+                <strong id="status-preset">Neo Tokyo Fennec</strong>
+              </div>
+              <span class="status-bar-fill" id="status-preset-bar" style="--fill: 88%"></span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="page-header glass reveal">
+          <div>
+            <p class="eyebrow">Profile</p>
+            <h1>Se Rocket League-rank og MMR direkte i appen.</h1>
+            <p class="hero-text">
+              Velg plattform og skriv inn gamertag for å hente spillerdata.
+            </p>
+          </div>
+        </header>
+
+        <section class="page-stack reveal">
+          <article class="glass module is-active">
+            <div class="module-header">
+              <div>
+                <p class="eyebrow">Rank profile</p>
+                <h3>Spilleroppslag</h3>
+              </div>
+            </div>
+            <div class="profile-shell">
+              <form class="profile-lookup" id="profile-form">
+                <label class="field-group">
+                  <span>Plattform</span>
+                  <select class="profile-input" id="profile-platform">
+                    <option value="epic">Epic Games</option>
+                    <option value="steam">Steam</option>
+                    <option value="xbl">Xbox Live</option>
+                    <option value="psn">PlayStation Network</option>
+                    <option value="switch">Nintendo Switch</option>
+                  </select>
+                </label>
+                <label class="field-group field-grow">
+                  <span>Gamertag</span>
+                  <input
+                    class="profile-input"
+                    id="profile-gamertag"
+                    type="text"
+                    placeholder="Skriv inn gamertag"
+                    autocomplete="off"
+                  />
+                </label>
+                <button class="primary-button compact-button" id="profile-submit" type="submit">
+                  Hent stats
+                </button>
+              </form>
+              <div class="profile-feedback">
+                <p class="profile-source" id="profile-source">Kilde: Tracker Network</p>
+                <p class="profile-status" id="profile-status">
+                  Skriv inn gamertag og velg plattform for å hente Rocket League-data.
+                </p>
+                <a class="ghost-button compact-button" id="tracker-profile-link" target="_blank" rel="noopener noreferrer" hidden>Åpne profilen på Tracker ↗</a>
+              </div>
+              <div class="profile-card">
+                <div class="identity-row">
+                  <div class="avatar-badge" id="profile-avatar">RL</div>
+                  <div>
+                    <strong id="profile-name">RL Hub Player</strong>
+                    <p id="profile-tagline">Smart grinding, clean presets og full oversikt.</p>
+                  </div>
+                </div>
+                <div class="profile-stats" id="profile-stats"></div>
+              </div>
+              <div class="rank-list" id="rank-list"></div>
+              <div class="activity-feed" id="activity-feed"></div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

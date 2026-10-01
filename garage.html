@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Garage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="app-ready" data-page="garage">
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">
+          <img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" />
+        </a>
+
+        <nav class="nav">
+          <a class="nav-link" href="./dashboard.html">Dashboard</a>
+          <a class="nav-link active" href="./garage.html">Garage</a>
+          <a class="nav-link" href="./training.html">Training</a>
+          <a class="nav-link" href="./performance.html">Performance</a>
+          <a class="nav-link" href="./profile.html">Profile</a>
+        </nav>
+
+        <div class="status-card glass">
+          <p class="eyebrow">Dagens status</p>
+          <h3 id="status-title">Aktivt biloppsett</h3>
+          <p id="status-copy">Denne visningen holder fokus på presetet du bruker akkurat nå og hvor komfortabelt det føles.</p>
+          <div class="status-bars">
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Readiness</span>
+                <strong id="status-flow">72%</strong>
+              </div>
+              <span class="status-bar-fill" id="status-flow-bar" style="--fill: 72%"></span>
+            </div>
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Routine</span>
+                <strong id="status-routine">2 / 4</strong>
+              </div>
+              <span class="status-bar-fill" id="status-routine-bar" style="--fill: 50%"></span>
+            </div>
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Preset</span>
+                <strong id="status-preset">Neo Tokyo Fennec</strong>
+              </div>
+              <span class="status-bar-fill" id="status-preset-bar" style="--fill: 88%"></span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="page-header glass reveal">
+          <div>
+            <p class="eyebrow">Garage</p>
+            <h1>Bytt builds uten at resten av appen kommer i veien.</h1>
+            <p class="hero-text">
+              Her ligger presetene dine i en egen side så du kan holde fullt
+              fokus på biloppsett og stilvalg.
+            </p>
+          </div>
+        </header>
+
+        <section class="page-stack reveal">
+          <article class="glass module is-active">
+            <div class="module-header">
+              <div>
+                <p class="eyebrow">Garage line-up</p>
+                <h3>Preset vault</h3>
+              </div>
+              <button class="text-button" id="garage-action" type="button">Velg build</button>
+            </div>
+            <div class="garage-layout">
+              <div class="preset-list" id="preset-list"></div>
+              <div class="preset-preview" id="preset-preview"></div>
+            </div>
+            <form class="garage-form" id="garage-form">
+              <label class="field-group">
+                <span>Preset navn</span>
+                <input class="profile-input" id="preset-name-input" type="text" placeholder="F.eks. Ranked Fennec" />
+              </label>
+              <label class="field-group">
+                <span>Bil</span>
+                <select class="profile-input" id="preset-car-input">
+                  <option>Fennec</option>
+                  <option>Octane</option>
+                  <option>Dominus</option>
+                  <option>Breakout</option>
+                </select>
+              </label>
+              <label class="field-group">
+                <span>Farger</span>
+                <input class="profile-input" id="preset-theme-input" type="text" placeholder="Cobalt / Orange" />
+              </label>
+              <label class="field-group">
+                <span>Wheels</span>
+                <input class="profile-input" id="preset-wheels-input" type="text" placeholder="Cristiano" />
+              </label>
+              <label class="field-group">
+                <span>Boost</span>
+                <input class="profile-input" id="preset-boost-input" type="text" placeholder="Standard Blue" />
+              </label>
+              <label class="field-group">
+                <span>Decal</span>
+                <input class="profile-input" id="preset-decal-input" type="text" placeholder="Clean finish" />
+              </label>
+              <label class="field-group form-wide">
+                <span>Notat</span>
+                <input class="profile-input" id="preset-note-input" type="text" placeholder="Hva brukes builden til?" />
+              </label>
+              <button class="primary-button compact-button" type="submit">Lagre preset</button>
+            </form>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

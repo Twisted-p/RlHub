@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Performance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="app-ready" data-page="performance">
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+      <aside class="sidebar">
+        <a class="brand" href="./index.html"><img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" /></a>
+        <nav class="nav">
+          <a class="nav-link" href="./dashboard.html">Dashboard</a>
+          <a class="nav-link" href="./garage.html">Garage</a>
+          <a class="nav-link" href="./training.html">Training</a>
+          <a class="nav-link active" href="./performance.html">Performance</a>
+          <a class="nav-link" href="./profile.html">Profile</a>
+        </nav>
+        <div class="status-card glass">
+          <p class="eyebrow">Etter kampen</p>
+          <h3>Se hva du bidro med.</h3>
+          <p>Oppsummeringer fra Rocket Leagues egen kampstatistikk. De siste 100 kampene lagres på maskinen din.</p>
+        </div>
+      </aside>
+      <main class="main-content">
+        <header class="page-header glass reveal">
+          <div>
+            <p class="eyebrow">Performance</p>
+            <h1>Ta med deg læringen fra siste kamp.</h1>
+            <p class="hero-text">Resultat, spillerbidrag og kamphistorikk — samlet automatisk mens RL Hub er åpen.</p>
+          </div>
+        </header>
+        <section class="page-stack reveal">
+          <article class="glass module is-active">
+            <div class="module-header"><h3>Kampoppsummeringer</h3><span class="live-pill" id="performance-connection">Kobler til</span></div>
+            <p class="module-note" id="performance-status" role="status" aria-live="polite">Sjekker tilkoblingen til Rocket League…</p>
+            <div class="performance-setup" id="performance-setup" hidden>
+              <p>Aktiver kampoppsummeringer én gang, og start Rocket League på nytt. Deretter lagres avsluttede kamper automatisk.</p>
+              <button class="primary-button compact-button" id="performance-enable" type="button">Aktiver kampoppsummeringer</button>
+            </div>
+          </article>
+          <div class="performance-layout">
+            <article class="glass module is-active performance-detail" id="performance-detail">
+              <p class="eyebrow">Din neste kamp</p><h3>Ingen kamper lagret ennå</h3>
+              <p>Spill en kamp med RL Hub åpen. Oppsummeringen dukker opp her når kampen er ferdig.</p>
+            </article>
+            <aside class="glass module is-active performance-history">
+              <p class="eyebrow">Kamphistorikk</p><h3>Siste kamper</h3>
+              <div id="performance-history"><p class="module-note">Avsluttede kamper vises her.</p></div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="./script.js"></script>
+    <script src="./performance.js"></script>
+  </body>
+</html>

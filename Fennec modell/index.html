@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub</title>
+    <meta
+      name="description"
+      content="RL Hub samler Rocket League-inspirerte verktøy, oversikter og widgets i en lett og clean app."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">
+            <span></span>
+          </div>
+          <div>
+            <p class="eyebrow">Rocket League Suite</p>
+            <h1>RL Hub</h1>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-link active" data-target="dashboard">Dashboard</button>
+          <button class="nav-link" data-target="garage">Garage</button>
+          <button class="nav-link" data-target="training">Training</button>
+          <button class="nav-link" data-target="market">Market</button>
+        </nav>
+
+        <div class="status-card glass">
+          <p class="eyebrow">Session Pulse</p>
+          <h2>Champ vibes</h2>
+          <p>
+            Hold styr på presets, trading og treningsøkter i én clean overflate.
+          </p>
+          <div class="status-bars">
+            <span style="--fill: 78%"></span>
+            <span style="--fill: 56%"></span>
+            <span style="--fill: 91%"></span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="hero glass reveal">
+          <div class="hero-copy">
+            <p class="eyebrow">Alt samlet på ett sted</p>
+            <h2>En lett, animert hub for Rocket League-flyt</h2>
+            <p class="hero-text">
+              Inspirert av følelsen RL Garage ga: raske oversikter, clean cards,
+              smarte widgets og en UI som føles sporty i stedet for tung.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-button" id="explore-button">Utforsk huben</button>
+              <button class="ghost-button" id="modules-button">Se moduler</button>
+            </div>
+          </div>
+
+          <section class="hero-panel">
+            <div class="orbital-ring"></div>
+            <div class="car-card glass">
+              <p class="eyebrow">Featured preset</p>
+              <h3>Neo Tokyo Breakout</h3>
+              <p class="meta-line">Titanium White boost · Cobalt trim · 1.2k views</p>
+              <div class="preset-stats">
+                <div>
+                  <span>Speed feel</span>
+                  <strong>94</strong>
+                </div>
+                <div>
+                  <span>Clean factor</span>
+                  <strong>88</strong>
+                </div>
+                <div>
+                  <span>Flex level</span>
+                  <strong>76</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+        </header>
+
+        <section class="section-heading reveal" id="modules-section">
+          <div>
+            <p class="eyebrow">Quick view</p>
+            <h2>Moduler som gjør RL Hub nyttig fra dag én</h2>
+          </div>
+          <div class="chip-row">
+            <span class="chip active">Live layout</span>
+            <span class="chip">Mobile ready</span>
+            <span class="chip">Rocket League feel</span>
+          </div>
+        </section>
+
+        <section class="card-grid reveal">
+          <article class="feature-card glass panel active" data-panel="dashboard">
+            <div class="feature-top">
+              <p class="eyebrow">Dashboard</p>
+              <span class="badge">Core</span>
+            </div>
+            <h3>Rank, presets og aktivitet i én flate</h3>
+            <p>
+              En home-screen med viktige tall, widgets og snarveier så appen blir
+              lett å bruke hver dag.
+            </p>
+          </article>
+
+          <article class="feature-card glass panel" data-panel="garage">
+            <div class="feature-top">
+              <p class="eyebrow">Garage</p>
+              <span class="badge">Style</span>
+            </div>
+            <h3>Byggsenter for biler og favoritt-designs</h3>
+            <p>
+              Samle presets, farger, boosts og wheels med preview-kort og raske
+              favoritter.
+            </p>
+          </article>
+
+          <article class="feature-card glass panel" data-panel="training">
+            <div class="feature-top">
+              <p class="eyebrow">Training</p>
+              <span class="badge">Skill</span>
+            </div>
+            <h3>Treningsrotasjon for mechanics og consistency</h3>
+            <p>
+              Lag daglige rutiner med aerials, recoveries og shooting packs i
+              samme hub.
+            </p>
+          </article>
+
+          <article class="feature-card glass panel" data-panel="market">
+            <div class="feature-top">
+              <p class="eyebrow">Market</p>
+              <span class="badge">Watchlist</span>
+            </div>
+            <h3>Oversikt for items, ønsker og prisfølelse</h3>
+            <p>
+              Track populære items, watchlists og markedssignaler i et rolig og
+              oversiktlig design.
+            </p>
+          </article>
+        </section>
+
+        <section class="dashboard-layout reveal" id="dashboard-section">
+          <div class="left-column">
+            <article class="glass module spotlight" data-view="dashboard">
+              <div class="module-header">
+                <div>
+                  <p class="eyebrow">Today</p>
+                  <h3>Aktiv økt</h3>
+                </div>
+                <span class="live-pill">Live focus</span>
+              </div>
+              <div class="progress-ring-wrap">
+                <div class="progress-ring">
+                  <div class="progress-core">
+                    <strong>72%</strong>
+                    <span>Flow</span>
+                  </div>
+                </div>
+                <div class="spotlight-list">
+                  <div>
+                    <span>Warmup</span>
+                    <strong>15 min</strong>
+                  </div>
+                  <div>
+                    <span>Air roll reps</span>
+                    <strong>34/50</strong>
+                  </div>
+                  <div>
+                    <span>Ranked queue</span>
+                    <strong>3 wins</strong>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="glass module" data-view="garage">
+              <div class="module-header">
+                <div>
+                  <p class="eyebrow">Garage line-up</p>
+                  <h3>Preset cards</h3>
+                </div>
+                <button class="text-button">Vis alle</button>
+              </div>
+              <div class="preset-grid">
+                <div class="preset-tile">
+                  <span class="tile-glow orange"></span>
+                  <strong>Octane Storm</strong>
+                  <p>Fennec wheels · sunset paint</p>
+                </div>
+                <div class="preset-tile">
+                  <span class="tile-glow teal"></span>
+                  <strong>Ice Circuit</strong>
+                  <p>Dominus cleanline · frosty boost</p>
+                </div>
+                <div class="preset-tile">
+                  <span class="tile-glow blue"></span>
+                  <strong>Zero Ping</strong>
+                  <p>Breakout glide · cobalt edge</p>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="right-column">
+            <article class="glass module" data-view="training">
+              <div class="module-header">
+                <div>
+                  <p class="eyebrow">Training queue</p>
+                  <h3>Dagens rotasjon</h3>
+                </div>
+              </div>
+              <div class="stack-list">
+                <div class="stack-item">
+                  <div>
+                    <strong>Fast aerial ladder</strong>
+                    <p>Reaksjon, høyde og recovery</p>
+                  </div>
+                  <span>12 min</span>
+                </div>
+                <div class="stack-item">
+                  <div>
+                    <strong>Wall reads</strong>
+                    <p>Timing fra sidevegg og backboard</p>
+                  </div>
+                  <span>18 min</span>
+                </div>
+                <div class="stack-item">
+                  <div>
+                    <strong>Shot consistency</strong>
+                    <p>Lav boost, raske touch og rebound</p>
+                  </div>
+                  <span>20 min</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="glass module" data-view="market">
+              <div class="module-header">
+                <div>
+                  <p class="eyebrow">Market pulse</p>
+                  <h3>Watchlist</h3>
+                </div>
+              </div>
+              <div class="ticker-list" id="ticker-list">
+                <div class="ticker-item">
+                  <span>Black Dieci</span>
+                  <strong>Stable</strong>
+                </div>
+                <div class="ticker-item">
+                  <span>Dueling Dragons</span>
+                  <strong>Rising</strong>
+                </div>
+                <div class="ticker-item">
+                  <span>TW Octane</span>
+                  <strong>Hot</strong>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

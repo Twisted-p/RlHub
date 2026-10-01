@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="app-ready" data-page="dashboard">
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">
+          <img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" />
+        </a>
+
+        <nav class="nav">
+          <a class="nav-link active" href="./dashboard.html">Dashboard</a>
+          <a class="nav-link" href="./garage.html">Garage</a>
+          <a class="nav-link" href="./training.html">Training</a>
+          <a class="nav-link" href="./performance.html">Performance</a>
+          <a class="nav-link" href="./profile.html">Profile</a>
+        </nav>
+
+        <div class="status-card glass">
+          <p class="eyebrow">Dagens status</p>
+          <h3 id="status-title">Lokal readiness</h3>
+          <p id="status-copy">Basert på Training-progress, warmup-tid og aktiv Garage-preset. Dette er ikke en offisiell Rocket League-stat.</p>
+          <div class="status-bars">
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Readiness</span>
+                <strong id="status-flow">72%</strong>
+              </div>
+              <span class="status-bar-fill" id="status-flow-bar" style="--fill: 72%"></span>
+            </div>
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Routine</span>
+                <strong id="status-routine">2 / 4</strong>
+              </div>
+              <span class="status-bar-fill" id="status-routine-bar" style="--fill: 50%"></span>
+            </div>
+            <div class="status-row">
+              <div class="status-meta">
+                <span>Preset</span>
+                <strong id="status-preset">Neo Tokyo Fennec</strong>
+              </div>
+              <span class="status-bar-fill" id="status-preset-bar" style="--fill: 88%"></span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="page-header glass reveal">
+          <div>
+            <p class="eyebrow">For dagens økt</p>
+            <h1>Se hva du skal fokusere på før du hopper inn i kamp.</h1>
+            <p class="hero-text">
+              Her får du en rask sjekk på formen din, warmupen og hva som bør
+              være hovedfokuset ditt akkurat nå.
+            </p>
+          </div>
+        </header>
+
+        <section class="page-stack reveal">
+          <article class="glass module spotlight is-active">
+            <div class="module-header">
+              <div>
+                <p class="eyebrow">Today</p>
+                <h3>Aktiv økt</h3>
+              </div>
+              <span class="live-pill">Live focus</span>
+            </div>
+            <p class="module-note" id="overwolf-status-note">
+              Lokal readiness: basert på Training-progress, warmup-tid og aktiv Garage-preset. Ikke en offisiell Rocket League-stat.
+            </p>
+            <div class="progress-ring-wrap">
+              <div class="progress-ring">
+                <div class="progress-core">
+                  <strong id="flow-score">72%</strong>
+                  <span>Readiness</span>
+                </div>
+              </div>
+              <div class="spotlight-list">
+                <div>
+                  <span>Kilde</span>
+                  <strong id="live-source">Garage + Training</strong>
+                </div>
+                <div>
+                  <span>Warmup</span>
+                  <strong id="live-mode">Ikke i kamp</strong>
+                </div>
+                <div>
+                  <span>Aktiv preset</span>
+                  <strong id="live-rank">Ingen preset valgt</strong>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub | Overlay Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./overwolf/overlay.css" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        overflow: auto;
+        background: #061423;
+      }
+
+      body {
+        display: block;
+        padding: 0;
+      }
+
+      .mock-page {
+        min-height: 100vh;
+        padding: 42px;
+        background:
+          radial-gradient(circle at 16% 12%, rgba(75, 171, 255, 0.18), transparent 28%),
+          radial-gradient(circle at 84% 18%, rgba(255, 126, 43, 0.18), transparent 30%),
+          linear-gradient(180deg, #071527 0%, #061321 48%, #09241f 100%);
+      }
+
+      .mock-header {
+        max-width: 920px;
+        margin-bottom: 28px;
+      }
+
+      .mock-header .eyebrow {
+        color: #5ff3e2;
+      }
+
+      .mock-header h1 {
+        max-width: 760px;
+        margin: 0;
+        color: #ffffff;
+        font-family: "Sora", sans-serif;
+        font-size: clamp(2.2rem, 5vw, 4.8rem);
+        letter-spacing: -0.05em;
+        line-height: 0.96;
+      }
+
+      .mock-header p {
+        max-width: 650px;
+        color: rgba(224, 237, 255, 0.74);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .mock-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        gap: 20px;
+        align-items: start;
+      }
+
+      .mock-stage {
+        min-height: 360px;
+        padding: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 30px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+          radial-gradient(circle at 50% 100%, rgba(68, 221, 145, 0.18), transparent 38%);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+      }
+
+      .mock-stage-label {
+        margin: 0 0 14px;
+        color: rgba(224, 237, 255, 0.72);
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+
+      .mock-stage .overlay-card {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
+
+      .mock-stage .overlay-card.is-training {
+        width: min(100%, 340px);
+      }
+
+      .mock-hidden-state {
+        display: grid;
+        min-height: 156px;
+        place-items: center;
+        border: 1px dashed rgba(95, 243, 226, 0.28);
+        border-radius: 24px;
+        overflow: hidden;
+        color: rgba(224, 237, 255, 0.7);
+        text-align: center;
+      }
+
+      .mock-hidden-state strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #ffffff;
+      }
+
+      @media (max-width: 1180px) {
+        .mock-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .mock-page {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="mock-page">
+      <header class="mock-header">
+        <p class="eyebrow">RL Hub overlay states</p>
+        <h1>Overlayen skal dukke opp når den faktisk er nyttig.</h1>
+        <p>
+          Under selve kampen holder RL Hub seg skjult. I lobby viser den 2v2 session-MMR,
+          i freeplay/training viser den timer, og etter match viser den en kort oppsummering.
+        </p>
+      </header>
+
+      <section class="mock-grid">
+        <article class="mock-stage">
+          <p class="mock-stage-label">Lobby overlay: vises før/etter queue når du ikke er i aktiv kamp.</p>
+          <main class="overlay-card is-lobby">
+            <div class="overlay-top">
+              <div class="overlay-brand">
+                <img src="./App Logo.png" alt="RL Hub" />
+                <div class="overlay-title">
+                  <span class="eyebrow">Lobby | 2v2 session</span>
+                  <strong>Ranked session tracker</strong>
+                </div>
+              </div>
+              <span class="overlay-pill">2W</span>
+            </div>
+
+            <section class="metric-grid">
+              <div class="metric-card">
+                <span>Start MMR</span>
+                <strong>1214</strong>
+              </div>
+              <div class="metric-card">
+                <span>Nåværende</span>
+                <strong>1236</strong>
+              </div>
+              <div class="metric-card">
+                <span>Økt</span>
+                <strong class="is-positive">+22 MMR</strong>
+              </div>
+            </section>
+
+            <section class="session-row">
+              <div class="session-delta">
+                <span>Win / loss</span>
+                <strong>3W / 1L</strong>
+              </div>
+              <div class="session-delta">
+                <span>Neste rank</span>
+                <strong>60 MMR til Champion 2 est.</strong>
+              </div>
+            </section>
+          </main>
+        </article>
+
+        <article class="mock-stage">
+          <p class="mock-stage-label">Training overlay: vises i freeplay/training og teller tid.</p>
+          <main class="overlay-card is-training">
+            <div class="overlay-top">
+              <div class="overlay-brand">
+                <img src="./App Logo.png" alt="RL Hub" />
+                <div>
+                  <span class="eyebrow">Freeplay / Training</span>
+                  <strong>Training timer</strong>
+                </div>
+              </div>
+            </div>
+            <div class="timer-value">14:38</div>
+            <p class="overlay-copy">Tid brukt i freeplay/training denne økten.</p>
+          </main>
+        </article>
+
+        <article class="mock-stage">
+          <p class="mock-stage-label">Post-match overlay: vises kort etter matchen er ferdig, ikke underveis.</p>
+          <main class="overlay-card is-post-match">
+            <div class="overlay-top">
+              <div class="overlay-brand">
+                <img src="./App Logo.png" alt="RL Hub" />
+                <div class="overlay-title">
+                  <span class="eyebrow">Post-match</span>
+                  <strong>Victory</strong>
+                </div>
+              </div>
+              <span class="overlay-pill">2W</span>
+            </div>
+
+            <section class="metric-grid">
+              <div class="metric-card">
+                <span>Score</span>
+                <strong>725</strong>
+              </div>
+              <div class="metric-card">
+                <span>Goals</span>
+                <strong>2</strong>
+              </div>
+              <div class="metric-card">
+                <span>Saves</span>
+                <strong>3</strong>
+              </div>
+            </section>
+
+            <div class="wide-stat">
+              <span>2v2 session</span>
+              <strong>+22 MMR denne økten | 60 MMR til Champion 2 est.</strong>
+            </div>
+          </main>
+        </article>
+
+        <article class="mock-stage">
+          <p class="mock-stage-label">Aktiv kamp: RL Hub skal ikke ligge over spillet.</p>
+          <div class="mock-hidden-state">
+            <div>
+              <strong>Hidden during match</strong>
+              <span>Ingen ekstra score/boost/duplikat-UI.</span>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

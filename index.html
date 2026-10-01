@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RL Hub</title>
+    <meta
+      name="description"
+      content="RL Hub samler garage, training, dashboard og profile i en lett Rocket League-inspirert app."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="splash-active" data-page="home">
+    <div class="splash-overlay" id="splash-overlay">
+      <div class="splash-backdrop"></div>
+      <div class="splash-brand" id="splash-brand">
+        <img class="splash-logo" src="./App Logo.png" alt="RL Hub logo" />
+        <p class="eyebrow">Rocket League Hub</p>
+        <h1>RL Hub</h1>
+        <p class="splash-copy">
+          Alt du trenger samlet i en clean Rocket League-inspirert hub.
+        </p>
+      </div>
+    </div>
+
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">
+          <img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" />
+        </a>
+
+        <nav class="nav">
+          <a class="nav-link" href="./dashboard.html" target="_blank" rel="noopener noreferrer">Dashboard</a>
+          <a class="nav-link" href="./garage.html" target="_blank" rel="noopener noreferrer">Garage</a>
+          <a class="nav-link" href="./training.html" target="_blank" rel="noopener noreferrer">Training</a>
+          <a class="nav-link" href="./performance.html">Performance</a>
+          <a class="nav-link" href="./profile.html" target="_blank" rel="noopener noreferrer">Profile</a>
+        </nav>
+      </aside>
+
+      <main class="main-content home-main">
+        <section class="home-landing reveal">
+          <div class="home-brand-lockup">
+            <img class="home-logo" src="./App Logo.png" alt="RL Hub logo" />
+            <p class="eyebrow">Rocket League Hub</p>
+            <h1>RL Hub</h1>
+          </div>
+
+          <form class="connect-panel" id="home-connect-form">
+            <div class="connect-heading">
+              <p class="eyebrow">Start profile</p>
+              <h2>Link spilleren din</h2>
+            </div>
+
+            <label class="field-group">
+              <span>Visningsnavn</span>
+              <input class="profile-input" id="home-display-name" type="text" placeholder="RL Hub Player" />
+            </label>
+
+            <div class="connect-grid">
+              <label class="field-group">
+                <span>Plattform</span>
+                <select class="profile-input" id="home-platform">
+                  <option value="epic">Epic Games</option>
+                  <option value="steam">Steam</option>
+                  <option value="xbl">Xbox Live</option>
+                  <option value="psn">PlayStation Network</option>
+                  <option value="switch">Nintendo Switch</option>
+                </select>
+              </label>
+              <label class="field-group">
+                <span>Gamertag</span>
+                <input class="profile-input" id="home-gamertag" type="text" placeholder="Gamertag" />
+              </label>
+            </div>
+
+            <div class="connect-actions">
+              <button class="primary-button compact-button" type="submit" data-connect-action="link">
+                Link Epic / Tracker
+              </button>
+              <button class="ghost-button compact-button" type="submit" data-connect-action="create">
+                Opprett bruker
+              </button>
+            </div>
+            <p class="profile-status" id="home-connect-status"></p>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
