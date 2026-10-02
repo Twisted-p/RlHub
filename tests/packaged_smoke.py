@@ -58,6 +58,9 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
         for page in ["index", "dashboard", "garage", "training", "profile", "performance", "overlay", "goals"]:
             with urlopen(f"{origin}/{page}.html", timeout=2) as response:
                 assert b"desktop-runtime.js" in response.read()
+        for asset in ["garage.js", "garage.css", "garage-presets.js", "assets/garage/zen.jpeg", "assets/garage/jstn.png", "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg"]:
+            with urlopen(origin + "/" + asset, timeout=2) as response:
+                assert response.status == 200 and len(response.read()) > 100, asset
         with urlopen(origin + "/api/performance", timeout=2) as response:
             performance = json.load(response)
             assert isinstance(performance["matches"], list)

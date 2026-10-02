@@ -16,6 +16,9 @@ assets = [
     "performance-analytics.js",
     "readiness.js",
     "goals.html", "goals.js",
+    "garage.js", "garage.css", "garage-presets.js",
+    "assets/garage/zen.jpeg", "assets/garage/jstn.png",
+    "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg",
 ]
 a = Analysis(
     [str(root / "desktop_app.py")],

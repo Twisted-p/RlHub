@@ -54,11 +54,16 @@ Resultatet er `dist/RL Hub.exe`, med grensesnitt, Python, introvideo og lokale t
 .\.venv\Scripts\python.exe tests/desktop_smoke.py write "$env:TEMP\rl-hub-smoke-webview"
 .\.venv\Scripts\python.exe tests/desktop_smoke.py read "$env:TEMP\rl-hub-smoke-webview"
 .\.venv\Scripts\python.exe tests/packaged_smoke.py
+.\.venv\Scripts\python.exe tests/garage_ui_smoke.py
 ```
 
 UI-testen bruker egen lagring. Bruk en ny tom testmappe for hver testsekvens. Lokal tjeneste bruker port 18765 for å bevare samme lagringsadresse mellom oppstarter, og stenges når appen lukkes. Oppstartsfeil logges i `%LOCALAPPDATA%/RL Hub/desktop.log`.
 
 Eksisterende Overwolf-filer ligger fortsatt i prosjektet. Desktop-versjonen laster dem ikke.
+
+## Garage
+
+Garage viser lokale bilbilder og community-gjenskapinger av historiske zen-, jstn-, Squishy- og Retals-design. Søk, bilfilter, favoritter, deleliste og egne varianter fungerer uten BakkesMod. Kildelenkene åpnes eksternt. Delene velges manuelt i Rocket League; lagring eller aktivering i RL Hub endrer ikke spillet. Egne endringer oppdaterer ikke referansebildet. Eksisterende presets beholdes i samme WebView-lagring.
 
 ## Performance
 

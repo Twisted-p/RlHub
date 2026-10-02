@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css" /><link rel="stylesheet" href="./garage.css" />
   </head>
   <body class="app-ready" data-page="garage">
     <div class="page-shell">
@@ -30,102 +30,54 @@
           <a class="nav-link" href="./profile.html">Profile</a>
         </nav>
 
-        <div class="status-card glass">
-          <p class="eyebrow">Dagens status</p>
-          <h3 id="status-title">Aktivt biloppsett</h3>
-          <p id="status-copy">Denne visningen holder fokus på presetet du bruker akkurat nå og hvor komfortabelt det føles.</p>
-          <div class="status-bars">
-            <div class="status-row">
-              <div class="status-meta">
-                <span>Readiness</span>
-                <strong id="status-flow">72%</strong>
-              </div>
-              <span class="status-bar-fill" id="status-flow-bar" style="--fill: 72%"></span>
-            </div>
-            <div class="status-row">
-              <div class="status-meta">
-                <span>Routine</span>
-                <strong id="status-routine">2 / 4</strong>
-              </div>
-              <span class="status-bar-fill" id="status-routine-bar" style="--fill: 50%"></span>
-            </div>
-            <div class="status-row">
-              <div class="status-meta">
-                <span>Preset</span>
-                <strong id="status-preset">Neo Tokyo Fennec</strong>
-              </div>
-              <span class="status-bar-fill" id="status-preset-bar" style="--fill: 88%"></span>
-            </div>
-          </div>
-        </div>
+        <div class="garage-sidebar-note"><span class="eyebrow">Din samling</span><strong id="garage-active-name">Ditt aktive preset</strong><p>Finn et design. Gjør det til ditt.</p></div>
       </aside>
-
-      <main class="main-content">
-        <header class="page-header glass reveal">
-          <div>
-            <p class="eyebrow">Garage</p>
-            <h1>Bytt builds uten at resten av appen kommer i veien.</h1>
-            <p class="hero-text">
-              Her ligger presetene dine i en egen side så du kan holde fullt
-              fokus på biloppsett og stilvalg.
-            </p>
-          </div>
+      <main class="main-content garage-main">
+        <header class="garage-heading">
+          <div><p class="eyebrow">Garage / preset-bibliotek</p><h1>Finn din neste main.</h1><p>Proff-inspirerte biler. Delene bak designet. Din egen samling.</p></div>
+          <button class="secondary-button compact-button" id="garage-new" type="button">+ Eget preset</button>
         </header>
-
-        <section class="page-stack reveal">
-          <article class="glass module is-active">
-            <div class="module-header">
-              <div>
-                <p class="eyebrow">Garage line-up</p>
-                <h3>Preset vault</h3>
-              </div>
-              <button class="text-button" id="garage-action" type="button">Velg build</button>
+        <section class="garage-feature" id="garage-feature" aria-label="Valgt preset"></section>
+        <section class="garage-library" aria-label="Preset-bibliotek">
+          <div class="garage-library-top">
+            <div class="garage-tabs" role="tablist" aria-label="Samling">
+              <button class="garage-tab active" data-view="discover" role="tab" aria-selected="true" aria-controls="garage-grid">Utforsk</button>
+              <button class="garage-tab" data-view="favorites" role="tab" aria-selected="false" aria-controls="garage-grid">Favoritter <span id="garage-favorite-count">0</span></button>
+              <button class="garage-tab" data-view="mine" role="tab" aria-selected="false" aria-controls="garage-grid">Mine presets <span id="garage-mine-count">0</span></button>
             </div>
-            <div class="garage-layout">
-              <div class="preset-list" id="preset-list"></div>
-              <div class="preset-preview" id="preset-preview"></div>
-            </div>
-            <form class="garage-form" id="garage-form">
-              <label class="field-group">
-                <span>Preset navn</span>
-                <input class="profile-input" id="preset-name-input" type="text" placeholder="F.eks. Ranked Fennec" />
-              </label>
-              <label class="field-group">
-                <span>Bil</span>
-                <select class="profile-input" id="preset-car-input">
-                  <option>Fennec</option>
-                  <option>Octane</option>
-                  <option>Dominus</option>
-                  <option>Breakout</option>
-                </select>
-              </label>
-              <label class="field-group">
-                <span>Farger</span>
-                <input class="profile-input" id="preset-theme-input" type="text" placeholder="Cobalt / Orange" />
-              </label>
-              <label class="field-group">
-                <span>Wheels</span>
-                <input class="profile-input" id="preset-wheels-input" type="text" placeholder="Cristiano" />
-              </label>
-              <label class="field-group">
-                <span>Boost</span>
-                <input class="profile-input" id="preset-boost-input" type="text" placeholder="Standard Blue" />
-              </label>
-              <label class="field-group">
-                <span>Decal</span>
-                <input class="profile-input" id="preset-decal-input" type="text" placeholder="Clean finish" />
-              </label>
-              <label class="field-group form-wide">
-                <span>Notat</span>
-                <input class="profile-input" id="preset-note-input" type="text" placeholder="Hva brukes builden til?" />
-              </label>
-              <button class="primary-button compact-button" type="submit">Lagre preset</button>
-            </form>
-          </article>
+            <label class="garage-search"><span class="sr-only">Søk i presets</span><input id="garage-search" type="search" placeholder="Søk spiller, dekal eller bil…" autocomplete="off" /></label>
+          </div>
+          <div class="garage-filter-row"><div class="garage-filters" aria-label="Filtrer på bil">
+            <button class="garage-filter active" data-car="all" aria-pressed="true">Alle biler</button>
+            <button class="garage-filter" data-car="Fennec" aria-pressed="false">Fennec</button>
+            <button class="garage-filter" data-car="Octane" aria-pressed="false">Octane</button>
+            <button class="garage-filter" data-car="other" aria-pressed="false">Andre</button>
+          </div><span class="garage-result-count" id="garage-result-count" aria-live="polite"></span></div>
+          <div class="garage-grid" id="garage-grid" role="tabpanel"></div>
+          <p class="garage-library-note">Proffdesignene er community-gjenskapinger, med bilder og kildelenker. De er ikke bekreftet som spillernes nåværende oppsett.</p>
         </section>
+        <p class="garage-feedback" id="garage-feedback" role="status" aria-live="polite"></p>
+        <dialog class="garage-dialog" id="garage-editor" aria-labelledby="garage-editor-title">
+          <form id="garage-custom-form">
+            <div class="garage-dialog-heading"><div><p class="eyebrow">Din egen variant</p><h2 id="garage-editor-title">Nytt preset</h2></div><button type="button" class="garage-close" id="garage-close-editor" aria-label="Lukk">×</button></div>
+            <div class="garage-editor-fields">
+              <label>Navn<input name="name" required maxlength="80" placeholder="Mitt ranked-oppsett" /></label>
+              <label>Bil<select name="car"><option>Fennec</option><option>Octane</option><option>Dominus</option><option>Breakout</option><option>Merc</option><option>Annen bil</option></select></label>
+              <label>Hjul<input name="wheels" maxlength="80" placeholder="Cristiano" /></label>
+              <label>Dekal<input name="decal" maxlength="80" placeholder="Ingen dekal" /></label>
+              <label>Boost<input name="boost" maxlength="80" placeholder="Standard" /></label>
+              <label>Farger<input name="theme" maxlength="80" placeholder="Blå / oransje" /></label>
+              <label class="garage-field-wide">Notat<input name="vibe" maxlength="180" placeholder="Hva liker du med dette oppsettet?" /></label>
+            </div>
+            <p class="garage-editor-note">Lagres i RL Hub. Sett delene manuelt i Rocket League.</p>
+            <button class="primary-button compact-button" type="submit">Lagre i min samling</button>
+          </form>
+        </dialog>
+        <dialog class="garage-image-dialog" id="garage-image-dialog" aria-label="Stort preset-bilde"><button type="button" id="garage-close-image" class="garage-close" aria-label="Lukk bildet">×</button><img id="garage-large-image" alt="" /><p id="garage-image-credit"></p></dialog>
       </main>
     </div>
-
     <script src="./script.js"></script>
+    <script src="./garage-presets.js"></script>
+    <script src="./garage.js"></script>
   </body>
 </html>

@@ -13,7 +13,7 @@ RL Hub er en Windows-app med Python, pywebview/WebView2 og lokale HTML/CSS/JS-si
 - Performance: automatisk post-match-oppsummering fra Rocket Leagues lokale Stats API. Kamper kan filtreres på gamemode/resultat og sorteres på dato eller egne tall. Grafer viser skudd, mål, saves og assists for siste 5, 10 eller 20 kamper.
 - Dashboard: faktisk treningstid, siste fem egne ranked/casual-kamper, snitt og MMR-endring i økten. Etter hver femkampers blokk gir minst tre tap rådet om 15 min pause; minst tre seiere gir 5 min pause + 5 min ny trening. Fokustimer på 90 min senker readiness gradvis. Dette er coachingregler, ikke offisiell spillstatistikk eller et dokumentert universelt fokusmaksimum.
 - Goals: separate rankmål for 1v1/2v2/3v3, MMR-avstand og `ceil(MMR igjen / 9)` seiere på rad. Rankgrenser og +9 MMR er anslag. Mål lagres per spiller.
-- Garage og Training, med lokal lagring av presets og rutiner.
+- Garage: visuelt bibliotek med fire kildebelagte, historiske proffdesign, lokale bilbilder, søk/bilfilter, favoritter og egne varianter. Egne presets beholdes og lagres lokalt. Aktivt preset gjelder RL Hub, ikke automatisk bilbytte i spillet. Bildet av en egen variant viser originalreferansen. Training lagrer rutiner lokalt.
 - Native Windows-overlay for kantløst vindu/vindu. Lobby, trening og etterkampvisning, samt egen bryter for statistikk under kamp. Ctrl+Shift+O skjuler/viser overlayet.
 - Fullskjerm-overlay via en egen Xbox Game Bar-widget. Widget 1.0.2.0 er kontrollert i ekte Rocket League-fullskjerm på utviklingsmaskinen. Ny maskin må teste sin egen visning; HTTP-forbindelse er ikke bevis på synlige piksler.
 
@@ -125,6 +125,7 @@ Manuell kontroll etter endringer: hovedvindu synlig, intro ferdig innen 7 sekund
 | `mmr_provider.py` | Offentlig spilleridentitet og MMR-oppslag |
 | `performance_service.py` | Stats API, live data, fullførte kamper og historikk |
 | `performance-analytics.js`, `performance.js` | Filtrering, sortering, egne spillerdata og grafer |
+| `garage.js`, `garage.css`, `garage-presets.js`, `assets/garage/` | Visuelt preset-bibliotek, lokale bilder og dokumenterte community-kilder |
 | `readiness_service.py`, `readiness.js` | Målt økt/trening, femkampers blokker, hvile/oppvarming og fokus |
 | `goals_service.py`, `goals.js`, `goals.html` | Rankmål per spiller/modus, omtrentlige rankgrenser og seiersanslag |
 | `overlay_service.py`, `native_overlay.py`, `overlay-settings.js` | Økt-MMR, rendererinnstillinger og transparent click-through Windows-overlay |
@@ -143,6 +144,8 @@ Bruk norsk og enkel tekst i UI. Gjenbruk eksisterende mørke design og turkise a
 ## 7. Lagring og personvern
 
 Personlige data ligger i `%LOCALAPPDATA%\RL Hub`, blant annet `performance.json`, `overlay.json`, `readiness.json`, `goals.json`, `WebView/` og `desktop.log`. En ny maskin starter med egen historikk og egne innstillinger. Ikke last opp denne mappen, Rocket League-logger, tokens eller innloggingsdata til GitHub. Les bare offentlig spilleridentitet fra spilloggene.
+
+Garage bruker de eksisterende nøklene `rlhub:garagePresets` og `rlhub:uiState`, pluss `rlhub:garageFavorites`. `script.js:normalizePreset` bevarer katalog-/referansefelter ved gjenstart. Test Garage med `.\.venv\Scripts\python.exe tests/garage_ui_smoke.py`; testen bruker isolert lagring og dekker eldre presets, favoritter, søk, deleliste, redigering, bildevisning og smal layout. Bilder og kilder dokumenteres i `assets/garage/SOURCES.md`; ikke omtale community-design som bekreftede nåværende oppsett.
 
 Kildekoden, introen, logoen, widget-assets, modellfiler og lisensfiler er med i Git. `.venv/`, `build/`, `dist/`, widgetens `bin/obj/packages`, logger og lokale backupfiler er ignorert. Det er tilsiktet; genererte filer bygges på nytt eller leveres gjennom Releases.
 

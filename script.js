@@ -399,6 +399,13 @@ function normalizePreset(preset, index) {
     tags: Array.isArray(preset.tags) ? preset.tags : ["Custom"],
     stats: Array.isArray(preset.stats) ? preset.stats : fallback.stats,
     custom: preset.custom === true,
+    catalogId: typeof preset.catalogId === "string" ? preset.catalogId : "",
+    referenceId: typeof preset.referenceId === "string" ? preset.referenceId : "",
+    body: typeof preset.body === "string" ? preset.body : "",
+    finish: typeof preset.finish === "string" ? preset.finish : "",
+    blue: typeof preset.blue === "string" ? preset.blue : "",
+    orange: typeof preset.orange === "string" ? preset.orange : "",
+    trail: typeof preset.trail === "string" ? preset.trail : "",
   };
 }
 

@@ -14,6 +14,8 @@ Dashboard viser **Dagens spillform** med faktisk treningstid, siste fem egne ran
 
 **Goals** lar deg lagre ett rankmål for hver av 1v1, 2v2 og 3v3. Siden bruker siste hentede MMR, omtrentlige rankgrenser per modus og `ceil(MMR igjen / 9)` for anslåtte seiere på rad. Mål lagres separat per tilkoblet spiller i `goals.json`; +9 er et planleggingsanslag, ikke en garanti for MMR-endringen i en kamp.
 
+**Garage** har et visuelt preset-bibliotek med community-gjenskapinger av design fra zen, jstn, Squishy og Retals. Se bilbilder, delelister, farger og kildelenker; søk, filtrer på bil, lagre favoritter eller lag egne varianter. Eksisterende egne presets beholdes. Aktivt preset gjelder RL Hub; delene velges manuelt i Rocket League. Bildene er lokale og viser originalreferansen også når en egen variant redigeres. Designene er historiske inspirasjonsforslag, ikke bekreftede nåværende proffoppsett.
+
 ## Fortsette utvikling på en annen maskin
 
 Åpne repoet i Codex og be den lese [CODEX_HANDOFF.md](CODEX_HANDOFF.md) og [AGENTS.md](AGENTS.md). Guiden dekker installasjon, bygging, tester, fullskjerm-widget, kodekart og videre utvikling. `main` inneholder den samlede nyeste versjonen.
@@ -42,6 +44,7 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 .\.venv\Scripts\python.exe tests/splash_ui_smoke.py
 .\.venv\Scripts\python.exe tests/performance_ui_smoke.py
+.\.venv\Scripts\python.exe tests/garage_ui_smoke.py
 .\.venv\Scripts\python.exe tests/readiness_ui_smoke.py
 .\.venv\Scripts\python.exe tests/goals_ui_smoke.py
 .\.venv\Scripts\python.exe tests/overlay_ui_smoke.py
@@ -57,6 +60,7 @@ Med Node.js kan du også kjøre `node tests/performance_analytics.test.cjs` for 
 - `desktop_app.py`: desktop-vindu, lokal HTTP-server og tjenester.
 - `index.html`, øvrige HTML-filer, `script.js`, `styles.css`: grensesnitt.
 - `desktop-runtime.js`: tilpasning for standalone-versjonen.
+- `garage.js`, `garage.css`, `garage-presets.js`, `assets/garage/`: preset-bibliotek, lokale bilder og kildeoversikt.
 - `mmr_provider.py`: rank og MMR via tredjepartstjenesten `mmr.kmdw.dev`.
 - `performance_service.py`, `performance.js`, `performance.html`: Rocket Leagues lokale Stats API og kampoppsummeringer.
 - `native_overlay.py`, `overlay_service.py`, `overlay.html`, `overlay-settings.js`: Windows-overlay, rank-økter og innstillinger.
