@@ -27,7 +27,13 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
         port = reservation.getsockname()[1]
     origin = f"http://127.0.0.1:{port}"
     title = "RL Hub packaged test " + uuid4().hex
-    environment = dict(os.environ, LOCALAPPDATA=storage, RL_HUB_PORT=str(port), RL_HUB_WINDOW_TITLE=title)
+    game_root = Path(storage) / "game"
+    game_config = game_root / "TAGame/Config/DefaultStatsAPI.ini"
+    game_config.parent.mkdir(parents=True)
+    original_config = "[TAGame.MatchStatsExporter_TA]\nPacketSendRate=0\nWebPort=49124\n"
+    game_config.write_text(original_config)
+    environment = dict(os.environ, LOCALAPPDATA=storage, RL_HUB_PORT=str(port), RL_HUB_WINDOW_TITLE=title,
+                       RL_HUB_TEST_GAME_ROOT=str(game_root))
     process = subprocess.Popen([str(executable)], env=environment,
                                creationflags=subprocess.CREATE_NO_WINDOW)
     handle = None
@@ -53,7 +59,11 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
             with urlopen(f"{origin}/{page}.html", timeout=2) as response:
                 assert b"desktop-runtime.js" in response.read()
         with urlopen(origin + "/api/performance", timeout=2) as response:
-            assert isinstance(json.load(response)["matches"], list)
+            performance = json.load(response)
+            assert isinstance(performance["matches"], list)
+            assert performance["enabled"], performance["setupError"]
+            assert "automatisk" in performance["setupMessage"]
+        assert game_config.with_name(game_config.name + ".rlhub.bak").read_text() == original_config
         with urlopen(origin + "/performance-analytics.js", timeout=2) as response:
             assert b"performanceAnalytics" in response.read()
         with urlopen(origin + "/readiness.js", timeout=2) as response:

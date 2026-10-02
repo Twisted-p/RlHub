@@ -20,6 +20,7 @@ config = storage / "game/TAGame/Config/DefaultStatsAPI.ini"
 config.parent.mkdir(parents=True)
 config.write_text("[TAGame.MatchStatsExporter_TA]\nPort=49123\nWebPort=49124\nPacketSendRate=0\n")
 service = PerformanceService(storage / "data", root=storage / "game", local_player={"name": "Player A", "playerId": PLAYER})
+service._ensure_setup()
 server = start_server(0, performance=service)
 window = webview.create_window("RL Hub Performance test", f"http://127.0.0.1:{server.server_port}/performance.html", width=1180, height=820)
 failures = []
@@ -42,8 +43,7 @@ def exercise():
         wait_for("typeof performanceData !== 'undefined' && performanceData !== null")
         assert window.evaluate_js("performanceDetail.innerText.includes('Ingen kamper lagret')")
         assert window.evaluate_js("document.querySelector('.nav-link.active').textContent") == "Performance"
-        window.evaluate_js("performanceEnable.click()")
-        wait_for("performanceSetup.hidden && performanceStatus.innerText.includes('Start Rocket League på nytt')")
+        wait_for("performanceSetup.hidden && performanceStatus.innerText.includes('aktivert automatisk')")
         service.ingest({"Event": "MatchCreated", "Data": {"MatchGuid": "test-match"}})
         service.ingest(STATE)
         service.ingest(END)

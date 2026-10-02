@@ -234,7 +234,9 @@ def main() -> None:
     try:
         import webview
 
-        performance = PerformanceService(data_dir)
+        # Packaged smoke tests isolate the game's configuration as well as storage.
+        test_game_root = os.environ.get("RL_HUB_TEST_GAME_ROOT")
+        performance = PerformanceService(data_dir, root=Path(test_game_root) if test_game_root else None)
         overlay = OverlayService(data_dir, performance)
         readiness = ReadinessService(data_dir, performance, overlay)
         goals = GoalsService(data_dir, overlay)

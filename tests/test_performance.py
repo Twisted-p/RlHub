@@ -9,6 +9,7 @@ import tempfile
 from threading import Thread
 import time
 import unittest
+from unittest.mock import patch
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
@@ -91,6 +92,69 @@ class PerformanceTests(unittest.TestCase):
         self.assertIn("Value=123", config.read_text())
         self.assertEqual(config.with_name(config.name + ".rlhub.bak").read_text(), original)
         self.service.setup()
+        self.assertEqual(config.with_name(config.name + ".rlhub.bak").read_text(), original)
+
+    def test_start_automatically_activates_stats_api(self):
+        config = self.path / "TAGame/Config/DefaultStatsAPI.ini"
+        config.parent.mkdir(parents=True)
+        original = "[TAGame.MatchStatsExporter_TA]\nPacketSendRate=0\nWebPort=49124\n"
+        config.write_text(original)
+        self.service.start()
+        deadline = time.monotonic() + 3
+        while not self.service.snapshot()["enabled"] and time.monotonic() < deadline:
+            time.sleep(.02)
+        self.assertTrue(self.service.snapshot()["enabled"])
+        self.assertEqual(config.with_name(config.name + ".rlhub.bak").read_text(), original)
+        self.assertIn("automatisk", self.service.snapshot()["setupMessage"])
+
+    def test_auto_setup_preserves_already_enabled_settings(self):
+        config = self.path / "TAGame/Config/TAStatsAPI.ini"
+        config.parent.mkdir(parents=True)
+        original = "[TAGame.MatchStatsExporter_TA]\nPacketSendRate=7\nWebPort=49126\n"
+        config.write_text(original)
+        with patch("performance_service.enable_stats_api") as enable:
+            self.service._ensure_setup()
+            self.service._ensure_setup()
+        enable.assert_not_called()
+        self.assertEqual(config.read_text(), original)
+        self.assertEqual(self.service.snapshot()["setupMessage"], "")
+
+    def test_auto_setup_retries_when_game_is_discovered_later(self):
+        config = self.path / "TAGame/Config/DefaultStatsAPI.ini"
+        config.parent.mkdir(parents=True)
+        config.write_text("[TAGame.MatchStatsExporter_TA]\nPacketSendRate=0\n")
+        self.service.root = None
+        with patch("performance_service.game_info", side_effect=[(None, None), (self.path, None)]):
+            self.service._ensure_setup()
+            self.assertFalse(self.service.snapshot()["enabled"])
+            self.assertTrue(self.service.snapshot()["setupError"])
+            self.service._ensure_setup()
+        self.assertTrue(self.service.snapshot()["enabled"])
+        self.assertEqual(self.service.snapshot()["setupError"], "")
+
+    def test_auto_setup_permission_error_keeps_app_available(self):
+        config = self.path / "TAGame/Config/DefaultStatsAPI.ini"
+        config.parent.mkdir(parents=True)
+        original = "[TAGame.MatchStatsExporter_TA]\nPacketSendRate=0\n"
+        config.write_text(original)
+        with patch("performance_service.enable_stats_api", side_effect=PermissionError):
+            self.service._ensure_setup()
+        self.assertIn("administrator", self.service.snapshot()["setupError"])
+        self.assertFalse(self.service.snapshot()["enabled"])
+        self.assertEqual(config.read_text(), original)
+
+    def test_auto_setup_uses_override_and_keeps_original_backup(self):
+        config = self.path / "TAGame/Config/TAStatsAPI.ini"
+        config.parent.mkdir(parents=True)
+        default = config.with_name("DefaultStatsAPI.ini")
+        original = "[TAGame.MatchStatsExporter_TA]\nPacketSendRate=0\nWebPort=49124\n"
+        config.write_text(original)
+        default.write_text(original)
+        self.service._ensure_setup()
+        config.write_text(original + "; reset by game update\n")
+        self.service._ensure_setup()
+        self.assertTrue(self.service.snapshot()["enabled"])
+        self.assertEqual(default.read_text(), original)
         self.assertEqual(config.with_name(config.name + ".rlhub.bak").read_text(), original)
 
     def test_history_endpoint_and_activation_origin(self):

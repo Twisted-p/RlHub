@@ -48,7 +48,7 @@ Før bruk på en ny maskin:
 
 1. Start Rocket League med brukerens konto én gang, så lokal spiller-ID kan finnes.
 2. Åpne Profile, velg plattform, skriv gamertag og trykk Hent rank.
-3. Åpne Performance, aktiver kampoppsummeringer én gang, og start Rocket League på nytt. Appen endrer aktiv Stats API-konfigurasjon og beholder en `.rlhub.bak`-kopi. Ikke endre anti-cheat eller injiser kode i spillet.
+3. RL Hub aktiverer kampoppsummeringer automatisk i bakgrunnen ved oppstart og prøver igjen hvis spillet først blir funnet senere. Åpne Performance for status, og start Rocket League på nytt dersom spillet allerede kjørte ved aktivering. Appen endrer bare en deaktivert Stats API-konfigurasjon og beholder en `.rlhub.bak`-kopi. Manglende skriverettigheter vises i appen. Ikke endre anti-cheat eller injiser kode i spillet.
 4. Fullfør en kort privat kamp helt til resultatskjermen for å kontrollere Performance. «Forlat kamp» før slutt skal ikke telle som en fullført kamp. Private kamper vises i Performance, men teller ikke i Dashboardets ranked/casual-blokker.
 5. La RL Hub være åpen under spilling. Innsamlingen fortsetter når en annen appfane er valgt.
 

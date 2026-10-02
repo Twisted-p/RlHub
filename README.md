@@ -6,7 +6,7 @@ En standalone Rocket League-app for Windows, uten Overwolf. Den samler rank/MMR,
 
 Last ned **RL Hub.exe** fra [Releases](https://github.com/Twisted-p/RlHub/releases). Ingen Python-installasjon er nødvendig. Appen bruker Microsoft Edge WebView2 Runtime, som må være installert på maskinen.
 
-Velg plattform og gamertag under Profile for å hente rank. Start Rocket League med kontoen én gang slik at appen kan finne den offentlige spiller-ID-en i den lokale spilloggen. Under Performance aktiverer du kampoppsummeringer én gang og starter spillet på nytt. La RL Hub kjøre mens du spiller.
+Velg plattform og gamertag under Profile for å hente rank. Start Rocket League med kontoen én gang slik at appen kan finne den offentlige spiller-ID-en i den lokale spilloggen. RL Hub aktiverer kampoppsummeringer automatisk ved oppstart når spillinstallasjonen blir funnet. Hvis Rocket League allerede kjører, må spillet startes på nytt etter aktiveringen. La RL Hub kjøre mens du spiller. Performance viser beskjed dersom spillet ikke finnes eller aktiveringen krever skriverettigheter.
 
 Performance har fanene **Kamper** og **Grafer**. Filtrer på gamemode og seier/tap, sorter kamper etter dato eller egne tall, og se skudd, mål, saves og assists for de siste 5, 10 eller 20 kampene. Grafene viser også totaler, snitt og samlet skuddprosent. Du kan åpne kampoppsummeringen direkte fra tabellen under grafene.
 

@@ -102,7 +102,7 @@ function renderPerformance() {
   performanceConnection.textContent = data.connected
     ? (data.activeMatch ? "Kamp pågår" : data.lastEvent ? "Tilkoblet" : "Venter på kampdata")
     : "Venter på spillet";
-  performanceStatus.textContent = setupMessage || (data.connected
+  performanceStatus.textContent = setupMessage || data.setupError || data.setupMessage || (data.connected
     ? data.activeMatch
       ? "Mottar kampdata fra Rocket League. Oppsummeringen lagres når kampen er ferdig."
       : data.lastEvent
@@ -110,7 +110,7 @@ function renderPerformance() {
         : "Forbindelsen til Rocket League er åpen. Venter på de første kampdataene."
     : data.enabled
       ? "Åpne Rocket League og spill en kamp med RL Hub åpen. Har du nettopp aktivert funksjonen, start spillet på nytt."
-      : "Aktiver kampoppsummeringer for å komme i gang.");
+      : "RL Hub aktiverer kampoppsummeringer automatisk. Start Rocket League én gang hvis spillet ikke blir funnet.");
   renderModeOptions();
   const filtered = performanceAnalytics.filter(data.matches, matchPlayer, modeFilter.value, resultFilter.value);
   const matches = performanceAnalytics.sort(filtered, matchPlayer, sortFilter.value);

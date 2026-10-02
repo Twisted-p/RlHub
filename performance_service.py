@@ -108,6 +108,8 @@ class PerformanceService:
         self.thread = None
         self.connection = None
         self.connected = False
+        self.setup_message = ""
+        self.setup_error = ""
         self.last_event = None
         self.last_event_name = None
         self.received_messages = 0
@@ -150,15 +152,30 @@ class PerformanceService:
             raise ValueError("Fant ikke Rocket League. Start spillet én gang på denne maskinen, lukk det, og prøv igjen.")
         try:
             with self.lock:
-                enable_stats_api(path)
+                if not read_settings(path)["enabled"]:
+                    enable_stats_api(path)
+                    self.setup_message = "Kampoppsummeringer er aktivert automatisk. Start Rocket League på nytt hvis spillet allerede kjører."
+                self.setup_error = ""
         except configparser.Error as error:
             raise ValueError("Spillets innstillinger kunne ikke leses.") from error
         return {"message": "Kampoppsummeringer er aktivert. Start Rocket League på nytt, og spill en kamp med RL Hub åpen."}
+
+    def _ensure_setup(self):
+        """Retry discovery and activation without blocking the app's startup."""
+        try:
+            self.setup()
+        except PermissionError:
+            with self.lock:
+                self.setup_error = "RL Hub kunne ikke aktivere kampoppsummeringer. Lukk appen og start den som administrator én gang."
+        except (OSError, ValueError):
+            with self.lock:
+                self.setup_error = "Kampoppsummeringer kunne ikke aktiveres. Start Rocket League én gang, og prøv igjen. Kontroller skriverettighetene hvis spillet allerede er installert."
 
     def snapshot(self) -> dict:
         with self.lock:
             settings = read_settings(config_path(self.root))
             return {"connected": self.connected, "enabled": settings["enabled"], "gameFound": settings["found"],
+                    "setupMessage": self.setup_message, "setupError": self.setup_error,
                     "lastEvent": self.last_event, "localPlayer": self.local_player,
                     "activeMatch": bool(self.current and self.current["players"] and not self.current.get("finished")),
                     "lastEventName": self.last_event_name, "receivedMessages": self.received_messages,
@@ -169,6 +186,7 @@ class PerformanceService:
 
     def _listen(self):
         while not self.stop_event.is_set():
+            self._ensure_setup()
             settings = read_settings(config_path(self.root))
             if not settings["enabled"]:
                 self.stop_event.wait(3)
@@ -180,6 +198,7 @@ class PerformanceService:
                 self.connection = connection
                 with self.lock:
                     self.connected = True
+                    self.setup_message = ""
                 while not self.stop_event.is_set():
                     try:
                         message = connection.recv()
