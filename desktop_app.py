@@ -35,6 +35,7 @@ UI_FILES = {
     "readiness.js",
     "goals.html", "goals.js",
     "garage.js", "garage.css", "garage-presets.js",
+    "settings.html", "settings.js", "settings.css", "pro-settings-data.js",
     "assets/garage/zen.jpeg", "assets/garage/jstn.png",
     "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg",
 }

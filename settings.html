@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RL Hub | Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" /><link rel="stylesheet" href="./settings.css" />
+</head>
+<body class="app-ready" data-page="settings">
+  <div class="page-shell">
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <aside class="sidebar">
+      <a class="brand" href="./index.html"><img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" /></a>
+      <nav class="nav">
+        <a class="nav-link" href="./dashboard.html">Dashboard</a><a class="nav-link" href="./garage.html">Garage</a>
+        <a class="nav-link active" href="./settings.html">Settings</a><a class="nav-link" href="./training.html">Training</a>
+        <a class="nav-link" href="./performance.html">Performance</a><a class="nav-link" href="./profile.html">Profile</a>
+      </nav>
+    </aside>
+    <main class="main-content settings-main">
+      <header class="settings-heading"><p class="eyebrow">Settings / proffoppsett</p><h1>Et oppsett å starte med.</h1><p>Fem utvalgte proffer. Kamera, knapper og følsomhet på ett sted.</p></header>
+      <div id="settings-players" class="settings-players" role="group" aria-label="Velg proffspiller"></div>
+      <section class="settings-profile" aria-labelledby="settings-player-name">
+        <div><p class="eyebrow" id="settings-region"></p><h2 id="settings-player-name"></h2><a id="settings-source" target="_blank" rel="noopener noreferrer">Liquipedia ↗</a></div>
+        <button id="settings-copy-all" class="primary-button" type="button" data-copy="all">Kopier hele oppsettet</button>
+      </section>
+      <p class="settings-hint">Kopier som tekst og bruk verdiene i Rocket League. Navnene på feltene følger spillmenyen.</p>
+      <div class="settings-toolbar">
+        <div class="settings-tabs" role="tablist" aria-label="Innstillinger">
+          <button id="settings-tab-camera" role="tab" aria-selected="true" aria-controls="settings-panel" data-section="camera">Kamera</button>
+          <button id="settings-tab-controls" role="tab" aria-selected="false" aria-controls="settings-panel" data-section="controls">Kontroller</button>
+        </div>
+        <label class="settings-controller">Knappevisning<select id="settings-controller"><option value="ps">PlayStation</option><option value="xbox">Xbox</option></select></label>
+      </div>
+      <section id="settings-panel" class="settings-panel" role="tabpanel" aria-labelledby="settings-tab-camera">
+        <div class="settings-section-heading"><p id="settings-section-note"></p><button id="settings-copy-section" class="ghost-button" data-copy="section" type="button">Kopier kamera</button></div>
+        <div id="settings-values" class="settings-values"></div>
+        <div id="settings-deadzones" hidden><h3>Deadzone og følsomhet</h3><div id="settings-deadzone-values" class="settings-deadzone-values"></div><p id="settings-shape" class="settings-hint"></p></div>
+      </section>
+      <p id="settings-feedback" class="settings-feedback" role="status" aria-live="polite"></p>
+      <details class="settings-provenance"><summary>Kilder og oppdateringsdatoer</summary><p id="settings-dates"></p><p>Verdiene er fra indekserte Liquipedia-utdrag hentet 02.10.2026. De kan være eldre enn spillerens faktiske oppsett. Utvalget er fem kjente proffer, uten innbyrdes rangering.</p><p><a href="https://liquipedia.net/rocketleague/List_of_player_camera_settings" target="_blank" rel="noopener noreferrer">Kameraliste ↗</a> · <a href="https://liquipedia.net/rocketleague/List_of_player_control_settings" target="_blank" rel="noopener noreferrer">Kontrolliste ↗</a> · <a href="https://liquipedia.net/rocketleague/List_of_player_deadzone_settings" target="_blank" rel="noopener noreferrer">Deadzone-liste ↗</a></p></details>
+      <dialog id="settings-copy-dialog" aria-labelledby="settings-copy-title"><div class="settings-dialog-heading"><h2 id="settings-copy-title">Kopier manuelt</h2><button id="settings-close-dialog" type="button" aria-label="Lukk">×</button></div><p>Automatisk kopiering er ikke tilgjengelig. Marker teksten og trykk Ctrl+C.</p><textarea id="settings-copy-text" readonly aria-label="Innstillinger til kopiering"></textarea></dialog>
+    </main>
+  </div>
+  <script src="./script.js"></script><script src="./pro-settings-data.js"></script><script src="./settings.js"></script>
+</body>
+</html>

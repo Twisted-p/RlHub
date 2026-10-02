@@ -55,10 +55,13 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
         ImageGrab.grab(bbox=(rect.left, rect.top, rect.right, rect.bottom)).save(root / "build" / "desktop-intro-preview.png")
         time.sleep(5)  # Wait for the intro to finish and the first page paint.
         assert process.poll() is None
-        for page in ["index", "dashboard", "garage", "training", "profile", "performance", "overlay", "goals"]:
+        for page in ["index", "dashboard", "garage", "settings", "training", "profile", "performance", "overlay", "goals"]:
             with urlopen(f"{origin}/{page}.html", timeout=2) as response:
                 assert b"desktop-runtime.js" in response.read()
         for asset in ["garage.js", "garage.css", "garage-presets.js", "assets/garage/zen.jpeg", "assets/garage/jstn.png", "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg"]:
+            with urlopen(origin + "/" + asset, timeout=2) as response:
+                assert response.status == 200 and len(response.read()) > 100, asset
+        for asset in ["settings.js", "settings.css", "pro-settings-data.js"]:
             with urlopen(origin + "/" + asset, timeout=2) as response:
                 assert response.status == 200 and len(response.read()) > 100, asset
         with urlopen(origin + "/api/performance", timeout=2) as response:

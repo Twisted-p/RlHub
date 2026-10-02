@@ -12,6 +12,14 @@ document.querySelectorAll("a[href]").forEach((link) => {
 
 const desktopNav = document.querySelector(".nav");
 if (desktopNav) {
+  if (!desktopNav.querySelector('a[href="./settings.html"]')) {
+    const settingsLink = document.createElement("a");
+    settingsLink.className = "nav-link";
+    settingsLink.href = "./settings.html";
+    settingsLink.textContent = "Settings";
+    const garageLink = desktopNav.querySelector('a[href="./garage.html"]');
+    desktopNav.insertBefore(settingsLink, garageLink ? garageLink.nextSibling : desktopNav.firstChild);
+  }
   if (!desktopNav.querySelector('a[href="./goals.html"]')) {
     const goalsLink = document.createElement("a");
     goalsLink.className = "nav-link";

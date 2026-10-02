@@ -1,0 +1,9 @@
+// Liquipedia indexed excerpts retrieved 2026-10-02; source dates are separate.
+// Five curated pros, not a numbered or live world ranking. See SETTINGS_SOURCES.md.
+window.RL_PRO_SETTINGS = [
+  {id:"zen",name:"zen",region:"Frankrike",source:"https://liquipedia.net/rocketleague/Zen",cameraUpdated:"2026-02-12",deadzoneUpdated:"2026-02-12",camera:["Off","110","100","-3.0","270","0.35","4.00","1.40","Toggle"],controls:["Square","R1","L2",null,"Circle","Cross","Triangle","L2","R2"],deadzone:["0.07","0.80","1.50","1.50"],shape:"Cross"},
+  {id:"vatira",name:"Vatira",region:"Frankrike",source:"https://liquipedia.net/rocketleague/Vatira",cameraUpdated:"2025-04-29",deadzoneUpdated:"2025-11-17",camera:["Off","110","90","-5.0","270","0.35","7.10","1.50","Toggle"],controls:["Square","Square","L1","R1","Circle","Cross","Triangle","L2","R2"],deadzone:["0.07","0.65","1.50","1.50"],shape:"Cross"},
+  {id:"monkeymoon",name:"M0nkey M00n",region:"Frankrike",source:"https://liquipedia.net/rocketleague/M0nkey_M00n",cameraUpdated:"2025-12-20",deadzoneUpdated:"2025-12-20",camera:["Off","110","100","-3.0","270","0.50","4.00","1.10","Toggle"],controls:["Square","L2",null,"R1","Circle","Cross","Triangle","L2","R2"],deadzone:["0.07","0.60","2.93","2.93"],shape:"Cross"},
+  {id:"daniel",name:"Daniel",region:"USA",source:"https://liquipedia.net/rocketleague/Daniel",cameraUpdated:"2025-11-25",deadzoneUpdated:null,camera:["Off","110","100","-3.0","270","0.35","4.70","1.20","Toggle"],controls:["R1","R1","L1",null,"Circle","Cross","Triangle","L2","R2"],deadzone:["0.05","0.70","1.30","1.30"],shape:"Cross"},
+  {id:"beastmode",name:"BeastMode",region:"USA",source:"https://liquipedia.net/rocketleague/BeastMode",cameraUpdated:"2025-09-14",deadzoneUpdated:"2022-07-17",camera:["Off","109","90","-4.0","270","0.45","7.00","1.20","Toggle"],controls:["Square","Square","L1",null,"Circle","Cross","Triangle","L2","R2"],deadzone:["0.05","0.70","1.30","1.30"],shape:"Cross"}
+];

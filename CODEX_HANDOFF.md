@@ -14,6 +14,7 @@ RL Hub er en Windows-app med Python, pywebview/WebView2 og lokale HTML/CSS/JS-si
 - Dashboard: faktisk treningstid, siste fem egne ranked/casual-kamper, snitt og MMR-endring i økten. Etter hver femkampers blokk gir minst tre tap rådet om 15 min pause; minst tre seiere gir 5 min pause + 5 min ny trening. Fokustimer på 90 min senker readiness gradvis. Dette er coachingregler, ikke offisiell spillstatistikk eller et dokumentert universelt fokusmaksimum.
 - Goals: separate rankmål for 1v1/2v2/3v3, MMR-avstand og `ceil(MMR igjen / 9)` seiere på rad. Rankgrenser og +9 MMR er anslag. Mål lagres per spiller.
 - Garage: visuelt bibliotek med fire kildebelagte, historiske proffdesign, lokale bilbilder, søk/bilfilter, favoritter og egne varianter. Egne presets beholdes og lagres lokalt. Aktivt preset gjelder RL Hub, ikke automatisk bilbytte i spillet. Bildet av en egen variant viser originalreferansen. Training lagrer rutiner lokalt.
+- Settings: fem utvalgte profiler (zen, Vatira, M0nkey M00n, Daniel, BeastMode), med kamera, bindinger, deadzone og følsomhet. Kopiering gir tekst for hele oppsettet, en kategori eller én verdi. PS/Xbox-visning oversetter knappesteder; ingen spillfiler endres. Kildegrunnlag og kjente kildedatoer er dokumentert i `SETTINGS_SOURCES.md`.
 - Native Windows-overlay for kantløst vindu/vindu. Lobby, trening og etterkampvisning, samt egen bryter for statistikk under kamp. Ctrl+Shift+O skjuler/viser overlayet.
 - Fullskjerm-overlay via en egen Xbox Game Bar-widget. Widget 1.0.2.0 er kontrollert i ekte Rocket League-fullskjerm på utviklingsmaskinen. Ny maskin må teste sin egen visning; HTTP-forbindelse er ikke bevis på synlige piksler.
 
@@ -126,6 +127,7 @@ Manuell kontroll etter endringer: hovedvindu synlig, intro ferdig innen 7 sekund
 | `performance_service.py` | Stats API, live data, fullførte kamper og historikk |
 | `performance-analytics.js`, `performance.js` | Filtrering, sortering, egne spillerdata og grafer |
 | `garage.js`, `garage.css`, `garage-presets.js`, `assets/garage/` | Visuelt preset-bibliotek, lokale bilder og dokumenterte community-kilder |
+| `settings.html`, `settings.js`, `settings.css`, `pro-settings-data.js` | Fem proffprofiler, kildebelagte innstillinger og tekstkopiering |
 | `readiness_service.py`, `readiness.js` | Målt økt/trening, femkampers blokker, hvile/oppvarming og fokus |
 | `goals_service.py`, `goals.js`, `goals.html` | Rankmål per spiller/modus, omtrentlige rankgrenser og seiersanslag |
 | `overlay_service.py`, `native_overlay.py`, `overlay-settings.js` | Økt-MMR, rendererinnstillinger og transparent click-through Windows-overlay |
@@ -146,6 +148,8 @@ Bruk norsk og enkel tekst i UI. Gjenbruk eksisterende mørke design og turkise a
 Personlige data ligger i `%LOCALAPPDATA%\RL Hub`, blant annet `performance.json`, `overlay.json`, `readiness.json`, `goals.json`, `WebView/` og `desktop.log`. En ny maskin starter med egen historikk og egne innstillinger. Ikke last opp denne mappen, Rocket League-logger, tokens eller innloggingsdata til GitHub. Les bare offentlig spilleridentitet fra spilloggene.
 
 Garage bruker de eksisterende nøklene `rlhub:garagePresets` og `rlhub:uiState`, pluss `rlhub:garageFavorites`. `script.js:normalizePreset` bevarer katalog-/referansefelter ved gjenstart. Test Garage med `.\.venv\Scripts\python.exe tests/garage_ui_smoke.py`; testen bruker isolert lagring og dekker eldre presets, favoritter, søk, deleliste, redigering, bildevisning og smal layout. Bilder og kilder dokumenteres i `assets/garage/SOURCES.md`; ikke omtale community-design som bekreftede nåværende oppsett.
+
+Settings lagrer bare valgt profil og knappevisning i `rlhub:proSettings`. Verdiene er et lokalt kildesnapshot; ikke anta at det er spillerens live innstillinger. Test med `.\.venv\Scripts\python.exe tests/settings_ui_smoke.py`. Testen dekker fem profiler, korrekt skille mellom Air Roll/Left/Right, PS/Xbox-knappesteder, kategorier/enkeltverdier, omstart, manuell kopiering ved avvist utklippstavle, navigasjon fra Garage og smal layout. `desktop-runtime.js` legger Settings-lenken til på eldre sider.
 
 Kildekoden, introen, logoen, widget-assets, modellfiler og lisensfiler er med i Git. `.venv/`, `build/`, `dist/`, widgetens `bin/obj/packages`, logger og lokale backupfiler er ignorert. Det er tilsiktet; genererte filer bygges på nytt eller leveres gjennom Releases.
 

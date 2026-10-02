@@ -55,6 +55,7 @@ Resultatet er `dist/RL Hub.exe`, med grensesnitt, Python, introvideo og lokale t
 .\.venv\Scripts\python.exe tests/desktop_smoke.py read "$env:TEMP\rl-hub-smoke-webview"
 .\.venv\Scripts\python.exe tests/packaged_smoke.py
 .\.venv\Scripts\python.exe tests/garage_ui_smoke.py
+.\.venv\Scripts\python.exe tests/settings_ui_smoke.py
 ```
 
 UI-testen bruker egen lagring. Bruk en ny tom testmappe for hver testsekvens. Lokal tjeneste bruker port 18765 for å bevare samme lagringsadresse mellom oppstarter, og stenges når appen lukkes. Oppstartsfeil logges i `%LOCALAPPDATA%/RL Hub/desktop.log`.
@@ -64,6 +65,10 @@ Eksisterende Overwolf-filer ligger fortsatt i prosjektet. Desktop-versjonen last
 ## Garage
 
 Garage viser lokale bilbilder og community-gjenskapinger av historiske zen-, jstn-, Squishy- og Retals-design. Søk, bilfilter, favoritter, deleliste og egne varianter fungerer uten BakkesMod. Kildelenkene åpnes eksternt. Delene velges manuelt i Rocket League; lagring eller aktivering i RL Hub endrer ikke spillet. Egne endringer oppdaterer ikke referansebildet. Eksisterende presets beholdes i samme WebView-lagring.
+
+## Settings
+
+Velg blant fem proffprofiler: zen, Vatira, M0nkey M00n, Daniel og BeastMode. Kopier alle innstillinger, bare kamera/kontroller eller én verdi. Kontroller inkluderer deadzone og følsomhet. PlayStation- og Xbox-visning bruker samme knappesteder; Xbox-visningen er appens oversettelse. Hvis utklippstavlen er utilgjengelig, åpnes teksten for manuell Ctrl+C. Kopiering endrer ikke spillfiler. Kildedatoene vises separat fra innhentingsdatoen; enkelte verdier er flere år gamle. Se `SETTINGS_SOURCES.md`.
 
 ## Performance
 

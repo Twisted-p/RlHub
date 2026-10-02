@@ -16,6 +16,8 @@ Dashboard viser **Dagens spillform** med faktisk treningstid, siste fem egne ran
 
 **Garage** har et visuelt preset-bibliotek med community-gjenskapinger av design fra zen, jstn, Squishy og Retals. Se bilbilder, delelister, farger og kildelenker; søk, filtrer på bil, lagre favoritter eller lag egne varianter. Eksisterende egne presets beholdes. Aktivt preset gjelder RL Hub; delene velges manuelt i Rocket League. Bildene er lokale og viser originalreferansen også når en egen variant redigeres. Designene er historiske inspirasjonsforslag, ikke bekreftede nåværende proffoppsett.
 
+**Settings** samler kamera, knappebindinger, deadzone og følsomhet for fem utvalgte proffer: zen, Vatira, M0nkey M00n, Daniel og BeastMode. Kopier hele oppsettet, en kategori eller én verdi, og velg PlayStation- eller tilsvarende Xbox-knappenavn. Siden husker valgt spiller/knappevisning. Verdiene følger kildeutdrag fra Liquipedia med egne oppdateringsdatoer; de er ikke en live verdensrangering eller garanti for spillerens nåværende innstillinger. Kopiering gir tekst; sett innstillingene manuelt i Rocket League. Kildegrunnlaget er dokumentert i [SETTINGS_SOURCES.md](SETTINGS_SOURCES.md).
+
 ## Fortsette utvikling på en annen maskin
 
 Åpne repoet i Codex og be den lese [CODEX_HANDOFF.md](CODEX_HANDOFF.md) og [AGENTS.md](AGENTS.md). Guiden dekker installasjon, bygging, tester, fullskjerm-widget, kodekart og videre utvikling. `main` inneholder den samlede nyeste versjonen.
@@ -45,6 +47,7 @@ Resultatet ligger i `dist/RL Hub.exe`. Kildekoden, logoen, introvideoen, modelle
 .\.venv\Scripts\python.exe tests/splash_ui_smoke.py
 .\.venv\Scripts\python.exe tests/performance_ui_smoke.py
 .\.venv\Scripts\python.exe tests/garage_ui_smoke.py
+.\.venv\Scripts\python.exe tests/settings_ui_smoke.py
 .\.venv\Scripts\python.exe tests/readiness_ui_smoke.py
 .\.venv\Scripts\python.exe tests/goals_ui_smoke.py
 .\.venv\Scripts\python.exe tests/overlay_ui_smoke.py
@@ -61,6 +64,7 @@ Med Node.js kan du også kjøre `node tests/performance_analytics.test.cjs` for 
 - `index.html`, øvrige HTML-filer, `script.js`, `styles.css`: grensesnitt.
 - `desktop-runtime.js`: tilpasning for standalone-versjonen.
 - `garage.js`, `garage.css`, `garage-presets.js`, `assets/garage/`: preset-bibliotek, lokale bilder og kildeoversikt.
+- `settings.html`, `settings.js`, `settings.css`, `pro-settings-data.js`: proffinnstillinger og kopiering som tekst.
 - `mmr_provider.py`: rank og MMR via tredjepartstjenesten `mmr.kmdw.dev`.
 - `performance_service.py`, `performance.js`, `performance.html`: Rocket Leagues lokale Stats API og kampoppsummeringer.
 - `native_overlay.py`, `overlay_service.py`, `overlay.html`, `overlay-settings.js`: Windows-overlay, rank-økter og innstillinger.
