@@ -15,7 +15,7 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def build(destination, webview, widget_zip):
+def build(destination, webview, widget_zip, release_version):
     destination.mkdir(parents=True, exist_ok=True)
     package = destination / 'RL Hub Complete'
     package.mkdir(exist_ok=True)
@@ -52,10 +52,10 @@ def build(destination, webview, widget_zip):
         name, version = expected.attrib['Name'], expected.attrib['MinVersion']
         assert name in dependencies, 'Missing widget dependency: ' + name
         assert tuple(map(int, dependencies[name].split('.'))) >= tuple(map(int, version.split('.'))), name
-    for name in ('README.md', 'CODEX_HANDOFF.md', 'STANDALONE_SETUP.md', 'SETTINGS_SOURCES.md'):
+    for name in ('README.md', 'CODEX_HANDOFF.md', 'STANDALONE_SETUP.md', 'SETTINGS_SOURCES.md', 'RANK_CELEBRATION_HANDOFF.md'):
         shutil.copy2(ROOT / name, package / name)
     shutil.copy2(ROOT / 'frontend/lanyard/REACT_BITS_LICENSE.md', package / 'REACT_BITS_LICENSE.md')
-    manifest_info = {'version':'0.4.0', 'architecture':'x64', 'webview2':'offline Evergreen standalone installer',
+    manifest_info = {'version':release_version, 'architecture':'x64', 'webview2':'offline Evergreen standalone installer',
         'webview2Source':'https://go.microsoft.com/fwlink/?LinkId=2124701',
         'widgetVersion':manifest.find('a:Identity',ns).attrib['Version'], 'widgetDependencies':dependencies,
         'gameBar':'Optional for fullscreen; Microsoft Store installation if absent'}
@@ -77,7 +77,8 @@ def build(destination, webview, widget_zip):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--version', required=True)
     parser.add_argument('--webview', type=Path, required=True)
     parser.add_argument('--widget-zip', type=Path, required=True)
     args = parser.parse_args()
-    build(args.output.resolve(), args.webview.resolve(), args.widget_zip.resolve())
+    build(args.output.resolve(), args.webview.resolve(), args.widget_zip.resolve(), args.version)

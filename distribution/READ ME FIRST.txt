@@ -1,4 +1,4 @@
-RL HUB 0.4.0 - WINDOWS x64
+RL HUB 0.5.0 - WINDOWS x64
 
 1. Extract ALL files from RL Hub Complete.zip to a folder first.
 2. Double-click Start RL Hub.cmd.
@@ -27,6 +27,10 @@ Then select Fullscreen - Xbox Game Bar in RL Hub's Overlay page, save, press
 Win+G, find RL Hub under Widgets and pin it. Keep RL Hub running.
 
 WHAT'S NEW
+New rank achievement card: bank-card style with chip, 3D tilt, rank text/numbers,
+gamertag, first observed promotion date and recorded match statistics.
+Celebrates a new highest rank family per player/mode, not subtiers/divisions.
+First lookup establishes a baseline; dismissed milestones stay dismissed.
 Training Packs: 3 source-checked codes rotating every 15 minutes.
 Dashboard: swinging rank card, actual MMR history graph and contextual daily tips.
 Rank history starts with saved observations; older history cannot be reconstructed.
