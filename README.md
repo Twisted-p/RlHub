@@ -1,5 +1,12 @@
 # RL Hub
 
+**Rankfeiring:** Ved en ny høyeste rankkategori per spiller og modus (for eksempel
+Diamond → Champion) spretter et eget rankkort inn i RL Hub med rankikon, farge,
+navn, registreringsdato, MMR og registrerte ranked-resultater siste 24 timer.
+Divisjoner og Diamond II → III utløser ikke feiring. Første oppslag setter et
+utgangspunkt; lukkede milepæler huskes etter omstart. Kortet vises i appvinduet
+og venter under intro eller når siden er skjult. Se `RANK_CELEBRATION_HANDOFF.md`.
+
 En standalone Rocket League-app for Windows, uten Overwolf. Den samler rank/MMR, kampoppsummeringer, garage og trening, med et eget Windows-overlay. Ved oppstart kjører en 6,6 sekunders intro der Octane powerslider og blir til RL Hub-logoen.
 
 

@@ -27,6 +27,7 @@ from native_overlay import NativeOverlay, render_card
 APP_PORT = int(os.environ.get("RL_HUB_PORT", "18765"))
 ASSET_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).parent))
 UI_FILES = {
+    "rank-celebration.js", "rank-celebration.css",
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",
     "assets/rlhub-intro.mp4",
@@ -43,6 +44,7 @@ UI_FILES = {
     "assets/garage/zen.jpeg", "assets/garage/jstn.png",
     "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg",
 }
+UI_FILES.update(f"assets/ranks/{i}.png" for i in range(23))
 
 
 class DesktopHandler(TrackerProxyHandler):
@@ -63,6 +65,15 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/api/rank-promotions":
+            overlay = getattr(self.server, "overlay", None)
+            if overlay:
+                with overlay.lock:
+                    events = overlay.promotions.pending(overlay.profile)
+            else:
+                events = []
+            self.respond_json(200, {"events": events})
+            return
         if parsed.path == "/api/progression":
             query = parse_qs(parsed.query)
             mode = query.get("playlist", ["2v2"])[0]
@@ -150,6 +161,7 @@ class DesktopHandler(TrackerProxyHandler):
             self.respond_json(404, {"error": "Fant ikke filen."})
             return
         if name.endswith(".html"):
+            content = content.replace(b"</body>", b'<link rel="stylesheet" href="./rank-celebration.css"><script src="./rank-celebration.js" defer></script></body>')
             content = content.replace(
                 b'<script src="./script.js"></script>',
                 b'<script src="./desktop-runtime.js"></script>\n'
@@ -175,12 +187,29 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_POST(self) -> None:
         path = urlparse(self.path).path
-        if path not in ("/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break", "/api/goals"):
+        if path not in ("/api/rank-promotions/ack", "/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break", "/api/goals"):
             self.respond_json(404, {"error": "Fant ikke endepunktet."})
             return
         expected_origin = f"http://127.0.0.1:{self.server.server_port}"
         if self.headers.get("Origin") != expected_origin:
             self.respond_json(403, {"error": "Endringer må gjøres fra RL Hub."})
+            return
+        if path == "/api/rank-promotions/ack":
+            overlay = getattr(self.server, "overlay", None)
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= 1024:
+                    raise ValueError()
+                payload = json.loads(self.rfile.read(length))
+                if not isinstance(payload, dict) or not isinstance(payload.get("id"), str):
+                    raise ValueError()
+                with overlay.lock:
+                    acknowledged = overlay.promotions.acknowledge(overlay.profile, payload["id"])
+                self.respond_json(200, {"acknowledged": acknowledged})
+            except (ValueError, TypeError):
+                self.respond_json(400, {"error": "Ugyldig milepæl."})
+            except AttributeError:
+                self.respond_json(503, {"error": "Ranktjenesten er ikke startet."})
             return
         if path == "/api/goals":
             service = getattr(self.server, "goals", None)

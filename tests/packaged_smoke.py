@@ -64,6 +64,11 @@ with tempfile.TemporaryDirectory(prefix="rl-hub-packaged-", ignore_cleanup_error
         for asset in ["dashboard-progression.js", "dashboard-progression-model.js", "dashboard-progression.css", "settings.js", "settings.css", "pro-settings-data.js", "training-packs.js", "training-packs.css", "training-packs-data.js", "training-packs-rotation.js", "assets/dashboard-lanyard/dashboard-lanyard.js", "assets/dashboard-lanyard/rlhub-dashboard-lanyard.css"]:
             with urlopen(origin + "/" + asset, timeout=2) as response:
                 assert response.status == 200 and len(response.read()) > 100, asset
+        for asset in ["rank-celebration.js", "rank-celebration.css"] + [f"assets/ranks/{i}.png" for i in range(23)]:
+            with urlopen(origin + "/" + asset, timeout=2) as response:
+                assert response.status == 200 and len(response.read()) > 0, asset
+        with urlopen(origin + "/api/rank-promotions", timeout=2) as response:
+            assert json.load(response) == {"events": []}
         with urlopen(origin + "/api/performance", timeout=2) as response:
             performance = json.load(response)
             assert isinstance(performance["matches"], list)

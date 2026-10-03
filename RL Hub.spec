@@ -9,6 +9,7 @@ with Image.open(root / "App Logo.png") as image:
     image.save(icon, format="ICO", sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
 
 assets = [
+    "rank-celebration.js", "rank-celebration.css",
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",
     "assets/rlhub-intro.mp4",
@@ -25,6 +26,7 @@ assets = [
     "assets/garage/zen.jpeg", "assets/garage/jstn.png",
     "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg",
 ]
+assets.extend(f"assets/ranks/{i}.png" for i in range(23))
 a = Analysis(
     [str(root / "desktop_app.py")],
     pathex=[str(root)],

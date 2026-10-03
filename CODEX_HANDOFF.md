@@ -1,5 +1,11 @@
 # RL Hub – instruks til Codex på en annen maskin
 
+**Rankfeiring:** Originalt JS/CSS-kort på alle standalone-faner, med rankikon,
+farger, dato og observerte stats. Bare en ny høyeste rankkategori per konto/modus
+utløser feiring; første oppslag og eksisterende historikk setter baseline.
+Lukking lagres i `rank-promotions.json`. Ingen React Bits Pro-lisens kreves.
+Les `RANK_CELEBRATION_HANDOFF.md` for kodekart, datagrunnlag og tester.
+
 Les denne filen sammen med `AGENTS.md`, `README.md`, `STANDALONE_SETUP.md` og, ved overlay-arbeid, `gamebar/README.md` før du endrer prosjektet. Brukerens nye forespørsel bestemmer hva som skal utvikles; denne filen beskriver utgangspunktet.
 
 

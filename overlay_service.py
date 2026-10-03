@@ -9,6 +9,7 @@ import time
 
 from mmr_provider import fetch_rank_profile
 from progression_service import ProgressionService
+from rank_promotion_service import RankPromotionService
 
 RANKED = {10: "1v1", 11: "2v2", 13: "3v3"}
 DEFAULTS = {"enabled": True, "showInMatch": False, "position": "top-left", "scale": 100, "playlist": "2v2", "renderer": "desktop"}
@@ -31,6 +32,7 @@ class OverlayService:
         self.settings = dict(DEFAULTS)
         self.profile = None
         self.progression = ProgressionService(data_dir)
+        self.promotions = RankPromotionService(data_dir, self.progression)
         self.lookup = None
         self.bases = {}
         self.started_at = datetime.now(timezone.utc).isoformat()
@@ -129,6 +131,8 @@ class OverlayService:
             for row in ranks:
                 self.bases.setdefault(row["playlist"], row["mmr"])
             self.profile = value
+            matches = self.performance.snapshot().get("matches", []) if self.performance else []
+            self.promotions.observe(value, matches)
             self.progression.record(value)
             if isinstance(lookup, dict) and lookup.get("platform") in ("epic", "steam", "psn", "xbl"):
                 self.lookup = {"platform": lookup["platform"], "gamertag": str(lookup.get("gamertag", ""))[:160], "playerId": value["playerId"]}
