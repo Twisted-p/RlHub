@@ -12,6 +12,14 @@ document.querySelectorAll("a[href]").forEach((link) => {
 
 const desktopNav = document.querySelector(".nav");
 if (desktopNav) {
+  if (!desktopNav.querySelector('a[href="./training-packs.html"]')) {
+    const link = document.createElement("a");
+    link.className = "nav-link" + (document.body.dataset.page === "training-packs" ? " active" : "");
+    link.href = "./training-packs.html";
+    link.textContent = "Training Packs";
+    const training = desktopNav.querySelector('a[href="./training.html"]');
+    desktopNav.insertBefore(link, training ? training.nextSibling : null);
+  }
   if (!desktopNav.querySelector('a[href="./settings.html"]')) {
     const settingsLink = document.createElement("a");
     settingsLink.className = "nav-link";

@@ -37,6 +37,22 @@ class DesktopServiceTests(unittest.TestCase):
                 urlopen(self.origin + "/" + name)
             self.assertEqual(result.exception.code, 404)
 
+    def test_dashboard_ranks_are_current_and_exclude_account_identifiers(self):
+        from types import SimpleNamespace
+        from threading import RLock
+        with urlopen(self.origin + "/api/dashboard-ranks") as response:
+            self.assertIsNone(json.load(response)["profile"])
+        self.server.overlay = SimpleNamespace(lock=RLock(), profile={
+            "name": "Test", "playerId": "private-id", "fetchedAt": "2026-10-03",
+            "ranks": [{"playlist": "2v2", "rank": "Diamond I Division II", "mmr": 1000}]})
+        with urlopen(self.origin + "/api/dashboard-ranks") as response:
+            profile = json.load(response)["profile"]
+            self.assertNotIn("playerId", profile)
+            self.assertEqual(profile["ranks"][0]["mmr"], 1000)
+        self.server.overlay.profile["ranks"][0]["mmr"] = 1009
+        with urlopen(self.origin + "/api/dashboard-ranks") as response:
+            self.assertEqual(json.load(response)["profile"]["ranks"][0]["mmr"], 1009)
+
     def test_runtime_session_changes_on_app_restart(self):
         with urlopen(self.origin + "/desktop-runtime.js") as response:
             first = response.read().decode()

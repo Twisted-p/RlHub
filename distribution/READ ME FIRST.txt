@@ -1,0 +1,41 @@
+RL HUB 0.4.0 - WINDOWS x64
+
+1. Extract ALL files from RL Hub Complete.zip to a folder first.
+2. Double-click Start RL Hub.cmd.
+   It checks for WebView2 and installs the INCLUDED OFFLINE Microsoft runtime
+   if missing, then starts RL Hub. Do not delete Dependencies or RuntimeSetup.psm1.
+3. In Profile, select your platform and enter your gamertag. Start Rocket League
+   with that account once so RL Hub can find its public player identity.
+
+The app includes Python, .NET interop libraries, React/Three/Rapier, graphics,
+the intro, rank icons and every app asset. No Python, Node, npm, API key or
+development tools are needed. WebView2 is checked/installed by the launcher.
+Normal Windows 11 x64 includes the required .NET Framework. Windows ARM/x86
+and modified Windows installations are not supported by this x64 package.
+Internet is needed for rank lookup. Existing local history/training remains local.
+
+OPTIONAL FULLSCREEN OVERLAY (Xbox Game Bar)
+The main app and borderless overlay DO NOT require Xbox Game Bar.
+For the fullscreen overlay, double-click Install Fullscreen Overlay.cmd.
+It installs RL Hub's widget and its included x64 UWP runtime dependencies.
+Windows administrator permission is required for this unsigned development
+widget. No certificate trust, anti-cheat or game injection is changed.
+If Xbox Game Bar itself is missing, the installer opens its official Microsoft
+Store page. Install Game Bar there and run the overlay installer again.
+Game Bar itself is not an offline-redistributable payload in this ZIP.
+Then select Fullscreen - Xbox Game Bar in RL Hub's Overlay page, save, press
+Win+G, find RL Hub under Widgets and pin it. Keep RL Hub running.
+
+WHAT'S NEW
+Training Packs: 3 source-checked codes rotating every 15 minutes.
+Dashboard: swinging rank card, actual MMR history graph and contextual daily tips.
+Rank history starts with saved observations; older history cannot be reconstructed.
+Settings: removed the copy-entire-setup button. Individual/category copying remains.
+
+UPDATING
+Close the previous RL Hub app and launch this package. Your personal data stays
+in LocalAppData\RL Hub and is not included in the download.
+
+Check SHA256SUMS.txt for release checksums and PACKAGE-SHA256SUMS.txt for contents.
+WebView2 source: https://developer.microsoft.com/microsoft-edge/webview2/
+Game Bar: https://apps.microsoft.com/detail/9nzkpstsnw4p

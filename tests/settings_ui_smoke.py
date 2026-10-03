@@ -66,12 +66,14 @@ def exercise():
         # Source-backed spot checks: camera, sensitivity and distinct directional bindings.
         expected_fov = {"zen":"110", "vatira":"110", "monkeymoon":"110", "daniel":"110", "beastmode":"109"}
         for player, fov in expected_fov.items():
-            js(f"document.querySelector('[data-player={player}]').click(); document.querySelector('[data-copy=all]').click()")
+            js(f"document.querySelector('[data-player={player}]').click(); document.querySelector('[data-section=camera]').click(); document.querySelector('[data-copy=section]').click()")
             wait_for("typeof copiedText === 'string'")
             copied = js("copiedText")
             assert "FOV: " + fov in copied
-            assert "Controller Deadzone:" in copied and "Kilde: https://liquipedia.net/rocketleague/" in copied
+            assert "Kilde: https://liquipedia.net/rocketleague/" in copied
             assert "dato ikke oppgitt" in copied
+            js("document.querySelector('[data-section=controls]').click(); document.querySelector('[data-copy=section]').click()")
+            assert "Controller Deadzone:" in js("copiedText")
         js("document.querySelector('[data-player=zen]').click(); document.querySelector('[data-section=controls]').click()")
         assert js("document.querySelectorAll('#settings-values .settings-value').length") == 9
         assert js("document.querySelector('[data-copy=\"controls:1\"]').previousElementSibling.textContent") == "R1"
@@ -92,7 +94,7 @@ def exercise():
         assert "FOV: 110" in js("copiedText") and "Boost:" not in js("copiedText")
         js("document.querySelector('[data-section=camera]').dispatchEvent(new KeyboardEvent('keydown',{key:'End',bubbles:true}))")
         assert js("document.getElementById('settings-tab-controls').getAttribute('aria-selected')") == "true"
-        js("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('denied')}}}); document.querySelector('[data-copy=all]').click()")
+        js("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('denied')}}}); document.querySelector('[data-copy=section]').click()")
         wait_for("document.getElementById('settings-copy-dialog').open")
         assert js("document.getElementById('settings-copy-text').value.includes('M0nkey M00n')")
         assert js("document.getElementById('settings-copy-text').selectionEnd") == js("document.getElementById('settings-copy-text').value.length")

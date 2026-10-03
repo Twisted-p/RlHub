@@ -2,6 +2,15 @@
 
 Les denne filen sammen med `AGENTS.md`, `README.md`, `STANDALONE_SETUP.md` og, ved overlay-arbeid, `gamebar/README.md` før du endrer prosjektet. Brukerens nye forespørsel bestemmer hva som skal utvikles; denne filen beskriver utgangspunktet.
 
+
+**Training Packs** viser tre unike koder fra et lokalt utvalg på 18 pakker. Utvalget byttes ved hvert kvarter (:00, :15, :30, :45), med nedtelling og kopiering per kode. Navigasjon og omstart innen samme kvarter beholder utvalget; etter hvilemodus brukes gjeldende kvarter. Kodene er kontrollert mot de to Dignitas-artiklene 02.10.2026, ikke testet i spillet. RL Garage blokkerte uthenting (HTTP 403) og er derfor bare lenket som en ekstra katalog. Ingen nettsider hentes automatisk ved hvert bytte.
+
+
+**Dashboard-rankkort:** React Bits Lanyard svinger inn ved åpning av Dashboard og viser ikonet for sist hentede rank. Velg 1v1/2v2/3v3 (standard 2v2); valget huskes. Rankdata oppdateres fra appens lokale tjeneste, uten ekstra MMR-oppslag. Manglende rank gir lenke til Profile. Redusert bevegelse/3D-feil gir statisk kort; scenen stoppes når siden er skjult. Kilde, bygging og tilpasninger: `frontend/lanyard/README.md`.
+
+
+**Dashboard-progresjon:** Oransje MMR-kurve med omtrentlige ranksoner, 1v1/2v2/3v3 og 30/90/365 dager eller hele historikken. `rank-history.json` lagrer faktiske rankoppslag per spiller og modus (maks 10 000 målinger per modus), uavhengig av øktreset. Eksisterende sist hentede rank kan bli første punkt; eldre historikk kan ikke rekonstrueres fra kampscore. `/api/progression` viser historikk og de siste egne ranked-resultatene. Dagens fokus bruker lokale regler: lang økt, flere tap siste døgn, MMR-endring siste sju dager, seiere eller et dagsvariert treningstips. Dette er coaching, ikke AI eller en garantert prestasjonsanalyse. Rankkort og graf deler valgt modus. Ranksonene gjenbruker Goals sine omtrentlige opprykksgrenser; de er ikke nøyaktige divisjonsgrenser.
+
 ## Prosjekt og siste funksjoner
 
 Repo: https://github.com/Twisted-p/RlHub. `main` inneholder den samlede standalone-versjonen. Repoet er privat; maskinen må ha tilgang til brukerens GitHub-konto. Utvikling av overlay, Dashboard og Goals ligger også historisk på `codex/standalone-overlay`.
@@ -14,7 +23,7 @@ RL Hub er en Windows-app med Python, pywebview/WebView2 og lokale HTML/CSS/JS-si
 - Dashboard: faktisk treningstid, siste fem egne ranked/casual-kamper, snitt og MMR-endring i økten. Etter hver femkampers blokk gir minst tre tap rådet om 15 min pause; minst tre seiere gir 5 min pause + 5 min ny trening. Fokustimer på 90 min senker readiness gradvis. Dette er coachingregler, ikke offisiell spillstatistikk eller et dokumentert universelt fokusmaksimum.
 - Goals: separate rankmål for 1v1/2v2/3v3, MMR-avstand og `ceil(MMR igjen / 9)` seiere på rad. Rankgrenser og +9 MMR er anslag. Mål lagres per spiller.
 - Garage: visuelt bibliotek med fire kildebelagte, historiske proffdesign, lokale bilbilder, søk/bilfilter, favoritter og egne varianter. Egne presets beholdes og lagres lokalt. Aktivt preset gjelder RL Hub, ikke automatisk bilbytte i spillet. Bildet av en egen variant viser originalreferansen. Training lagrer rutiner lokalt.
-- Settings: fem utvalgte profiler (zen, Vatira, M0nkey M00n, Daniel, BeastMode), med kamera, bindinger, deadzone og følsomhet. Kopiering gir tekst for hele oppsettet, en kategori eller én verdi. PS/Xbox-visning oversetter knappesteder; ingen spillfiler endres. Kildegrunnlag og kjente kildedatoer er dokumentert i `SETTINGS_SOURCES.md`.
+- Settings: fem utvalgte profiler (zen, Vatira, M0nkey M00n, Daniel, BeastMode), med kamera, bindinger, deadzone og følsomhet. Kopiering gir tekst for en kategori eller én verdi. PS/Xbox-visning oversetter knappesteder; ingen spillfiler endres. Kildegrunnlag og kjente kildedatoer er dokumentert i `SETTINGS_SOURCES.md`.
 - Native Windows-overlay for kantløst vindu/vindu. Lobby, trening og etterkampvisning, samt egen bryter for statistikk under kamp. Ctrl+Shift+O skjuler/viser overlayet.
 - Fullskjerm-overlay via en egen Xbox Game Bar-widget. Widget 1.0.2.0 er kontrollert i ekte Rocket League-fullskjerm på utviklingsmaskinen. Ny maskin må teste sin egen visning; HTTP-forbindelse er ikke bevis på synlige piksler.
 
@@ -77,7 +86,7 @@ Alternative bygg for å unngå å erstatte en kjørende exe:
 
 ## 4. Fullskjerm-widget
 
-Den ferdige release-pakken **RL Hub Fullscreen.zip** inneholder appen, widget 1.0.2.0, riktige x64-runtimeavhengigheter og installasjonsinstruks. Pakk ut hele ZIP-en. Følg `LES MEG.txt` og kjør den medfølgende `Install-Widget.ps1` fra administrator-PowerShell. Installasjonen legger til en loopback exemption kun for RL Hubs widgetpakke.
+Release 0.4.0 leverer **RL Hub Complete.zip** med appen, WebView2 offline-installer, widget 1.0.2.0 og alle tre x64 UWP-runtimeavhengigheter. Pakk ut hele ZIP-en og kjør `Start RL Hub.cmd`; WebView2 installeres bare ved behov. `Install Fullscreen Overlay.cmd` ber om administratortillatelse for widgeten og dens lokale loopback exemption. Hvis Windows-appen Game Bar mangler, åpnes Microsoft Store. Game Bar er ikke nødvendig for vanlig app/kantløst overlay og følger ikke med som offline-installer. Se `distribution/README.md` for reproduksjon og kontroll av pakken.
 
 Etter installasjon: velg Fullskjerm / Xbox Game Bar under Overlay i RL Hub, lagre, åpne Win+G, finn RL Hub under Widgets, fest med tegnestiften og aktiver museklikkgjennomgang. Lukk Win+G og kontroller overlayet over spillet. Game Bar styrer plassering/størrelse i denne modusen. Vanlig Windows-overlay støtter kantløst vindu, ikke eksklusiv fullskjerm.
 
@@ -145,7 +154,7 @@ Bruk norsk og enkel tekst i UI. Gjenbruk eksisterende mørke design og turkise a
 
 ## 7. Lagring og personvern
 
-Personlige data ligger i `%LOCALAPPDATA%\RL Hub`, blant annet `performance.json`, `overlay.json`, `readiness.json`, `goals.json`, `WebView/` og `desktop.log`. En ny maskin starter med egen historikk og egne innstillinger. Ikke last opp denne mappen, Rocket League-logger, tokens eller innloggingsdata til GitHub. Les bare offentlig spilleridentitet fra spilloggene.
+Personlige data ligger i `%LOCALAPPDATA%\RL Hub`, blant annet `performance.json`, `overlay.json`, `readiness.json`, `goals.json`, `rank-history.json`, `WebView/` og `desktop.log`. En ny maskin starter med egen historikk og egne innstillinger. Ikke last opp denne mappen, Rocket League-logger, tokens eller innloggingsdata til GitHub. Les bare offentlig spilleridentitet fra spilloggene.
 
 Garage bruker de eksisterende nøklene `rlhub:garagePresets` og `rlhub:uiState`, pluss `rlhub:garageFavorites`. `script.js:normalizePreset` bevarer katalog-/referansefelter ved gjenstart. Test Garage med `.\.venv\Scripts\python.exe tests/garage_ui_smoke.py`; testen bruker isolert lagring og dekker eldre presets, favoritter, søk, deleliste, redigering, bildevisning og smal layout. Bilder og kilder dokumenteres i `assets/garage/SOURCES.md`; ikke omtale community-design som bekreftede nåværende oppsett.
 

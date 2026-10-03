@@ -1,0 +1,21 @@
+body[data-page="training-packs"] .ambient-two{right:0}
+body[data-page="training-packs"] .main-content{padding:32px;min-width:0}
+.packs-heading{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:32px}
+.packs-heading h1{font-size:clamp(26px,3vw,38px);line-height:1.2;margin:10px 0 14px;letter-spacing:-1.3px}
+.packs-heading p,.packs-help p{color:var(--muted);font-size:14px;line-height:1.6}
+.packs-clock{flex-shrink:0;background:#59f0d410;border:1px solid #59f0d440;border-radius:16px;padding:16px 20px;text-align:center}
+.packs-clock span{display:block;color:var(--muted);font-size:11px}.packs-clock strong{font:600 30px Sora,sans-serif;color:var(--teal);font-variant-numeric:tabular-nums;display:block;margin-top:6px}
+.packs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pack-card{display:flex;flex-direction:column;min-width:0;padding:22px 18px;background:linear-gradient(145deg,#182c3d,#101d2b);border:1px solid var(--line);border-radius:20px}
+.pack-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.pack-top .eyebrow{font-size:10px}.pack-number{font:700 30px Sora,sans-serif;color:#536c80}
+.pack-card h2{font:700 20px/1.4 Sora,sans-serif;min-height:84px;margin:26px 0 0;overflow-wrap:anywhere}
+.pack-level{color:var(--muted);font-size:12px;min-height:34px;margin:8px 0 20px}
+.pack-card code{display:block;font:600 13px/1.6 Consolas,monospace;white-space:nowrap;color:#e3f8f5;background:#061520;padding:13px 6px;border-radius:8px;text-align:center;user-select:all}
+.pack-card button{margin:14px 0 18px;padding:12px 8px;font-size:12px}.pack-card a{font-size:11px;color:var(--muted);align-self:center;text-decoration:underline;text-underline-offset:3px}
+#packs-feedback{min-height:22px;font-size:12px;color:var(--teal);margin:14px 0}
+.packs-help{padding:20px 24px;border:1px solid var(--line);border-radius:16px;background:#0b1a29}.packs-help strong{font-size:16px}.packs-help p{margin:8px 0}.packs-help span,.packs-sources{color:var(--muted);font-size:11px;line-height:1.7}
+.packs-sources{margin-top:24px}.packs-sources p{margin:4px 0}.packs-sources a{display:inline-block;margin:10px 16px 0 0;color:var(--teal);text-decoration:underline;text-underline-offset:3px}
+#packs-copy-dialog{padding:28px;background:#101e2d;color:var(--text);border:1px solid var(--line);border-radius:18px;max-width:90vw}#packs-copy-dialog::backdrop{background:#020810bb}#packs-copy-dialog h2{font-size:22px}#packs-copy-dialog p{font-size:13px;color:var(--muted)}#packs-copy-text{display:block;width:100%;padding:14px;margin:20px 0;background:#061520;color:var(--text);border:1px solid var(--line);font:16px monospace}
+body[data-page="training-packs"] :is(button,a):focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+@media(max-width:1120px){body[data-page="training-packs"] .sidebar{display:grid;grid-template-columns:90px 1fr;align-items:center;padding:12px 24px;gap:12px}body[data-page="training-packs"] .brand{padding:0}body[data-page="training-packs"] .brand-logo{width:90px}body[data-page="training-packs"] .nav{display:flex;flex-wrap:wrap;gap:4px}body[data-page="training-packs"] .nav-link{padding:9px 12px;font-size:12px;border-radius:8px}}
+@media(max-width:700px){body[data-page="training-packs"] .main-content{padding:20px}.packs-heading{align-items:flex-start;flex-wrap:wrap}.packs-grid{grid-template-columns:1fr}.pack-card h2{min-height:0;margin-top:14px}.pack-level{min-height:0}.pack-card code{font-size:16px}}

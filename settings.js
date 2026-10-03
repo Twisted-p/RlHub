@@ -51,7 +51,7 @@
   }
   function copyText(scope) {
     if (scope.includes(':')) { const [group,index] = scope.split(':'); return rows(group)[Number(index)][1]; }
-    const body = scope === 'all' ? 'KAMERA\n' + sectionText('camera') + '\n\nKONTROLLER / ' + (controller === 'ps' ? 'PlayStation' : 'Xbox (tilsvarende knapper)') + '\n' + sectionText('controls') : sectionText(section);
+    const body = sectionText(section);
     return player.name + ' – Rocket League\n\n' + body + '\n\nKilde: ' + player.source + '\nKamera: ' + date(player.cameraUpdated) + ' · Deadzone: ' + date(player.deadzoneUpdated) + '\nKnappebindinger: dato ikke oppgitt. Kildeutdrag hentet 02.10.2026.\nSett innstillingene manuelt i Rocket League.';
   }
   document.querySelector('.settings-main').addEventListener('click',async event=>{

@@ -1,0 +1,14 @@
+const assert = require('node:assert/strict');
+const {advice} = require('../dashboard-progression-model.js');
+const now = Date.parse('2026-10-03T10:00:00Z');
+const base = {current:{mmr:950},weekDelta:null,recent:[],focusSeconds:0};
+const losses = [false,false,false,true].map(win=>({win,at:'2026-10-03T09:00:00Z'}));
+assert.match(advice({...base,current:null},now).title,/utgangspunkt/);
+assert.match(advice({...base,recent:losses},now).title,/Nullstill/);
+assert.match(advice({...base,recent:losses,focusSeconds:5400},now).title,/pause/);
+assert.match(advice({...base,weekDelta:30},now).title,/fungerer/);
+assert.match(advice({...base,weekDelta:-30},now).title,/trygghet/);
+assert.match(advice({...base,recent:losses.map(r=>({...r,win:true}))},now).title,/rytmen/);
+assert.deepEqual(advice(base,now),advice({...base,recent:losses.map(r=>({...r,at:'2026-10-01T00:00:00Z'}))},now));
+assert.deepEqual(advice(base,now),advice(base,now+3600000));
+console.log('Daily advice: missing data, fatigue priority, losses, gains, declines, wins, stale results and daily stability OK');

@@ -12,7 +12,7 @@ from pathlib import Path
 import sys
 from threading import Thread
 from http.server import ThreadingHTTPServer
-from urllib.parse import unquote, urlparse
+from urllib.parse import unquote, urlparse, parse_qs
 from uuid import uuid4
 
 from tracker_proxy import TrackerProxyHandler
@@ -30,12 +30,16 @@ UI_FILES = {
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",
     "assets/rlhub-intro.mp4",
+    "assets/dashboard-lanyard/dashboard-lanyard.js", "assets/dashboard-lanyard/rlhub-dashboard-lanyard.css",
     "overlay.html", "overlay-settings.js",
     "performance-analytics.js",
     "readiness.js",
+    "dashboard-progression.js", "dashboard-progression-model.js", "dashboard-progression.css",
     "goals.html", "goals.js",
     "garage.js", "garage.css", "garage-presets.js",
     "settings.html", "settings.js", "settings.css", "pro-settings-data.js",
+    "training-packs.html", "training-packs.js", "training-packs.css",
+    "training-packs-data.js", "training-packs-rotation.js",
     "assets/garage/zen.jpeg", "assets/garage/jstn.png",
     "assets/garage/squishy.jpeg", "assets/garage/retals.jpeg",
 }
@@ -59,6 +63,36 @@ class DesktopHandler(TrackerProxyHandler):
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/api/progression":
+            query = parse_qs(parsed.query)
+            mode = query.get("playlist", ["2v2"])[0]
+            days = query.get("days", ["90"])[0]
+            if mode not in ("1v1", "2v2", "3v3") or days not in ("30", "90", "365", "0"):
+                self.respond_json(400, {"error":"Ugyldig periode eller spillmodus."})
+                return
+            overlay = getattr(self.server, "overlay", None)
+            if not overlay:
+                self.respond_json(503, {"error":"Ranktjenesten er ikke startet."})
+                return
+            from copy import deepcopy
+            with overlay.lock:
+                profile = deepcopy(overlay.profile)
+            payload = overlay.progression.view(profile, mode, int(days), overlay.performance.snapshot().get("matches", []))
+            readiness = getattr(self.server, "readiness", None)
+            state = readiness.tick() if readiness else {}
+            payload["focusSeconds"] = state.get("focusSeconds", 0)
+            payload["trainingSeconds"] = state.get("trainingSeconds", 0)
+            self.respond_json(200, payload)
+            return
+        if parsed.path == "/api/dashboard-ranks":
+            overlay = getattr(self.server, "overlay", None)
+            profile = None
+            if overlay:
+                with overlay.lock:
+                    if overlay.profile:
+                        profile = {key: overlay.profile.get(key) for key in ("name", "ranks", "fetchedAt")}
+            self.respond_json(200, {"profile": profile})
+            return
         if parsed.path == "/api/goals":
             service = getattr(self.server, "goals", None)
             self.respond_json(200 if service else 503, service.view() if service else {"error": "Goals er ikke startet."})

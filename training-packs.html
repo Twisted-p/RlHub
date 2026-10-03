@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RL Hub | Training Packs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" /><link rel="stylesheet" href="./training-packs.css" />
+</head>
+<body class="app-ready" data-page="training-packs">
+  <div class="page-shell">
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <aside class="sidebar">
+      <a class="brand" href="./index.html"><img class="brand-logo" src="./App Logo.png" alt="RL Hub logo" /></a>
+      <nav class="nav">
+        <a class="nav-link" href="./dashboard.html">Dashboard</a><a class="nav-link" href="./garage.html">Garage</a>
+        <a class="nav-link" href="./settings.html">Settings</a><a class="nav-link" href="./training.html">Training</a>
+        <a class="nav-link active" href="./training-packs.html">Training Packs</a>
+        <a class="nav-link" href="./performance.html">Performance</a><a class="nav-link" href="./profile.html">Profile</a>
+      </nav>
+    </aside>
+    <main class="main-content packs-main">
+      <header class="packs-heading"><div><p class="eyebrow">Training Packs</p><h1>Finn fokus for neste økt.</h1><p>Tre treningspakker. Nye forslag hvert 15. minutt.</p></div><div class="packs-clock"><span>Neste bytte om</span><strong id="packs-countdown">15:00</strong></div></header>
+      <section id="packs-grid" class="packs-grid" aria-label="Tre treningspakker"></section>
+      <p id="packs-feedback" role="status" aria-live="polite"></p>
+      <aside class="packs-help"><strong>Kopier. Lim inn. Tren.</strong><p>Kopier koden og lim den inn under Custom Training i Rocket League.</p><span>Forslagene byttes ved hvert kvarter og fungerer også uten nett.</span></aside>
+      <footer class="packs-sources"><p>Koder fra Dignitas · 18 pakker i rotasjon · kontrollert 02.10.2026</p><p>Nivåene følger kildeartiklene. Kodene er ikke testet inne i spillet.</p><a href="https://dignitas.gg/articles/best-training-packs-for-every-rank-in-rocket-league" target="_blank" rel="noopener noreferrer">Dignitas: trening etter rank ↗</a><a href="https://dignitas.gg/articles/training-packs-you-can-utilize-today-in-rocket-league" target="_blank" rel="noopener noreferrer">Dignitas: flere treningspakker ↗</a><a href="https://rocket-league.com/training" target="_blank" rel="noopener noreferrer">Utforsk RL Garage ↗</a></footer>
+      <dialog id="packs-copy-dialog" aria-labelledby="packs-copy-title"><h2 id="packs-copy-title">Kopier koden manuelt</h2><p>Trykk Ctrl+C for å kopiere den markerte koden.</p><input id="packs-copy-text" readonly aria-label="Pack code"><button id="packs-close-dialog" class="ghost-button" type="button">Lukk</button></dialog>
+    </main>
+  </div>
+  <script src="./script.js"></script><script src="./training-packs-data.js"></script><script src="./training-packs-rotation.js"></script><script src="./training-packs.js"></script>
+</body></html>

@@ -1,0 +1,3 @@
+# Vite output contains third-party GLSL strings with insignificant trailing spaces.
+assets/dashboard-lanyard/*.js whitespace=-blank-at-eol linguist-generated=true
+assets/dashboard-lanyard/*.css linguist-generated=true

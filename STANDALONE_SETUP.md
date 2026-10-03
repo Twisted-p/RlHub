@@ -1,6 +1,15 @@
 # RL Hub for Windows
 
-Last ned `RL Hub.exe` fra GitHub Releases, eller bygg den selv til `dist/RL Hub.exe`. Appen kjører i sitt eget vindu og starter lokale rank- og Performance-tjenester automatisk. Overwolf og Python trengs ikke for den ferdigbygde appen.
+Last ned `RL Hub Complete.zip` fra GitHub Releases, pakk ut hele pakken og kjør `Start RL Hub.cmd`. Den medfølgende offline-installeren installerer WebView2 hvis den mangler. `Install Fullscreen Overlay.cmd` installerer widgeten med medfølgende x64-runtimepakker og åpner Microsoft Store hvis selve Game Bar mangler. Game Bar trengs bare for fullskjerm-overlayet. Alternativt kan appen bygges til `dist/RL Hub.exe`. Appen kjører i sitt eget vindu og starter lokale rank- og Performance-tjenester automatisk. Overwolf og Python trengs ikke for den ferdigbygde appen.
+
+
+**Training Packs** viser tre unike koder fra et lokalt utvalg på 18 pakker. Utvalget byttes ved hvert kvarter (:00, :15, :30, :45), med nedtelling og kopiering per kode. Navigasjon og omstart innen samme kvarter beholder utvalget; etter hvilemodus brukes gjeldende kvarter. Kodene er kontrollert mot de to Dignitas-artiklene 02.10.2026, ikke testet i spillet. RL Garage blokkerte uthenting (HTTP 403) og er derfor bare lenket som en ekstra katalog. Ingen nettsider hentes automatisk ved hvert bytte.
+
+
+**Dashboard-rankkort:** React Bits Lanyard svinger inn ved åpning av Dashboard og viser ikonet for sist hentede rank. Velg 1v1/2v2/3v3 (standard 2v2); valget huskes. Rankdata oppdateres fra appens lokale tjeneste, uten ekstra MMR-oppslag. Manglende rank gir lenke til Profile. Redusert bevegelse/3D-feil gir statisk kort; scenen stoppes når siden er skjult. Kilde, bygging og tilpasninger: `frontend/lanyard/README.md`.
+
+
+**Dashboard-progresjon:** Oransje MMR-kurve med omtrentlige ranksoner, 1v1/2v2/3v3 og 30/90/365 dager eller hele historikken. `rank-history.json` lagrer faktiske rankoppslag per spiller og modus (maks 10 000 målinger per modus), uavhengig av øktreset. Eksisterende sist hentede rank kan bli første punkt; eldre historikk kan ikke rekonstrueres fra kampscore. `/api/progression` viser historikk og de siste egne ranked-resultatene. Dagens fokus bruker lokale regler: lang økt, flere tap siste døgn, MMR-endring siste sju dager, seiere eller et dagsvariert treningstips. Dette er coaching, ikke AI eller en garantert prestasjonsanalyse. Rankkort og graf deler valgt modus. Ranksonene gjenbruker Goals sine omtrentlige opprykksgrenser; de er ikke nøyaktige divisjonsgrenser.
 
 ## Overlay uten Overwolf
 
@@ -68,7 +77,7 @@ Garage viser lokale bilbilder og community-gjenskapinger av historiske zen-, jst
 
 ## Settings
 
-Velg blant fem proffprofiler: zen, Vatira, M0nkey M00n, Daniel og BeastMode. Kopier alle innstillinger, bare kamera/kontroller eller én verdi. Kontroller inkluderer deadzone og følsomhet. PlayStation- og Xbox-visning bruker samme knappesteder; Xbox-visningen er appens oversettelse. Hvis utklippstavlen er utilgjengelig, åpnes teksten for manuell Ctrl+C. Kopiering endrer ikke spillfiler. Kildedatoene vises separat fra innhentingsdatoen; enkelte verdier er flere år gamle. Se `SETTINGS_SOURCES.md`.
+Velg blant fem proffprofiler: zen, Vatira, M0nkey M00n, Daniel og BeastMode. Kopier kamera/kontroller eller én verdi. Kontroller inkluderer deadzone og følsomhet. PlayStation- og Xbox-visning bruker samme knappesteder; Xbox-visningen er appens oversettelse. Hvis utklippstavlen er utilgjengelig, åpnes teksten for manuell Ctrl+C. Kopiering endrer ikke spillfiler. Kildedatoene vises separat fra innhentingsdatoen; enkelte verdier er flere år gamle. Se `SETTINGS_SOURCES.md`.
 
 ## Performance
 

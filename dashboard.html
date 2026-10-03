@@ -11,6 +11,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./dashboard-progression.css" />
+    <link rel="stylesheet" href="./assets/dashboard-lanyard/rlhub-dashboard-lanyard.css" />
   </head>
   <body class="app-ready" data-page="dashboard">
     <div class="page-shell">
@@ -70,8 +72,23 @@
               og MMR-endringen gjennom økten.
             </p>
           </div>
+          <section id="dashboard-rank-lanyard" aria-label="Din rank"><p>Hent rank i Profile</p></section>
         </header>
 
+        <section class="progress-panel" aria-labelledby="progress-title">
+          <div class="progress-heading"><div><p class="eyebrow">Din utvikling</p><h2 id="progress-title">MMR-progresjon</h2></div></div>
+          <div class="progress-toolbar">
+            <div class="progress-controls"><label>Spillmodus<select id="progress-mode"><option>1v1</option><option selected>2v2</option><option>3v3</option></select></label><label>Periode<select id="progress-period"><option value="30">30 dager</option><option value="90" selected>90 dager</option><option value="365">Ett år</option><option value="0">Hele historikken</option></select></label></div>
+            <div class="progress-summary"><div><span>Sist hentede rank</span><strong id="progress-rank">Ingen rank hentet</strong></div><div><span>MMR</span><strong id="progress-mmr">—</strong></div><div><span>Endring i perioden</span><strong id="progress-delta">—</strong></div><div><span>Målinger</span><strong id="progress-samples">0</strong></div></div>
+          </div>
+          <p id="progress-empty" class="progress-empty">Hent rank i Profile for å starte progresjonsgrafen.</p>
+          <div id="progress-chart" class="progress-chart"></div>
+          <p id="progress-notice" class="progress-note">Historikken starter ved første lagrede rankmåling.</p>
+          <p class="progress-legend">Oransje linje: observert MMR · Fargede soner: omtrentlige rankgrenser. Grensene varierer med sesong og er ikke eksakte divisjonsgrenser.</p>
+          <article class="progress-tip" aria-labelledby="progress-tip-title"><p class="eyebrow">Dagens fokus</p><h3 id="progress-tip-title">Små steg teller</h3><p id="progress-tip-copy">Velg én ferdighet du vil jobbe med i dag.</p><small id="progress-tip-reason">Tips fra lokale regler og dine innsamlede data.</small><a id="progress-tip-action" href="./training-packs.html">Velg trening</a></article>
+          <p id="progress-status" class="progress-status" role="status"></p>
+          <details class="progress-data"><summary>Se de siste 100 målingene i perioden</summary><div class="progress-table-wrap"><table><thead><tr><th>Tidspunkt</th><th>MMR</th><th>Rank</th></tr></thead><tbody id="progress-table"></tbody></table></div></details>
+        </section>
         <section class="page-stack reveal">
           <article class="glass module spotlight is-active">
             <div class="module-header">
@@ -147,5 +164,8 @@
 
     <script src="./script.js"></script>
     <script src="./readiness.js"></script>
+    <script src="./dashboard-progression-model.js"></script>
+    <script src="./dashboard-progression.js"></script>
+    <script type="module" src="./assets/dashboard-lanyard/dashboard-lanyard.js"></script>
   </body>
 </html>
