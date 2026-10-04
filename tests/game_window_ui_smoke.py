@@ -51,7 +51,7 @@ def rank_card_ready():
     if js("document.querySelector('#dashboard-rank-lanyard canvas') !== null"):
         return True
     if os.environ.get('RL_HUB_UI_ALLOW_STATIC') == '1':
-        return js("document.querySelector('#dashboard-rank-lanyard').dataset.scene === 'fallback' && document.querySelector('.rank-card-static img')?.naturalWidth > 0 && document.querySelector('.rank-caption strong')?.textContent === 'Diamond II Division III'")
+        return js("(document.querySelector('#dashboard-rank-lanyard').dataset.scene === 'fallback' || matchMedia('(prefers-reduced-motion: reduce)').matches) && document.querySelector('.rank-card-static img')?.naturalWidth > 0 && document.querySelector('.rank-caption strong')?.textContent === 'Diamond II Division III'")
     return False
 
 def exercise():
