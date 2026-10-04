@@ -27,6 +27,8 @@ from native_overlay import NativeOverlay, render_card
 APP_PORT = int(os.environ.get("RL_HUB_PORT", "18765"))
 ASSET_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).parent))
 UI_FILES = {
+    "assets/app-polish/app-polish.js", "assets/app-polish/app-polish.css",
+    "assets/goals-star-border/goals-star-border.js", "assets/goals-star-border/goals-star-border.css",
     "rank-celebration.js", "rank-celebration.css",
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",
@@ -161,6 +163,11 @@ class DesktopHandler(TrackerProxyHandler):
             self.respond_json(404, {"error": "Fant ikke filen."})
             return
         if name.endswith(".html"):
+            controller = getattr(self.server, "game_window", None)
+            initial_busy = "true" if controller and controller.busy else "false"
+            content = content.replace(b"</head>", f'<script>window.RL_HUB_GAME_BUSY={initial_busy};</script></head>'.encode(), 1)
+            if name in ("dashboard.html", "garage.html", "settings.html", "training-packs.html"):
+                content = content.replace(b"</body>", b'<link rel="stylesheet" href="./assets/app-polish/app-polish.css"><script type="module" src="./assets/app-polish/app-polish.js"></script></body>')
             content = content.replace(b"</body>", b'<link rel="stylesheet" href="./rank-celebration.css"><script src="./rank-celebration.js" defer></script></body>')
             content = content.replace(
                 b'<script src="./script.js"></script>',
@@ -298,6 +305,7 @@ def main() -> None:
     performance = None
     native_overlay = None
     readiness = None
+    game_window = None
     try:
         import webview
 
@@ -312,11 +320,15 @@ def main() -> None:
         readiness.start()
         native_overlay = NativeOverlay(overlay, ASSET_ROOT / "App Logo.png")
         native_overlay.start()
-        webview.create_window(
+        window = webview.create_window(
             os.environ.get("RL_HUB_WINDOW_TITLE", "RL Hub"), f"http://127.0.0.1:{APP_PORT}/index.html",
             width=1180, height=820, min_size=(980, 680),
             background_color="#10131d",
         )
+        from game_window import GameWindowController
+        game_window = GameWindowController(window, performance)
+        server.game_window = game_window
+        game_window.start()
         webview.start(gui="edgechromium", private_mode=False, storage_path=str(data_dir / "WebView"))
     except Exception as error:
         logging.exception("RL Hub kunne ikke starte")
@@ -329,6 +341,8 @@ def main() -> None:
         else:
             print(message, file=sys.stderr)
     finally:
+        if game_window is not None:
+            game_window.stop()
         if readiness is not None:
             readiness.stop()
         if native_overlay is not None:

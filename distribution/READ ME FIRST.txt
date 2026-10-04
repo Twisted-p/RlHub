@@ -1,4 +1,4 @@
-RL HUB 0.5.0 - WINDOWS x64
+RL HUB 0.6.0 - WINDOWS x64
 
 1. Extract ALL files from RL Hub Complete.zip to a folder first.
 2. Double-click Start RL Hub.cmd.
@@ -27,6 +27,13 @@ Then select Fullscreen - Xbox Game Bar in RL Hub's Overlay page, save, press
 Win+G, find RL Hub under Widgets and pin it. Keep RL Hub running.
 
 WHAT'S NEW
+Automatic gameplay mode: decorative animations pause and the main window
+minimizes in training/matches. Returning to lobby restores it. The result screen
+keeps it minimized. Stats collection and the overlay continue in the background.
+Requires working Stats API data; connection loss does not count as a lobby.
+Game-log name decoding now preserves accented names (including ae/oe/aa letters).
+New CountUp, TiltedCard, SpotlightCard, subtle Aurora and rank-goal StarBorder.
+Aurora and the 3D rank scene release their graphics resources while paused.
 New rank achievement card: bank-card style with chip, 3D tilt, rank text/numbers,
 gamertag, first observed promotion date and recorded match statistics.
 Celebrates a new highest rank family per player/mode, not subtiers/divisions.

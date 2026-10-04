@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import re
 import sys
+import unicodedata
 
 import requests
 from tracker_proxy import TrackerUnavailableError, avatar_text, estimate_next_rank_gap
@@ -50,6 +51,32 @@ def normalize_player_id(platform: str, value: str) -> str:
     return value
 
 
+def game_log_lines(path: Path):
+    """Decode game logs without destroying names in legacy Windows logs.
+
+    Use BOMs for UTF-16 and strict UTF-8 otherwise. Windows-1252 is the
+    fallback for non-UTF-8 lines; valid UTF-8 names must never be re-decoded.
+    Only callers' public identity/install records are retained.
+    """
+    with path.open("rb") as stream:
+        marker = stream.read(3)
+        stream.seek(0)
+        if marker.startswith((b"\xff\xfe", b"\xfe\xff")):
+            import io
+            with io.TextIOWrapper(stream, encoding="utf-16", errors="replace") as text:
+                yield from text
+        else:
+            for line in stream:
+                try:
+                    yield line.decode("utf-8-sig")
+                except UnicodeDecodeError:
+                    yield line.decode("cp1252", errors="replace")
+
+
+def comparable_name(value: str) -> str:
+    return unicodedata.normalize("NFC", value.strip()).casefold()
+
+
 def resolve_player_id(platform: str, gamertag: str, player_id: str = "", log_dir: Path | None = None) -> str:
     if player_id:
         return normalize_player_id(platform, player_id)
@@ -63,11 +90,10 @@ def resolve_player_id(platform: str, gamertag: str, player_id: str = "", log_dir
         for path in logs:
             # Reading only login identity records prevents tokens from being used or exposed.
             found = None
-            with path.open(encoding="utf-8", errors="replace") as stream:
-                for line in stream:
-                    match = LOGIN_PATTERN.search(line)
-                    if match and match[1].casefold() == gamertag.casefold() and match[2].startswith(PLATFORMS[platform] + "|"):
-                        found = match[2]
+            for line in game_log_lines(path):
+                match = LOGIN_PATTERN.search(line)
+                if match and comparable_name(match[1]) == comparable_name(gamertag) and match[2].startswith(PLATFORMS[platform] + "|"):
+                    found = match[2]
             if found:
                 return normalize_player_id(platform, found)
     except OSError:

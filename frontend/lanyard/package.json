@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "build:goals": "vite build --config vite.goals.config.js",
+    "build:polish": "vite build --config vite.polish.config.js"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -11,6 +13,8 @@
     "@react-three/rapier": "^2.2.0",
     "@vitejs/plugin-react": "^6.1.1",
     "meshline": "^3.3.1",
+    "motion": "^12.43.0",
+    "ogl": "^1.0.11",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "three": "^0.186.1",

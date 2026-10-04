@@ -160,6 +160,24 @@ Bruk norsk og enkel tekst i UI. Gjenbruk eksisterende mørke design og turkise a
 
 ## 7. Lagring og personvern
 
+`game_window.py` følger `PerformanceService.activity_snapshot()` uavhengig av
+overlayets visningsbrytere. MatchCreated/Initialized og trening minimerer
+hovedvinduet én gang og sender pauseflagget til alle faner. MatchEnded beholder
+pause under resultatskjerm; MatchDestroyed etterfulgt av 1,5 sekunder stabil
+lobby gjenoppretter vinduet. Ukjent status eller frakobling skal ikke utløse
+gjenoppretting. `desktop-runtime.js` styrer CSS-pause og `rlhub:motion`;
+Lanyard/Aurora unmountes og CountUp/TiltedCard blir statiske. Ny navigasjon arver
+flagget i hostens HTML. Backend, overlay, Stats API og rank-oppslag fortsetter.
+Tester: `tests/test_game_window.py` og `tests/game_window_ui_smoke.py` med
+syntetiske spillhendelser, faktisk WebView2-minimering og GPU/CSS pause/resume.
+
+Spillogger leses gjennom `mmr_provider.game_log_lines`: UTF-8 (med/uten BOM),
+UTF-16 med BOM og Windows-1252-fallback for ikke-UTF-8-linjer. Dette bevarer
+æ/ø/å både ved lokal kontoidentifikasjon og navn i Performance/overlay.
+Gamertag sammenlignes med Unicode-normalisering og uten hensyn til store/små
+bokstaver, men feil navn/plattform skal fortsatt avvises. Regresjonstester:
+`tests/test_mmr_provider.py`. Ikke anta at en venns logg er bekreftet uten å lese den.
+
 Personlige data ligger i `%LOCALAPPDATA%\RL Hub`, blant annet `performance.json`, `overlay.json`, `readiness.json`, `goals.json`, `rank-history.json`, `WebView/` og `desktop.log`. En ny maskin starter med egen historikk og egne innstillinger. Ikke last opp denne mappen, Rocket League-logger, tokens eller innloggingsdata til GitHub. Les bare offentlig spilleridentitet fra spilloggene.
 
 Garage bruker de eksisterende nøklene `rlhub:garagePresets` og `rlhub:uiState`, pluss `rlhub:garageFavorites`. `script.js:normalizePreset` bevarer katalog-/referansefelter ved gjenstart. Test Garage med `.\.venv\Scripts\python.exe tests/garage_ui_smoke.py`; testen bruker isolert lagring og dekker eldre presets, favoritter, søk, deleliste, redigering, bildevisning og smal layout. Bilder og kilder dokumenteres i `assets/garage/SOURCES.md`; ikke omtale community-design som bekreftede nåværende oppsett.
@@ -169,6 +187,13 @@ Settings lagrer bare valgt profil og knappevisning i `rlhub:proSettings`. Verdie
 Kildekoden, introen, logoen, widget-assets, modellfiler og lisensfiler er med i Git. `.venv/`, `build/`, `dist/`, widgetens `bin/obj/packages`, logger og lokale backupfiler er ignorert. Det er tilsiktet; genererte filer bygges på nytt eller leveres gjennom Releases.
 
 ## 8. Fortsette og publisere
+
+React Bits-effektene bygges fra `frontend/lanyard/`: `npm run build:polish`
+(CountUp, TiltedCard, SpotlightCard, Aurora) og `npm run build:goals`
+(StarBorder). De lokale JS/CSS-bundlene under `assets/` skal følge exe-bygget.
+Aurora stopper og frigir WebGL ved mistet fokus, skjult vindu, header utenfor
+skjermen eller redusert bevegelse. Test med `tests/app_polish_ui_smoke.py` i
+isolert WebView2-lagring. Bevar de eksisterende HTML-kontrollene ved nye effekter.
 
 Åpne den klonede repo-mappen i Codex, og gi for eksempel instruksen:
 

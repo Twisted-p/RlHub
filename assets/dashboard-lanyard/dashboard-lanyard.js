@@ -45272,7 +45272,7 @@ function _O() {
 		} catch {
 			return "2v2";
 		}
-	}), [i, a] = (0, F.useState)(!document.hidden), [o, s] = (0, F.useState)(matchMedia("(prefers-reduced-motion: reduce)").matches), [c, l] = (0, F.useState)(null), u = dO(e, n);
+	}), [i, a] = (0, F.useState)(!document.hidden && !window.RL_HUB_MOTION_PAUSED), [o, s] = (0, F.useState)(matchMedia("(prefers-reduced-motion: reduce)").matches), [c, l] = (0, F.useState)(null), u = dO(e, n);
 	(0, F.useEffect)(() => {
 		let e = (e) => {
 			[
@@ -45283,8 +45283,8 @@ function _O() {
 		};
 		return window.addEventListener("rlhub:playlist", e), () => window.removeEventListener("rlhub:playlist", e);
 	}, []), (0, F.useEffect)(() => {
-		let e = matchMedia("(prefers-reduced-motion: reduce)"), n = (e) => s(e.matches), r = () => a(!document.hidden), i = () => t(hO());
-		e.addEventListener("change", n), document.addEventListener("visibilitychange", r), window.addEventListener("storage", i);
+		let e = matchMedia("(prefers-reduced-motion: reduce)"), n = (e) => s(e.matches), r = () => a(!document.hidden && !window.RL_HUB_MOTION_PAUSED), i = () => t(hO());
+		e.addEventListener("change", n), document.addEventListener("visibilitychange", r), window.addEventListener("rlhub:motion", r), window.addEventListener("storage", i);
 		let o = !0, c = async () => {
 			if (!document.hidden) try {
 				let e = await fetch("./api/dashboard-ranks");
@@ -45296,7 +45296,7 @@ function _O() {
 		c();
 		let l = setInterval(c, 1e4);
 		return () => {
-			o = !1, clearInterval(l), e.removeEventListener("change", n), document.removeEventListener("visibilitychange", r), window.removeEventListener("storage", i);
+			o = !1, clearInterval(l), e.removeEventListener("change", n), document.removeEventListener("visibilitychange", r), window.removeEventListener("rlhub:motion", r), window.removeEventListener("storage", i);
 		};
 	}, []), (0, F.useEffect)(() => {
 		let e = !0, t = new Image();

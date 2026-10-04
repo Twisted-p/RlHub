@@ -21,7 +21,7 @@ function App() {
   const [playlist, setPlaylist] = useState(() => {
     try { const mode = localStorage.getItem('rlhub:lanyardPlaylist'); return ['1v1','2v2','3v3'].includes(mode) ? mode : '2v2'; } catch (_) { return '2v2'; }
   });
-  const [visible, setVisible] = useState(!document.hidden);
+  const [visible, setVisible] = useState(!document.hidden && !window.RL_HUB_MOTION_PAUSED);
   const [reduced, setReduced] = useState(matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [front, setFront] = useState(null);
   const rank = selectRank(profile, playlist);
@@ -33,10 +33,11 @@ function App() {
   useEffect(() => {
     const query = matchMedia('(prefers-reduced-motion: reduce)');
     const motion = e => setReduced(e.matches);
-    const visibility = () => setVisible(!document.hidden);
+    const visibility = () => setVisible(!document.hidden && !window.RL_HUB_MOTION_PAUSED);
     const storage = () => setProfile(storedProfile());
     query.addEventListener('change', motion);
     document.addEventListener('visibilitychange', visibility);
+    window.addEventListener('rlhub:motion', visibility);
     window.addEventListener('storage', storage);
     let active = true;
     const poll = async () => {
@@ -49,7 +50,7 @@ function App() {
       } catch (_) { /* Last fetched profile remains available offline. */ }
     };
     poll(); const timer = setInterval(poll, 10000);
-    return () => { active = false; clearInterval(timer); query.removeEventListener('change', motion); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('storage', storage); };
+    return () => { active = false; clearInterval(timer); query.removeEventListener('change', motion); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('rlhub:motion', visibility); window.removeEventListener('storage', storage); };
   }, []);
   useEffect(() => {
     let active = true;

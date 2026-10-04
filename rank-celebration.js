@@ -36,7 +36,7 @@
   button.addEventListener('click', dismiss);
   dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(); });
   card.addEventListener('pointermove', event => {
-    if (reduced.matches || event.pointerType === 'touch') return;
+    if (reduced.matches || window.RL_HUB_MOTION_PAUSED || event.pointerType === 'touch') return;
     const box = card.getBoundingClientRect();
     const x = Math.max(-.5, Math.min(.5, (event.clientX-box.left)/box.width-.5));
     const y = Math.max(-.5, Math.min(.5, (event.clientY-box.top)/box.height-.5));
@@ -47,7 +47,7 @@
   });
   card.addEventListener('pointerleave', () => {card.style.setProperty('--tilt-x','0deg');card.style.setProperty('--tilt-y','0deg');});
   async function poll() {
-    if (busy || document.hidden || document.body.classList.contains('splash-active')) return;
+    if (busy || window.RL_HUB_MOTION_PAUSED || document.hidden || document.body.classList.contains('splash-active')) return;
     busy = true;
     try {
       const response = await fetch('./api/rank-promotions');

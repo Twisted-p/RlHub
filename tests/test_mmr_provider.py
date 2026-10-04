@@ -5,11 +5,46 @@ from unittest.mock import patch, Mock
 
 from mmr_provider import build_rank_profile, fetch_rank_profile, normalize_player_id, resolve_player_id
 from tracker_proxy import TrackerUnavailableError
+from performance_service import game_info
 
 EPIC_ID = "Epic|" + "a" * 32 + "|0"
 
 
 class MmrProviderTests(unittest.TestCase):
+    def test_non_ascii_login_in_supported_log_encodings(self):
+        for encoding in ('utf-8', 'utf-8-sig', 'cp1252', 'utf-16', 'utf-16-be'):
+            with self.subTest(encoding=encoding), tempfile.TemporaryDirectory() as directory:
+                documents = Path(directory)
+                logs = documents / 'My Games/Rocket League/TAGame/Logs'
+                logs.mkdir(parents=True)
+                game = documents / 'Rocket League'
+                (game / 'TAGame/Config').mkdir(parents=True)
+                name = 'TestæøåGG'
+                text = (f'Base directory: {game / "Binaries/Win64"}\n'
+                        f'Party: HandleLocalPlayerLoginStatusChanged PlayerName={name} PlayerID={EPIC_ID} '
+                        'LoginStatus=LS_LoggedIn IsPrimary=True IsInParty=False\n')
+                data = text.encode(encoding)
+                if encoding == 'utf-16-be':
+                    data = b'\xfe\xff' + data
+                (logs / 'Launch.log').write_bytes(data)
+                self.assertEqual(resolve_player_id('epic', name.upper(), log_dir=logs), EPIC_ID)
+                with patch('performance_service.documents_dir', return_value=documents):
+                    root, player = game_info()
+                self.assertEqual(root, game)
+                self.assertEqual(player, {'name': name, 'playerId': EPIC_ID})
+                with self.assertRaises(TrackerUnavailableError):
+                    resolve_player_id('epic', 'TestaeoaGG', log_dir=logs)
+                with self.assertRaises(TrackerUnavailableError):
+                    resolve_player_id('steam', name, log_dir=logs)
+
+    def test_unicode_name_normalization_preserves_identity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            logs = Path(directory)
+            (logs / 'Launch.log').write_text(
+                f'Party: HandleLocalPlayerLoginStatusChanged PlayerName=André PlayerID={EPIC_ID} '
+                'LoginStatus=LS_LoggedIn IsPrimary=True\n', encoding='utf-8')
+            self.assertEqual(resolve_player_id('epic', ' Andre\u0301 ', log_dir=logs), EPIC_ID)
+
     def test_local_login_resolves_only_the_requested_name(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)

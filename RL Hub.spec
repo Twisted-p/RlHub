@@ -9,6 +9,8 @@ with Image.open(root / "App Logo.png") as image:
     image.save(icon, format="ICO", sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
 
 assets = [
+    "assets/app-polish/app-polish.js", "assets/app-polish/app-polish.css",
+    "assets/goals-star-border/goals-star-border.js", "assets/goals-star-border/goals-star-border.css",
     "rank-celebration.js", "rank-celebration.css",
     "index.html", "dashboard.html", "garage.html", "training.html", "profile.html",
     "script.js", "styles.css", "desktop-runtime.js", "App Logo.png", "performance.html", "performance.js",

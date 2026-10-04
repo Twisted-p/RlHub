@@ -30,9 +30,9 @@ its signer is Microsoft Corporation. Fetch the previous fullscreen ZIP from the
 authenticated release API and verify its published SHA-256 digest. Then run:
 
 ```powershell
-.\.venv\Scripts\python.exe distribution/build_release.py --version 0.5.0 --output ../work/release-0.5.0 --webview ../work/release-0.4.0/Dependencies/WebView2/MicrosoftEdgeWebView2RuntimeInstallerX64.exe --widget-zip ../work/fullscreen-0.3.0.zip
+.\.venv\Scripts\python.exe distribution/build_release.py --version 0.6.0 --exe "dist/latest/RL Hub.exe" --output ../work/release-0.6.0 --webview ../work/MicrosoftEdgeWebView2RuntimeInstallerX64.exe --widget-zip ../work/fullscreen-0.3.0.zip
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/distribution_setup.test.ps1
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File '../work/release-0.5.0/RL Hub Complete/Start-RLHub.ps1' -CheckOnly
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File '../work/release-0.6.0/RL Hub Complete/Start-RLHub.ps1' -CheckOnly
 ```
 
 Use a new output directory for each release. The builder verifies all archive

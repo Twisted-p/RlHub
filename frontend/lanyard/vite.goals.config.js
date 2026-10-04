@@ -5,13 +5,11 @@ export default defineConfig({
   plugins: [react()],
   resolve: {alias: {'@': fileURLToPath(new URL('./src', import.meta.url))}},
   define: {'process.env.NODE_ENV': JSON.stringify('production')},
-  assetsInclude: ['**/*.glb'],
   base: './',
   build: {
-    outDir: '../../assets/dashboard-lanyard',
+    outDir: '../../assets/goals-star-border',
     emptyOutDir: true,
-    lib: {entry: 'src/main.jsx', formats: ['es'], fileName: () => 'dashboard-lanyard.js'},
-    rollupOptions: {output: {assetFileNames: '[name][extname]'}},
-    assetsInlineLimit: 0
+    lib: {entry: 'src/goals-star-border.jsx', formats: ['es'], fileName: () => 'goals-star-border.js', cssFileName: 'goals-star-border'},
+    rollupOptions: {output: {assetFileNames: '[name][extname]'}}
   }
 });

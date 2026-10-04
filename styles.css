@@ -1180,6 +1180,14 @@ body.app-ready .page-shell {
   border-radius: 32px;
 }
 
+/* The intro remains playable; gameplay pauses the decorative page animations. */
+body.app-motion-paused:not(.splash-active) *,
+body.app-motion-paused:not(.splash-active) *::before,
+body.app-motion-paused:not(.splash-active) *::after {
+  animation-play-state: paused !important;
+  transition-duration: 0s !important;
+}
+
 .page-header h1 {
   margin: 0;
   max-width: 12ch;

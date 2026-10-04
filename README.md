@@ -20,6 +20,12 @@ En standalone Rocket League-app for Windows, uten Overwolf. Den samler rank/MMR,
 
 ## Bruke den ferdige appen
 
+Når Stats API oppdager trening eller kamp, pauses dekorative animasjoner og
+RL Hub-vinduet minimeres automatisk. Innsamling og overlay fortsetter.
+Vinduet gjenopprettes og animasjonene starter igjen etter tilbakekomst til
+lobbyen. Resultatskjermen holder appen minimert. Uten spilldata fungerer ikke
+denne automatiseringen; et tilkoblingsbrudd regnes ikke som lobby.
+
 Last ned **[RL Hub Complete.zip](https://github.com/Twisted-p/RlHub/releases/latest/download/RL.Hub.Complete.zip)** fra Releases. Pakk ut hele ZIP-en og dobbeltklikk **Start RL Hub.cmd**. Pakken inneholder appen, alle appbiblioteker, WebView2 sin fullstendige offline-installer og fullskjerm-widgetens x64-runtimepakker. Startfilen installerer WebView2 bare hvis den mangler. Ingen Python, Node eller utviklingsverktøy trengs. GitHubs «Source code (zip)» er kildekode for utviklere, ikke denne ferdige Windows-pakken.
 
 **Xbox Game Bar er bare nødvendig for fullskjerm-overlayet.** Kjør `Install Fullscreen Overlay.cmd` hvis du vil bruke det. Hvis Game Bar mangler, åpnes den offisielle Microsoft Store-siden; selve Windows-appen er ikke en offline-installer i pakken. RL Hub-widgeten og dens UWP-avhengigheter følger med. Vanlig app og kantløst overlay kan brukes uten Game Bar.

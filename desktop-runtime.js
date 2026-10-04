@@ -1,6 +1,18 @@
 // Loaded by the desktop host before the shared application script.
 window.RL_HUB_STANDALONE = true;
 document.body.classList.add("desktop-app");
+
+function applyMotionPause() {
+  window.RL_HUB_MOTION_PAUSED = Boolean(window.RL_HUB_GAME_BUSY || document.hidden);
+  document.body.classList.toggle("app-motion-paused", window.RL_HUB_MOTION_PAUSED);
+  window.dispatchEvent(new CustomEvent("rlhub:motion", {detail: window.RL_HUB_MOTION_PAUSED}));
+}
+window.RL_HUB_SET_GAME_ACTIVITY = function (busy) {
+  window.RL_HUB_GAME_BUSY = Boolean(busy);
+  applyMotionPause();
+};
+document.addEventListener("visibilitychange", applyMotionPause);
+applyMotionPause();
 const connectButton = document.querySelector('[data-connect-action="link"]');
 if (connectButton) connectButton.textContent = "Koble spiller";
 document.querySelectorAll("a[href]").forEach((link) => {

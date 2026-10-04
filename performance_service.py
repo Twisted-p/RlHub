@@ -14,7 +14,7 @@ import time
 from threading import Event, RLock, Thread
 
 import websocket
-from mmr_provider import documents_dir, LOGIN_PATTERN
+from mmr_provider import documents_dir, LOGIN_PATTERN, game_log_lines
 
 SECTION = "TAGame.MatchStatsExporter_TA"
 PLAYLISTS = {10: "Ranked 1v1", 11: "Ranked 2v2", 13: "Ranked 3v3", 1: "Casual 1v1", 2: "Casual 2v2", 3: "Casual 3v3", 6: "Privat kamp"}
@@ -27,18 +27,17 @@ def game_info() -> tuple[Path | None, dict | None]:
         logs = sorted(directory.glob("Launch*.log"), key=lambda p: p.stat().st_mtime, reverse=True)[:3]
         root, player = None, None
         for path in logs:
-            with path.open(encoding="utf-8", errors="replace") as stream:
-                for line in stream:
-                    base = re.search(r"Base directory:\s*(.+)", line)
-                    if base and root is None:
-                        binary_dir = Path(base[1].strip().rstrip("\\/"))
-                        if binary_dir.parent.name.lower() == "binaries":
-                            candidate = binary_dir.parent.parent
-                            if (candidate / "TAGame/Config").is_dir():
-                                root = candidate
-                    match = LOGIN_PATTERN.search(line)
-                    if match:
-                        player = {"name": match[1], "playerId": match[2]}
+            for line in game_log_lines(path):
+                base = re.search(r"Base directory:\s*(.+)", line)
+                if base and root is None:
+                    binary_dir = Path(base[1].strip().rstrip("\\/"))
+                    if binary_dir.parent.name.lower() == "binaries":
+                        candidate = binary_dir.parent.parent
+                        if (candidate / "TAGame/Config").is_dir():
+                            root = candidate
+                match = LOGIN_PATTERN.search(line)
+                if match:
+                    player = {"name": match[1], "playerId": match[2]}
             if root and player:
                 break
         return root, player
@@ -119,6 +118,7 @@ class PerformanceService:
         self.live = None
         self.live_at = 0
         self.replay = False
+        self.activity = "unknown"
         self.history = []
         try:
             saved = json.loads(self.history_file.read_text(encoding="utf-8"))
@@ -184,6 +184,11 @@ class PerformanceService:
                     "currentMatch": deepcopy(self.current), "replay": self.replay,
                     "matches": deepcopy(self.history)}
 
+    def activity_snapshot(self) -> dict:
+        """Lightweight lifecycle status, independent of overlay visibility."""
+        with self.lock:
+            return {"connected": self.connected, "phase": self.activity}
+
     def _listen(self):
         while not self.stop_event.is_set():
             self._ensure_setup()
@@ -218,6 +223,7 @@ class PerformanceService:
                     self.connected = False
                     self.current = None  # Never mix snapshots across connections.
                     self.live = None
+                    self.activity = "unknown"
                 self.connection = None
                 if connection:
                     connection.close(timeout=0)
@@ -243,6 +249,18 @@ class PerformanceService:
             self.last_event = datetime.now(timezone.utc).isoformat()
             self.last_event_name = event
             game = data.get("Game", {})
+            # MatchEnded is the result screen, not proof of a return to lobby.
+            if event == "MatchDestroyed":
+                self.activity = "lobby"
+            elif event == "ReplayCreated" or game.get("bReplay"):
+                self.activity = "replay"
+            elif event in ("MatchCreated", "MatchInitialized"):
+                self.activity = "match"
+            elif event == "MatchEnded":
+                self.activity = "post-match"
+            elif event == "UpdateState" and data.get("Players"):
+                if self.activity != "post-match":
+                    self.activity = "training" if len(game.get("Teams", [])) < 2 or len(data["Players"]) < 2 else "match"
             if event == "ReplayCreated":
                 self.current = None
                 self.live = None

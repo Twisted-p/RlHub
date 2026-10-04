@@ -1,0 +1,22 @@
+.polish-aurora-header{position:relative;isolation:isolate;overflow:hidden}
+.polish-aurora-root{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.22;mask-image:linear-gradient(transparent,#000 18%,#000 70%,transparent)}
+.polish-aurora,.polish-aurora .aurora-container{width:100%;height:100%}
+.polish-aurora-static{width:100%;height:100%;background:radial-gradient(ellipse at 35% 0%,#3de0ce55,transparent 70%),radial-gradient(ellipse at 85% 15%,#9971d855,transparent 60%)}
+.pack-card.polish-mounted,.settings-value.polish-mounted{padding:0;background:transparent;border:0;min-width:0}
+.polish-spotlight-root,.polish-spotlight{height:100%;width:100%;box-sizing:border-box}
+.polish-spotlight.card-spotlight{background:#0e1a27;border-color:rgba(255,255,255,.1);border-radius:inherit;padding:22px;color:inherit}
+.pack-card .polish-spotlight{border-radius:20px}.settings-value .polish-spotlight{border-radius:14px;padding:16px}
+.polish-spotlight-content{position:relative;z-index:1}
+.pack-card .polish-spotlight-content{display:flex;flex-direction:column;height:100%}
+.pack-card .polish-spotlight{padding:22px 18px}
+.settings-value .polish-spotlight-content{position:static}
+.settings-value .polish-spotlight-content>*{position:relative;z-index:1}
+.settings-value .polish-spotlight-content>button{position:absolute}
+.polish-tilt-root{display:block;width:100%;height:100%}
+.polish-tilt-root .tilted-card-figure{margin:0}.polish-tilt-root .tilted-card-img{border-radius:0;box-shadow:none}
+.polish-number-wrap{position:relative;display:inline-block;font:inherit;line-height:inherit;max-width:100%}
+.polish-number-original{color:transparent!important}.polish-number-display{position:absolute;inset:0;white-space:inherit;font:inherit;line-height:inherit;color:inherit}
+.polish-number-display span{display:inline!important;font:inherit!important;color:inherit!important}
+body.app-motion-paused .card-spotlight::before{opacity:0!important}
+.progress-summary .polish-number-display,.progress-summary .polish-number-display span{font-size:14px;font-weight:700;color:inherit}
+@media(prefers-reduced-motion:reduce){.polish-spotlight.card-spotlight::before{transition:none}}

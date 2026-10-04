@@ -15,13 +15,14 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def build(destination, webview, widget_zip, release_version):
+def build(destination, webview, widget_zip, release_version, executable=None):
     destination.mkdir(parents=True, exist_ok=True)
     package = destination / 'RL Hub Complete'
     package.mkdir(exist_ok=True)
     assert webview.stat().st_size > 100_000_000, 'Expected full offline installer, not a bootstrapper'
-    shutil.copy2(ROOT / 'dist/RL Hub.exe', destination / 'RL Hub.exe')
-    shutil.copy2(ROOT / 'dist/RL Hub.exe', package / 'RL Hub.exe')
+    executable = executable or ROOT / 'dist/RL Hub.exe'
+    shutil.copy2(executable, destination / 'RL Hub.exe')
+    shutil.copy2(executable, package / 'RL Hub.exe')
     dependency = package / 'Dependencies/WebView2/MicrosoftEdgeWebView2RuntimeInstallerX64.exe'
     dependency.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(webview, dependency)
@@ -80,5 +81,6 @@ if __name__ == '__main__':
     parser.add_argument('--version', required=True)
     parser.add_argument('--webview', type=Path, required=True)
     parser.add_argument('--widget-zip', type=Path, required=True)
+    parser.add_argument('--exe', type=Path, help='Verified executable; defaults to dist/RL Hub.exe')
     args = parser.parse_args()
-    build(args.output.resolve(), args.webview.resolve(), args.widget_zip.resolve(), args.version)
+    build(args.output.resolve(), args.webview.resolve(), args.widget_zip.resolve(), args.version, args.exe.resolve() if args.exe else None)
