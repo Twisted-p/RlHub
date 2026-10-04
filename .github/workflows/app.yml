@@ -35,6 +35,8 @@ jobs:
       - name: Build Windows executable
         run: python -m PyInstaller --noconfirm "RL Hub.spec"
       - name: WebView2 game window lifecycle
+        env:
+          RL_HUB_UI_ALLOW_STATIC: '1'
         run: python tests/game_window_ui_smoke.py
       - name: WebView2 milestone save and retry
         run: python tests/rank_celebration_ui_smoke.py

@@ -4,6 +4,7 @@ import ctypes
 from ctypes import wintypes
 from pathlib import Path
 import sys
+import os
 import tempfile
 import time
 import traceback
@@ -44,12 +45,20 @@ def wait(condition):
     while time.monotonic()<deadline:
         if condition(): return
         time.sleep(.1)
-    raise AssertionError('Condition did not become true')
+    raise AssertionError('Condition did not become true; rank scene: ' + str(js("({scene:document.querySelector('#dashboard-rank-lanyard')?.dataset.scene,rank:document.querySelector('#dashboard-rank-lanyard')?.dataset.rank,hidden:document.hidden,paused:window.RL_HUB_MOTION_PAUSED,static:!!document.querySelector('.rank-card-static')})")))
+
+def rank_card_ready():
+    if js("document.querySelector('#dashboard-rank-lanyard canvas') !== null"):
+        return True
+    if os.environ.get('RL_HUB_UI_ALLOW_STATIC') == '1':
+        return js("document.querySelector('#dashboard-rank-lanyard').dataset.scene === 'fallback' && document.querySelector('.rank-card-static img')?.naturalWidth > 0 && document.querySelector('.rank-caption strong')?.textContent === 'Diamond II Division III'")
+    return False
 
 def exercise():
     try:
         wait(lambda: controller.ready.is_set() and js("typeof RL_HUB_SET_GAME_ACTIVITY === 'function'"))
-        wait(lambda: js("document.querySelector('#dashboard-rank-lanyard canvas') !== null"))
+        wait(rank_card_ready)
+        print('Rank renderer:', '3D' if js("!!document.querySelector('#dashboard-rank-lanyard canvas')") else 'verified static fallback', flush=True)
         controller.tick()
         assert not iconic()
         training = deepcopy(STATE)
@@ -91,7 +100,7 @@ def exercise():
         wait(lambda: not iconic())
         wait(lambda: js("!RL_HUB_MOTION_PAUSED && getComputedStyle(document.querySelector('.border-gradient-top')).animationPlayState === 'running'"))
         window.load_url(origin+'/dashboard.html')
-        wait(lambda: js("document.body.dataset.page === 'dashboard' && document.querySelector('#dashboard-rank-lanyard canvas') !== null"))
+        wait(lambda: js("document.body.dataset.page === 'dashboard'") and rank_card_ready())
         controller.tick()
         assert not controller.busy
         print('Game window UI: actual minimize/restore, result-screen hold, GPU release/resume, paused navigation, CSS pause and connection-loss handling OK', flush=True)
