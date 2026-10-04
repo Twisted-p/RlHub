@@ -1,7 +1,7 @@
 import json
 import unittest
 from urllib.error import HTTPError
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 from unittest.mock import patch
 from requests import Response
 from tracker_proxy import TrackerUnavailableError, check_tracker_response
@@ -18,6 +18,11 @@ class DesktopServiceTests(unittest.TestCase):
         self.server.shutdown()
         self.server.server_close()
 
+    def lookup(self, platform, gamertag="", origin=True):
+        return urlopen(Request(self.origin + "/api/profile",
+            data=json.dumps({"platform": platform, "gamertag": gamertag}).encode(),
+            headers={"Content-Type": "application/json", **({"Origin": self.origin} if origin else {})}))
+
     def test_ui_and_tracker_share_origin(self):
         with urlopen(self.origin + "/") as response:
             html = response.read().decode()
@@ -27,7 +32,7 @@ class DesktopServiceTests(unittest.TestCase):
             with urlopen(self.origin + "/" + name) as response:
                 self.assertEqual(response.status, 200)
         with patch("desktop_app.fetch_rank_profile", return_value={"name": "Test Player"}) as fetch:
-            with urlopen(self.origin + "/api/profile?platform=epic&gamertag=Test%20Player") as response:
+            with self.lookup("epic", "Test Player") as response:
                 self.assertEqual(json.load(response)["profile"]["name"], "Test Player")
             fetch.assert_called_once_with("epic", "Test Player", "")
 
@@ -68,9 +73,9 @@ class DesktopServiceTests(unittest.TestCase):
 
     def test_invalid_lookup_does_not_call_tracker(self):
         with patch("desktop_app.fetch_rank_profile") as fetch:
-            for query in ["platform=invalid&gamertag=Player", "platform=epic"]:
+            for platform, gamertag in [("invalid", "Player"), ("epic", "")]:
                 with self.assertRaises(HTTPError) as result:
-                    urlopen(self.origin + "/api/profile?" + query)
+                    self.lookup(platform, gamertag)
                 self.assertEqual(result.exception.code, 400)
             fetch.assert_not_called()
 
@@ -82,12 +87,37 @@ class DesktopServiceTests(unittest.TestCase):
         self.assertEqual(result.exception.code, "tracker_access_denied")
         with patch("desktop_app.fetch_rank_profile", side_effect=result.exception):
             with self.assertRaises(HTTPError) as failure:
-                urlopen(self.origin + "/api/profile?platform=epic&gamertag=Twisted_p")
+                self.lookup("epic", "Twisted_p")
             payload = json.load(failure.exception)
             self.assertEqual(failure.exception.code, 503)
             self.assertEqual(payload["code"], "tracker_access_denied")
-            self.assertTrue(payload["profileUrl"].endswith("/epic/Twisted_p/overview"))
             self.assertNotIn("403 Client Error", payload["error"])
+
+    def test_get_profile_never_fetches_or_changes_state(self):
+        from threading import RLock
+        from types import SimpleNamespace
+        profile = {"name": "Saved player", "ranks": []}
+        self.server.overlay = SimpleNamespace(lock=RLock(), profile=profile)
+        with patch("desktop_app.fetch_rank_profile") as fetch:
+            with urlopen(self.origin + "/api/profile?platform=epic&gamertag=Other") as response:
+                self.assertEqual(json.load(response)["profile"], profile)
+            fetch.assert_not_called()
+        self.assertEqual(self.server.overlay.profile, profile)
+
+    def test_profile_mutation_requires_origin(self):
+        with patch("desktop_app.fetch_rank_profile") as fetch:
+            with self.assertRaises(HTTPError) as failure:
+                self.lookup("epic", "Other", origin=False)
+            self.assertEqual(failure.exception.code, 403)
+            fetch.assert_not_called()
+
+    def test_untrusted_host_rejected_for_reads_and_writes(self):
+        for method in ("GET", "POST", "OPTIONS"):
+            request = Request(self.origin + "/api/profile", method=method,
+                headers={"Host": "attacker.example", "Origin": self.origin})
+            with self.assertRaises(HTTPError) as failure:
+                urlopen(request)
+            self.assertEqual(failure.exception.code, 403)
 
     def test_tracker_rate_limit_is_distinct_from_access_denial(self):
         response = Response()

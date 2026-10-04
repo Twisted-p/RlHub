@@ -73,6 +73,12 @@ def exercise():
         wait(lambda: js("document.querySelectorAll('.goal-star-border').length === 3"))
         controller.tick()
         assert js("getComputedStyle(document.querySelector('.border-gradient-top')).animationPlayState === 'paused'")
+        assert js("Array.from(document.querySelectorAll('.reveal')).every(el => getComputedStyle(el).opacity === '1' && getComputedStyle(el).transform === 'none')")
+        window.restore()
+        wait(lambda: not iconic())
+        assert js("RL_HUB_MOTION_PAUSED && Array.from(document.querySelectorAll('.reveal')).every(el => getComputedStyle(el).opacity === '1')")
+        window.minimize()
+        wait(iconic)
         performance.connected = False
         controller.tick()
         assert iconic()  # A lost feed must not be mistaken for a lobby.

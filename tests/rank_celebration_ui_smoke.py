@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import tempfile
 import time
+from unittest.mock import patch
 from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,6 +66,11 @@ def exercise():
         capture('rank-celebration-mobile.png')
         cdp('Emulation.setEmulatedMedia', {'features':[{'name':'prefers-reduced-motion','value':'reduce'}]})
         assert js("getComputedStyle(document.querySelector('.milestone-stage')).animationName") == 'none'
+        with patch.object(overlay.promotions, '_save', side_effect=PermissionError('Test disk failure')):
+            js("document.querySelector('.milestone-dismiss').click()")
+            wait_for("document.querySelector('.milestone-stat-note[role=status]').textContent.includes('Prøv igjen')")
+            assert js("document.querySelector('.rank-celebration').open")
+            assert overlay.promotions.pending(overlay.profile)
         js("document.querySelector('.rank-celebration').dispatchEvent(new Event('cancel',{cancelable:true}))")
         wait_for("!document.querySelector('.rank-celebration').open")
         deadline = time.monotonic()+5

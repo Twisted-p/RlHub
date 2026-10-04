@@ -211,4 +211,7 @@ class ReadinessService:
                 "advice": deepcopy(s["advice"]), "resting": s["resting"],
                 "restSeconds": int(s["restSeconds"]), "warmupSeconds": int(s["warmupSeconds"]),
                 "mmr": mmr, "playlist": playlist, "rankStatus": rank_status,
-                "training": training, "playing": playing, "connected": bool(snapshot.get("connected"))}
+                "training": training, "playing": playing, "connected": bool(snapshot.get("connected")),
+                "accountMismatch": bool((snapshot.get("localPlayer") or {}).get("playerId") and profile.get("playerId")
+                    and snapshot["localPlayer"]["playerId"] != profile["playerId"]),
+                "gamePlayerName": (snapshot.get("localPlayer") or {}).get("name", "")}

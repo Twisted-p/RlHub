@@ -31,6 +31,7 @@ class RankPromotionService:
         self.file = Path(data_dir) / "rank-promotions.json"
         self.lock = RLock()
         self.accounts = {}
+        self.storage_error = ""
         try:
             saved = json.loads(self.file.read_text(encoding="utf-8"))
             for key, modes in saved.items():
@@ -60,8 +61,11 @@ class RankPromotionService:
             temporary = self.file.with_suffix(".tmp")
             temporary.write_text(json.dumps(self.accounts, ensure_ascii=False), encoding="utf-8")
             temporary.replace(self.file)
+            self.storage_error = ""
         except OSError:
+            self.storage_error = "Kunne ikke lagre milepælen. Prøv igjen."
             logging.exception("Could not save rank milestones")
+            raise
 
     def observe(self, profile, matches=()):
         key = account_key(profile)
@@ -95,8 +99,11 @@ class RankPromotionService:
                 state["at"] = at.isoformat()
                 states[mode] = state
                 changed = True
-            if changed:
-                self._save()
+            if changed or self.storage_error:
+                try:
+                    self._save()
+                except OSError:
+                    pass  # Retain pending state and error; later observations retry.
 
     def pending(self, profile):
         with self.lock:
@@ -106,7 +113,12 @@ class RankPromotionService:
         with self.lock:
             for state in self.accounts.get(account_key(profile), {}).values():
                 if (state.get("pending") or {}).get("id") == event_id:
+                    pending = state["pending"]
                     state["pending"] = None
-                    self._save()
+                    try:
+                        self._save()
+                    except OSError:
+                        state["pending"] = pending
+                        raise
                     return True
             return False

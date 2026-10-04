@@ -182,7 +182,7 @@ class PerformanceTests(unittest.TestCase):
                 handler.send_header("Connection", "Upgrade")
                 handler.send_header("Sec-WebSocket-Accept", accept)
                 handler.end_headers()
-                for event in [STATE, END]:
+                for event in [{"Event": "UpdateState", "Data": {"Game": None}}, STATE, END]:
                     wire_event = dict(event, Data=json.dumps(event["Data"]))
                     payload = json.dumps(wire_event).encode()
                     header = bytes([0x81, 126]) + struct.pack("!H", len(payload)) if len(payload) >= 126 else bytes([0x81, len(payload)])
@@ -202,6 +202,8 @@ class PerformanceTests(unittest.TestCase):
             while not self.service.snapshot()["matches"] and time.monotonic() < deadline:
                 time.sleep(.05)
             self.assertEqual(len(self.service.snapshot()["matches"]), 1)
+            self.assertTrue(self.service.thread.is_alive())
+            self.assertGreaterEqual(self.service.snapshot()["ignoredMessages"], 1)
         finally:
             self.service.stop()
             game.shutdown()

@@ -102,6 +102,7 @@ class PerformanceService:
         self.history_file = data_dir / "performance.json"
         self.root, detected = game_info() if root is None else (root, None)
         self.local_player = local_player or detected
+        self.next_identity_check = 0
         self.lock = RLock()
         self.stop_event = Event()
         self.thread = None
@@ -171,6 +172,18 @@ class PerformanceService:
             with self.lock:
                 self.setup_error = "Kampoppsummeringer kunne ikke aktiveres. Start Rocket League én gang, og prøv igjen. Kontroller skriverettighetene hvis spillet allerede er installert."
 
+    def refresh_identity(self, force=False):
+        now = time.monotonic()
+        if not force and now < self.next_identity_check:
+            return
+        self.next_identity_check = now + 5
+        root, player = game_info()
+        with self.lock:
+            if root is not None:
+                self.root = root
+            if player is not None:
+                self.local_player = player
+
     def snapshot(self) -> dict:
         with self.lock:
             settings = read_settings(config_path(self.root))
@@ -201,10 +214,12 @@ class PerformanceService:
                 connection = websocket.create_connection(f"ws://127.0.0.1:{settings['port']}/", timeout=2,
                                                          suppress_origin=True, http_no_proxy=["127.0.0.1", "localhost"])
                 self.connection = connection
+                self.refresh_identity(force=True)
                 with self.lock:
                     self.connected = True
                     self.setup_message = ""
                 while not self.stop_event.is_set():
+                    self.refresh_identity()
                     try:
                         message = connection.recv()
                         if not message:
@@ -245,10 +260,18 @@ class PerformanceService:
             if not isinstance(data, dict) or not isinstance(event, str):
                 self.ignored_messages += 1
                 return
+            game = data.get("Game", {})
+            players = data.get("Players", [])
+            if (not isinstance(game, dict) or not isinstance(players, list)
+                    or not isinstance(game.get("Teams", []), list)
+                    or any(not isinstance(row, dict) for row in players)
+                    or any(not isinstance(row, dict) for row in game.get("Teams", []))):
+                self.ignored_messages += 1
+                logging.warning("Ignored malformed Rocket League stats structure")
+                return
             self.parsed_events += 1
             self.last_event = datetime.now(timezone.utc).isoformat()
             self.last_event_name = event
-            game = data.get("Game", {})
             # MatchEnded is the result screen, not proof of a return to lobby.
             if event == "MatchDestroyed":
                 self.activity = "lobby"

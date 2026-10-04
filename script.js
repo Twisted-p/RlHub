@@ -1120,7 +1120,9 @@ async function fetchTrackerProfile(lookup) {
 
   try {
     const params = new URLSearchParams({ platform, gamertag, playerId });
-    const response = await fetch(`${TRACKER_PROXY_URL}/api/profile?${params.toString()}`);
+    const response = IS_STANDALONE
+      ? await fetch(`${TRACKER_PROXY_URL}/api/profile`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({platform,gamertag,playerId})})
+      : await fetch(`${TRACKER_PROXY_URL}/api/profile?${params.toString()}`);
     const payload = await response.json().catch(() => ({}));
 
     if (!response.ok) {

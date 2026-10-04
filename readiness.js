@@ -14,6 +14,7 @@
     el('training').textContent = duration(s.trainingSeconds);
     el('status').textContent = !s.connected ? 'Venter på spillet' : s.resting ? 'Pause' : s.training ? 'Trening' : s.playing ? 'I kamp' : 'I lobby';
     el('note').textContent = started ? 'Din lokale spillform, basert på innsamlede data i denne økten.' : 'Start trening eller en kamp. Aktiver kampoppsummeringer i Performance hvis spillet ikke kobles til.';
+    if (s.accountMismatch) el('note').textContent = `Spillet bruker ${s.gamePlayerName || 'en annen konto'} enn rankprofilen. Hent rank for denne kontoen i Profile. MMR fra kontoene blandes ikke.`;
     el('sidebar-copy').textContent = started ? `${s.matchCount} kamper · ${duration(s.trainingSeconds)} trening` : 'Venter på første trenings- eller kampdata.';
     el('sidebar-bracket').textContent = `${s.bracketProgress} / 5`;
     el('bracket-bar').style.setProperty('--fill', `${s.bracketProgress * 20}%`);

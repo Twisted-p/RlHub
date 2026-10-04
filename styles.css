@@ -1255,6 +1255,16 @@ body.app-motion-paused:not(.splash-active) *::after {
   animation: rise-in 700ms ease forwards;
 }
 
+/* Content visibility must never depend on a decorative animation finishing. */
+body.app-motion-paused .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; animation: none !important; }
+}
+
 @keyframes float {
   0%,
   100% {

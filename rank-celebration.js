@@ -1,7 +1,6 @@
 /* Original RL Hub milestone card. No external scripts or paid component source. */
 (() => {
   let active = null, busy = false, previousFocus = null;
-  const dismissed = new Set();
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const dialog = document.createElement('dialog');
   dialog.className = 'rank-celebration';
@@ -17,21 +16,31 @@
   document.body.append(dialog);
   const card = dialog.querySelector('.milestone-card');
   const button = dialog.querySelector('button');
+  const saveStatus = document.createElement('p');
+  saveStatus.className = 'milestone-stat-note';
+  saveStatus.setAttribute('role','status');
+  button.after(saveStatus);
   const put = (id, value) => { dialog.querySelector(`#milestone-${id}`).textContent = value; };
   async function ack(id) {
     try {
       const response = await fetch('./api/rank-promotions/ack', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
-      if (response.ok && (await response.json()).acknowledged) dismissed.delete(id);
-    } catch (_) { /* Retry on the next poll without showing it twice this page. */ }
+      const payload = await response.json();
+      if (!response.ok || !payload.acknowledged) throw new Error(payload.error || 'Kunne ikke lagre milepælen. Prøv igjen.');
+      return true;
+    } catch (error) { saveStatus.textContent = error.message || 'Kunne ikke lagre milepælen. Prøv igjen.'; return false; }
   }
-  function dismiss() {
-    if (!active) return;
+  async function dismiss() {
+    if (!active || button.disabled) return;
     const id = active.id;
-    dismissed.add(id);
+    button.disabled = true;
+    saveStatus.textContent = 'Lagrer…';
+    const saved = await ack(id);
+    button.disabled = false;
+    if (!saved) return;
+    saveStatus.textContent = '';
     active = null;
     dialog.close();
     if (previousFocus?.isConnected) previousFocus.focus({preventScroll:true});
-    ack(id);
   }
   button.addEventListener('click', dismiss);
   dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(); });
@@ -53,12 +62,11 @@
       const response = await fetch('./api/rank-promotions');
       if (!response.ok) return;
       const {events} = await response.json();
-      for (const id of dismissed) ack(id);
       if (active) {
         if (!events.some(event => event.id === active.id)) {active=null;dialog.close();}
         return;
       }
-      const event = events.find(event => !dismissed.has(event.id));
+      const event = events[0];
       if (!event) return;
       active = event;
       const digits = {I:'1', II:'2', III:'3', IV:'4'};

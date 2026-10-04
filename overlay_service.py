@@ -69,6 +69,7 @@ class OverlayService:
             temporary.replace(self.file)
         except OSError:
             logging.exception("Could not save overlay settings")
+            raise
 
     def configure(self, changes, persist=True):
         if not isinstance(changes, dict):
@@ -96,11 +97,16 @@ class OverlayService:
                 if changes["renderer"] not in ("desktop", "gamebar"):
                     raise ValueError("Ugyldig visningsmodus.")
                 settings["renderer"] = changes["renderer"]
+            old_settings, old_preview = self.settings, self.preview_until
             self.settings = settings
             if not settings["enabled"]:
                 self.preview_until = 0
             if persist:
-                self._save()
+                try:
+                    self._save()
+                except OSError:
+                    self.settings, self.preview_until = old_settings, old_preview
+                    raise
             return dict(settings)
 
     def set_profile(self, profile, lookup=None, persist=True):
@@ -125,6 +131,7 @@ class OverlayService:
         with self.lock:
             if self.profile and self.profile["playerId"] == value["playerId"] and self.profile["fetchedAt"] > value["fetchedAt"]:
                 return
+            previous = deepcopy((self.profile, self.lookup, self.bases, self.started_at))
             if self.profile and self.profile["playerId"] != value["playerId"]:
                 self.bases = {}
                 self.started_at = datetime.now(timezone.utc).isoformat()
@@ -132,12 +139,16 @@ class OverlayService:
                 self.bases.setdefault(row["playlist"], row["mmr"])
             self.profile = value
             matches = self.performance.snapshot().get("matches", []) if self.performance else []
-            self.promotions.observe(value, matches)
-            self.progression.record(value)
             if isinstance(lookup, dict) and lookup.get("platform") in ("epic", "steam", "psn", "xbl"):
                 self.lookup = {"platform": lookup["platform"], "gamertag": str(lookup.get("gamertag", ""))[:160], "playerId": value["playerId"]}
             if persist:
-                self._save()
+                try:
+                    self._save()
+                except OSError:
+                    self.profile, self.lookup, self.bases, self.started_at = previous
+                    raise
+            self.promotions.observe(value, matches)
+            self.progression.record(value)
 
     def preview(self):
         with self.lock:
@@ -145,9 +156,14 @@ class OverlayService:
 
     def reset_session(self):
         with self.lock:
+            previous = self.started_at, self.bases
             self.started_at = datetime.now(timezone.utc).isoformat()
             self.bases = {r["playlist"]: r["mmr"] for r in (self.profile or {}).get("ranks", [])}
-            self._save()
+            try:
+                self._save()
+            except OSError:
+                self.started_at, self.bases = previous
+                raise
 
     def _refresh(self):
         with self.lock:

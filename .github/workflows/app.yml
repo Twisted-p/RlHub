@@ -1,0 +1,51 @@
+name: Test and build RL Hub
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows-app:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install desktop and build dependencies
+        run: python -m pip install -r requirements-build.txt
+      - name: Python regressions and packaged asset manifest
+        run: python -m unittest discover -s tests -p "test_*.py"
+      - name: JavaScript regressions
+        shell: pwsh
+        run: |
+          node tests/performance_analytics.test.cjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tests/training_packs.test.cjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tests/dashboard_rank.test.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tests/dashboard_progression.test.cjs
+          exit $LASTEXITCODE
+      - name: Build Windows executable
+        run: python -m PyInstaller --noconfirm "RL Hub.spec"
+      - name: WebView2 game window lifecycle
+        run: python tests/game_window_ui_smoke.py
+      - name: WebView2 milestone save and retry
+        run: python tests/rank_celebration_ui_smoke.py
+      - name: WebView2 profile lookup and persistence
+        run: python tests/profile_lookup_ui_smoke.py
+      - name: Packaged executable smoke test
+        run: python tests/packaged_smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-app-validation
+          path: |
+            build/*.png
+            dist/RL Hub.exe

@@ -1,5 +1,21 @@
 # RL Hub – instruks til Codex på en annen maskin
 
+**Gjennomgang rettet 04.10.2026:** Pauset og redusert bevegelse gjør `.reveal`
+synlig uten å vente på animasjonen. Stats API avviser ugyldige Game/Teams/Players
+før spilltilstanden endres, og fortsetter med neste melding. Spilleridentitet
+oppdateres ved tilkobling og hvert femte sekund; coaching viser kontomismatch
+og blander ikke MMR fra rankprofilen med en annen innlogget konto.
+Standalone-rankoppslag bruker nå POST `/api/profile` med samme Origin;
+GET returnerer bare lagret profil. Alle lokale endepunkter kontrollerer Host.
+Overlay-endringer rulles tilbake ved skrivefeil. Milepæl-lukking lykkes først
+når lagringen lykkes; kortet viser feil og tillater nytt forsøk.
+`.github/workflows/app.yml` kjører Python-/JS-tester, kontrollerer pakkede assets,
+bygger Windows-appen og tester ekte WebView2 og executable på push/PR.
+Lokalt verifisert: 80 Python-tester, fire JS-suiter, spillvinduets pause/synlighet
+og rankkortets lagringsfeil/nytt forsøk i WebView2. Brukerens tidligere test
+uten feil i ekte Rocket League gjaldt v0.6.0; disse ekstra feiltilfellene er
+testet isolert, ikke bekreftet i en ny ekte kamp.
+
 **Rankfeiring:** Originalt JS/CSS-kort på alle standalone-faner, med rankikon,
 farger, dato og observerte stats. Bare en ny høyeste rankkategori per konto/modus
 utløser feiring; første oppslag og eksisterende historikk setter baseline.

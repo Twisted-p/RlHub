@@ -16,6 +16,8 @@ from urllib.parse import unquote, urlparse, parse_qs
 from uuid import uuid4
 
 from tracker_proxy import TrackerProxyHandler
+from tracker_proxy import TrackerUnavailableError
+from requests import RequestException
 from mmr_provider import fetch_rank_profile
 from performance_service import PerformanceService
 from overlay_service import OverlayService
@@ -52,6 +54,18 @@ UI_FILES.update(f"assets/ranks/{i}.png" for i in range(23))
 class DesktopHandler(TrackerProxyHandler):
     source_name = "MMR-tjenesten"
 
+    def valid_host(self):
+        hosts = self.headers.get_all("Host", [])
+        allowed = {f"127.0.0.1:{self.server.server_port}", f"localhost:{self.server.server_port}"}
+        if len(hosts) != 1 or hosts[0].lower() not in allowed:
+            self.respond_json(403, {"error": "Ugyldig lokal adresse."})
+            return False
+        return True
+
+    def do_OPTIONS(self):
+        if self.valid_host():
+            super().do_OPTIONS()
+
     def fetch_profile(self, platform: str, gamertag: str, player_id: str = "") -> dict:
         profile = fetch_rank_profile(platform, gamertag, player_id)
         overlay = getattr(self.server, "overlay", None)
@@ -66,7 +80,18 @@ class DesktopHandler(TrackerProxyHandler):
         super(TrackerProxyHandler, self).end_headers()
 
     def do_GET(self) -> None:
+        if not self.valid_host():
+            return
         parsed = urlparse(self.path)
+        if parsed.path == "/api/profile":
+            overlay = getattr(self.server, "overlay", None)
+            if overlay:
+                with overlay.lock:
+                    profile = json.loads(json.dumps(overlay.profile))
+            else:
+                profile = None
+            self.respond_json(200, {"profile": profile})
+            return
         if parsed.path == "/api/rank-promotions":
             overlay = getattr(self.server, "overlay", None)
             if overlay:
@@ -116,9 +141,6 @@ class DesktopHandler(TrackerProxyHandler):
             return
         if parsed.path == "/health":
             self.respond_json(200, {"status": "ok", "app": "rl-hub-desktop"})
-            return
-        if parsed.path == "/api/profile":
-            super().do_GET()
             return
         if parsed.path == "/api/overlay":
             overlay = getattr(self.server, "overlay", None)
@@ -193,13 +215,36 @@ class DesktopHandler(TrackerProxyHandler):
             pass
 
     def do_POST(self) -> None:
+        if not self.valid_host():
+            return
         path = urlparse(self.path).path
-        if path not in ("/api/rank-promotions/ack", "/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break", "/api/goals"):
+        if path not in ("/api/profile", "/api/rank-promotions/ack", "/api/performance/setup", "/api/overlay/settings", "/api/overlay/preview", "/api/overlay/profile", "/api/overlay/reset", "/api/readiness/reset", "/api/readiness/break", "/api/goals"):
             self.respond_json(404, {"error": "Fant ikke endepunktet."})
             return
         expected_origin = f"http://127.0.0.1:{self.server.server_port}"
         if self.headers.get("Origin") != expected_origin:
             self.respond_json(403, {"error": "Endringer må gjøres fra RL Hub."})
+            return
+        if path == "/api/profile":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= 2048:
+                    raise ValueError()
+                query = json.loads(self.rfile.read(length))
+                if (not isinstance(query, dict) or query.get("platform") not in ("epic", "steam", "psn", "xbl")
+                        or not isinstance(query.get("gamertag"), str) or not 0 < len(query["gamertag"].strip()) <= 160
+                        or not isinstance(query.get("playerId", ""), str) or len(query.get("playerId", "")) > 160):
+                    raise ValueError()
+                profile = self.fetch_profile(query["platform"], query["gamertag"].strip(), query.get("playerId", ""))
+                self.respond_json(200, {"profile": profile})
+            except TrackerUnavailableError as error:
+                self.respond_json(503, {"error": str(error), "code": error.code})
+            except (ValueError, TypeError):
+                self.respond_json(400, {"error": "Kontroller plattform og gamertag."})
+            except RequestException:
+                self.respond_json(502, {"error": "MMR-tjenesten svarer ikke. Prøv igjen senere."})
+            except OSError:
+                self.respond_json(500, {"error": "Profilen kunne ikke lagres. Prøv igjen."})
             return
         if path == "/api/rank-promotions/ack":
             overlay = getattr(self.server, "overlay", None)
@@ -217,6 +262,8 @@ class DesktopHandler(TrackerProxyHandler):
                 self.respond_json(400, {"error": "Ugyldig milepæl."})
             except AttributeError:
                 self.respond_json(503, {"error": "Ranktjenesten er ikke startet."})
+            except OSError:
+                self.respond_json(500, {"error": "Kunne ikke lagre milepælen. Prøv igjen."})
             return
         if path == "/api/goals":
             service = getattr(self.server, "goals", None)
@@ -246,6 +293,8 @@ class DesktopHandler(TrackerProxyHandler):
                 self.respond_json(200, service.tick())
             except ValueError as error:
                 self.respond_json(400, {"error": str(error)})
+            except OSError:
+                self.respond_json(500, {"error": "Økten ble ikke lagret på disk. Prøv igjen."})
             return
         if path.startswith("/api/overlay/"):
             overlay = getattr(self.server, "overlay", None)
@@ -274,6 +323,8 @@ class DesktopHandler(TrackerProxyHandler):
                 self.respond_json(200, overlay.view())
             except (ValueError, TypeError):
                 self.respond_json(400, {"error": "Kunne ikke lagre overlay-innstillingene."})
+            except OSError:
+                self.respond_json(500, {"error": "Endringen ble ikke lagret på disk. Prøv igjen."})
             return
         service = getattr(self.server, "performance", None)
         if service is None:
